@@ -172,6 +172,22 @@ body{font-family:'Noto Sans JP',sans-serif;background:#880000;color:#1A1A2E;min-
           <div class="form-group"><label class="form-label">解散予定時刻</label><input id="f_endTime" class="form-input"></div>
           <div class="form-group" style="grid-column:1/-1"><label class="form-label">集合に関する注記</label><input id="f_meetNote" class="form-input"></div>
         </div>
+        <div style="font-size:.82rem;font-weight:700;color:#1A1A1A;margin:20px 0 12px;padding:8px 14px;background:#EFF3FA;border-radius:8px;border-left:4px solid #CC0000">
+          <i class="fa-solid fa-map-location-dot" style="color:#CC0000"></i>&ensp;Google マップ設定
+        </div>
+        <div style="font-size:.78rem;color:#5A5650;margin-bottom:14px;padding:0 2px">
+          Google マップで場所を検索 → 「共有」→「地図を埋め込む」→ 表示された <code style="background:#f0f0f0;border-radius:3px;padding:1px 5px">&lt;iframe&gt;</code> の <strong>src="…"</strong> の値（URL部分のみ）をコピーして貼り付けてください。
+        </div>
+        <div class="form-grid">
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label"><i class="fa-solid fa-flag-checkered" style="color:#CC0000"></i>&ensp;集合場所 マップURL</label>
+            <input id="f_meetMapUrl" class="form-input" placeholder="https://www.google.com/maps/embed?pb=...">
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label"><i class="fa-solid fa-circle-check" style="color:#CC0000"></i>&ensp;解散場所 マップURL</label>
+            <input id="f_endMapUrl" class="form-input" placeholder="https://www.google.com/maps/embed?pb=...">
+          </div>
+        </div>
       </div>
 
       <!-- ── 添乗員 ── -->
@@ -425,6 +441,8 @@ function initForms(){
   set('f_endPlace',       d.meeting.endPlace);
   set('f_endTime',        d.meeting.endTime);
   set('f_meetNote',       d.meeting.note);
+  set('f_meetMapUrl',     d.meeting.meetMapUrl);
+  set('f_endMapUrl',      d.meeting.endMapUrl);
   // Guide
   set('f_guideName',      d.guide.name);
   set('f_guideTitle',     d.guide.title);
@@ -706,7 +724,7 @@ function getGoods(){
 function collectData(){
   const d = JSON.parse(JSON.stringify(current())); // deep clone as base
   d.basic = { tourTitle:g('f_tourTitle'), tourSubtitle:g('f_tourSubtitle'), customerName:g('f_customerName'), participantCount:g('f_participantCount'), tourDates:g('f_tourDates'), area:g('f_area') };
-  d.meeting = { place:g('f_meetPlace'), placeDetail:g('f_meetPlaceDetail'), date:g('f_meetDate'), time:g('f_meetTime'), endPlace:g('f_endPlace'), endTime:g('f_endTime'), note:g('f_meetNote') };
+  d.meeting = { place:g('f_meetPlace'), placeDetail:g('f_meetPlaceDetail'), date:g('f_meetDate'), time:g('f_meetTime'), endPlace:g('f_endPlace'), endTime:g('f_endTime'), note:g('f_meetNote'), meetMapUrl:g('f_meetMapUrl'), endMapUrl:g('f_endMapUrl') };
   d.guide = { name:g('f_guideName'), title:g('f_guideTitle'), phone:g('f_guidePhone'), email:g('f_guideEmail'), lineId:g('f_guideLineId'), greeting:g('f_guideGreeting') };
   d.includes = getSimpleList('includesList');
   d.excludes = getSimpleList('excludesList');

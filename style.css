@@ -295,6 +295,37 @@ ul { list-style: none; }
 .info-card-body .value { font-size: .95rem; font-weight: 700; color: var(--text); line-height: 1.4; }
 .info-card-body .sub { font-size: .8rem; color: var(--text-light); margin-top: 3px; }
 
+/* ── Meeting Map ─────────────────────────────────────────── */
+.meeting-maps { display: flex; flex-direction: column; gap: 28px; margin-top: 28px; }
+.meeting-map-block {}
+.meeting-map-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--navy-dark);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.meeting-map-label i { color: var(--navy-dark); }
+.meeting-map-frame {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0,0,0,.10);
+  border: 1px solid var(--border);
+}
+.meeting-map-frame iframe {
+  width: 100%;
+  height: 380px;
+  border: 0;
+  display: block;
+}
+@media (max-width: 768px) {
+  .meeting-map-frame iframe { height: 240px; }
+}
+
 /* ── Greeting Box ───────────────────────────────────────── */
 .greeting-box {
   background: var(--white);
@@ -391,6 +422,59 @@ ul { list-style: none; }
 .route-table tbody tr:last-child td { border-bottom: none; }
 .route-table tbody tr:hover td { background: var(--cream); }
 .route-table .day-header td { background: var(--navy-mid) !important; color: var(--gold-light); font-weight: 700; padding: 11px 18px; font-size: .82rem; }
+
+@media (max-width: 640px) {
+  /* テーブルをカード型に変換 */
+  .route-table,
+  .route-table tbody { display: block; box-shadow: none; }
+  .route-table thead  { display: none; }
+
+  /* 日付ヘッダー行 */
+  .route-table .day-header { display: block; border-radius: 8px; overflow: hidden; margin: 20px 0 6px; }
+  .route-table .day-header td { display: block; }
+
+  /* 各スケジュール行 → カード */
+  .route-table tbody tr:not(.day-header) {
+    display: block;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 6px rgba(0,0,0,.07);
+  }
+  .route-table tbody tr:not(.day-header) td {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: .84rem;
+    background: var(--white) !important;
+    border-right: none;
+  }
+  .route-table tbody tr:not(.day-header) td:last-child { border-bottom: none; }
+  .route-table tbody tr:not(.day-header) td:empty       { display: none; }
+
+  /* ラベル（data-label属性から自動生成） */
+  .route-table tbody tr:not(.day-header) td::before {
+    content: attr(data-label);
+    font-size: .66rem;
+    font-weight: 700;
+    color: var(--navy-dark);
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    min-width: 28px;
+    opacity: .6;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+  /* 「内容」列はラベル非表示（メインコンテンツなので不要） */
+  .route-table tbody tr:not(.day-header) td[data-label="内容"]::before { display: none; }
+  /* ホバー効果はモバイルで無効化 */
+  .route-table tbody tr:not(.day-header):hover td { background: var(--white) !important; }
+}
 
 /* ── Hotel Card ──────────────────────────────────────────── */
 .hotel-card { display: flex; background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-sm); }

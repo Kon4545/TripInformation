@@ -98,7 +98,14 @@ function buildTable(){
     const hdr = DAY_COLORS[idx] || '#1A1A1A';
     rows += `<tr class="day-header"><td colspan="4" style="background:${hdr}"><i class="fa-solid fa-calendar-day"></i>&ensp;${day.date}（${day.theme}）</td></tr>`;
     (day.items||[]).forEach(item=>{
-      rows += `<tr><td><strong>${item.time||''}</strong></td><td style="font-size:.82rem;color:var(--text-mid)">${item.place||''}</td><td><strong>${item.title||''}</strong><br><span style="font-size:.82rem;color:var(--text-mid)">${item.desc||''}</span></td><td>${badge(item.badge,item.badgeType)}</td></tr>`;
+      const descHtml = item.desc ? `<br><span style="font-size:.82rem;color:var(--text-mid)">${item.desc}</span>` : '';
+      const badgeHtml = badge(item.badge, item.badgeType);
+      rows += `<tr>
+        <td data-label="時刻"><strong>${item.time||''}</strong></td>
+        <td data-label="場所" style="font-size:.82rem;color:var(--text-mid)">${item.place||''}</td>
+        <td data-label="内容"><strong>${item.title||''}</strong>${descHtml}</td>
+        <td data-label="備考">${badgeHtml}</td>
+      </tr>`;
     });
   });
   document.getElementById('routeTableBody').innerHTML = rows;
