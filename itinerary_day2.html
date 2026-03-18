@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day 2 詳細行程｜旅のしおり</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
+  <style>
+
+    /* ===== Day2 専用スタイル ===== */
+    .detail-timeline {
+      position: relative;
+      padding-left: 3.25rem;
+    }
+
+    .detail-timeline::before {
+      content: '';
+      position: absolute;
+      left: 1.1rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #c9922a, rgba(201,146,42,0.1));
+      border-radius: 2px;
+    }
+
+    .dt-item {
+      position: relative;
+      margin-bottom: 1.75rem;
+      background: var(--bg-white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .dt-item:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateX(4px);
+    }
+
+    .dt-item:last-child { margin-bottom: 0; }
+
+    .dt-dot {
+      position: absolute;
+      left: -2.5rem;
+      top: 1.1rem;
+      width: 1.45rem;
+      height: 1.45rem;
+      background: white;
+      border: 2.5px solid var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      color: var(--accent);
+      font-weight: 700;
+      box-shadow: 0 0 0 4px rgba(201,146,42,0.12);
+    }
+
+    .dt-dot.featured {
+      background: linear-gradient(135deg, var(--accent), var(--accent-gold));
+      border-color: var(--accent);
+      color: white;
+      width: 1.65rem;
+      height: 1.65rem;
+      left: -2.6rem;
+      box-shadow: 0 0 0 4px rgba(201,146,42,0.15), 0 4px 10px rgba(201,146,42,0.3);
+    }
+
+    .dt-header {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.9rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, var(--bg-light), var(--bg-white));
+    }
+
+    .dt-time-badge {
+      background: linear-gradient(135deg, var(--accent), var(--accent-gold));
+      color: white;
+      padding: 0.22rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(201,146,42,0.3);
+    }
+
+    .dt-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      flex: 1;
+      font-family: var(--font-serif);
+    }
+
+    .dt-category {
+      font-size: 0.72rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .cat-transport { background: #e0e7ff; color: #3730a3; }
+    .cat-sightseeing { background: #dbeafe; color: #1e40af; }
+    .cat-meal { background: #dcfce7; color: #14532d; }
+    .cat-hotel { background: #fce7f3; color: #9d174d; }
+    .cat-free { background: #fef3c7; color: #92400e; }
+    .cat-cruise { background: #ecfdf5; color: #065f46; }
+
+    .dt-body { padding: 1.1rem 1.25rem; }
+
+    .dt-body p {
+      font-size: 0.88rem;
+      color: var(--text-medium);
+      line-height: 1.75;
+      margin-bottom: 0.8rem;
+    }
+
+    .dt-body p:last-child { margin-bottom: 0; }
+
+    .dt-tips {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 0.7rem 1rem;
+      font-size: 0.83rem;
+      color: #92400e;
+      display: flex;
+      gap: 0.55rem;
+      align-items: flex-start;
+      margin-top: 0.85rem;
+    }
+
+    .dt-tips i { flex-shrink: 0; margin-top: 0.18rem; }
+
+    .dt-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.85rem;
+    }
+
+    .dt-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.77rem;
+      color: var(--text-medium);
+      background: var(--bg-light);
+      padding: 0.28rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+    }
+
+    /* スポットカード */
+    .spot-photo-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .spot-photo-card {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    .spot-photo-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .spot-photo-card-img {
+      height: 130px;
+      overflow: hidden;
+    }
+
+    .spot-photo-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .spot-photo-card:hover .spot-photo-card-img img { transform: scale(1.08); }
+
+    .spot-photo-card-body {
+      padding: 0.75rem;
+      background: var(--bg-white);
+    }
+
+    .spot-photo-card-body h4 {
+      font-family: var(--font-serif);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .spot-photo-card-body p {
+      font-size: 0.72rem;
+      color: var(--text-medium);
+      line-height: 1.4;
+    }
+
+    /* 地図タブ */
+    .map-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.1rem;
+      flex-wrap: wrap;
+    }
+
+    .map-tab-btn {
+      padding: 0.45rem 1rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 2px solid var(--border);
+      background: var(--bg-white);
+      color: var(--text-medium);
+      transition: all 0.22s;
+    }
+
+    .map-tab-btn.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-gold));
+      color: white;
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(201,146,42,0.25);
+    }
+
+    .map-tab-btn:hover:not(.active) {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .map-panel { display: none; }
+    .map-panel.active { display: block; }
+
+    @media (max-width: 900px) {
+      .spot-photo-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 640px) {
+      .detail-timeline { padding-left: 2.5rem; }
+      .dt-dot { left: -1.95rem; }
+      .dt-dot.featured { left: -2.05rem; }
+      .spot-photo-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ナビゲーション -->
+  <header class="nav-header">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="logo-icon"><i class="fas fa-paper-plane"></i></span>
+        <div>
+          <span>旅のしおり</span>
+          <span class="logo-sub">Dream Travel</span>
+        </div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="メニュー">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav-menu" id="navMenu">
+        <a href="index.html"><span class="nav-icon">🏠</span><span>ホーム</span></a>
+        <a href="route.html"><span class="nav-icon">🗺️</span><span>行程</span></a>
+        <a href="itinerary_day1.html"><span class="nav-icon">📅</span><span>Day 1</span></a>
+        <a href="itinerary_day2.html" class="active"><span class="nav-icon">📅</span><span>Day 2</span></a>
+        <a href="caution.html"><span class="nav-icon">📋</span><span>注意事項</span></a>
+        <a href="company_information.html"><span class="nav-icon">📞</span><span>会社情報</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ヒーロー -->
+  <section class="page-hero" style="min-height:380px;">
+    <div class="page-hero-bg" style="background-image:url('https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1920&q=80'); background-position:center 50%;"></div>
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <div class="page-hero-eyebrow"><i class="fas fa-map-marker-alt"></i> Day 2 · 2026.05.11</div>
+      <h1>パリ終日観光</h1>
+      <p>PARIS — Full Day Sightseeing</p>
+      <div class="page-hero-meta">
+        <span class="meta-tag">🗼 エッフェル塔</span>
+        <span class="meta-tag">🖼️ ルーヴル美術館</span>
+        <span class="meta-tag">🛣️ シャンゼリゼ通り</span>
+        <span class="meta-tag">🚢 セーヌ川クルーズ</span>
+        <span class="meta-tag">🍽️ フレンチディナー</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- パリ写真バナー -->
+  <div style="display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:4px; height:200px;">
+    <div style="overflow:hidden; position:relative;">
+      <img src="https://images.unsplash.com/photo-1471874276752-65e2d717604a?w=800&q=80" alt="エッフェル塔" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" loading="lazy" onmouseover="this.style.transform='scale(1.07)'" onmouseout="this.style.transform=''" />
+      <div style="position:absolute;bottom:0;left:0;right:0;padding:0.75rem 1rem;background:linear-gradient(to top,rgba(0,0,0,0.7),transparent);color:white;">
+        <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;">🗼 Tour Eiffel</div>
+      </div>
+    </div>
+    <div style="overflow:hidden; position:relative;">
+      <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600&q=80" alt="ルーヴル" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" loading="lazy" onmouseover="this.style.transform='scale(1.07)'" onmouseout="this.style.transform=''" />
+      <div style="position:absolute;bottom:0;left:0;right:0;padding:0.65rem 0.75rem;background:linear-gradient(to top,rgba(0,0,0,0.7),transparent);color:white;font-size:0.78rem;font-weight:700;">🖼️ Louvre</div>
+    </div>
+    <div style="overflow:hidden; position:relative;">
+      <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=600&q=80" alt="セーヌ川" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" loading="lazy" onmouseover="this.style.transform='scale(1.07)'" onmouseout="this.style.transform=''" />
+      <div style="position:absolute;bottom:0;left:0;right:0;padding:0.65rem 0.75rem;background:linear-gradient(to top,rgba(0,0,0,0.7),transparent);color:white;font-size:0.78rem;font-weight:700;">🚢 Seine River</div>
+    </div>
+    <div style="overflow:hidden; position:relative;">
+      <img src="https://images.unsplash.com/photo-1582272417997-68c8bdb4e2e7?w=600&q=80" alt="凱旋門" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" loading="lazy" onmouseover="this.style.transform='scale(1.07)'" onmouseout="this.style.transform=''" />
+      <div style="position:absolute;bottom:0;left:0;right:0;padding:0.65rem 0.75rem;background:linear-gradient(to top,rgba(0,0,0,0.7),transparent);color:white;font-size:0.78rem;font-weight:700;">🏛️ Arc de Triomphe</div>
+    </div>
+  </div>
+
+  <main class="main-container">
+
+    <!-- 本日の見どころ -->
+    <section class="observe-fade" style="margin-bottom:2.5rem;">
+      <div class="section-title">
+        <span class="icon">⭐</span>
+        <h2>本日の見どころ</h2>
+      </div>
+      <div class="spot-photo-grid">
+        <div class="spot-photo-card">
+          <div class="spot-photo-card-img">
+            <img src="https://images.unsplash.com/photo-1471874276752-65e2d717604a?w=400&q=80" alt="エッフェル塔" loading="lazy" />
+          </div>
+          <div class="spot-photo-card-body">
+            <h4>🗼 エッフェル塔</h4>
+            <p>第2展望台から絶景を満喫</p>
+          </div>
+        </div>
+        <div class="spot-photo-card">
+          <div class="spot-photo-card-img">
+            <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&q=80" alt="ルーヴル" loading="lazy" />
+          </div>
+          <div class="spot-photo-card-body">
+            <h4>🖼️ ルーヴル美術館</h4>
+            <p>日本語ガイドで名作を鑑賞</p>
+          </div>
+        </div>
+        <div class="spot-photo-card">
+          <div class="spot-photo-card-img">
+            <img src="https://images.unsplash.com/photo-1543349689-9a4d426bee8e?w=400&q=80" alt="シャンゼリゼ" loading="lazy" />
+          </div>
+          <div class="spot-photo-card-body">
+            <h4>🛣️ シャンゼリゼ通り</h4>
+            <p>ブランドショップと絶景散策</p>
+          </div>
+        </div>
+        <div class="spot-photo-card">
+          <div class="spot-photo-card-img">
+            <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=400&q=80" alt="セーヌ川" loading="lazy" />
+          </div>
+          <div class="spot-photo-card-body">
+            <h4>🚢 セーヌ川クルーズ</h4>
+            <p>夕暮れの川から楽しむパリ</p>
+          </div>
+        </div>
+        <div class="spot-photo-card">
+          <div class="spot-photo-card-img">
+            <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80" alt="フランス料理" loading="lazy" />
+          </div>
+          <div class="spot-photo-card-body">
+            <h4>🍽️ フレンチディナー</h4>
+            <p>本格フランス料理コース</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 詳細行程 -->
+    <section class="observe-fade" style="margin-bottom:2.5rem;">
+      <div class="section-title">
+        <span class="icon">📋</span>
+        <h2>Day 2 詳細スケジュール</h2>
+      </div>
+      <div class="detail-timeline">
+
+        <div class="dt-item">
+          <div class="dt-dot">1</div>
+          <div class="dt-header">
+            <span class="dt-time-badge">07:00</span>
+            <span class="dt-title">ホテルにて朝食ビュッフェ</span>
+            <span class="dt-category cat-meal">🍳 朝食</span>
+          </div>
+          <div class="dt-body">
+            <p>ホテル ル・グラン・パリのレストランにて朝食ビュッフェをお楽しみください。クロワッサン、バゲット、フルーツ、チーズなど本格フランス式の朝食をご堪能ください。</p>
+            <div class="dt-meta">
+              <span class="dt-meta-item"><i class="fas fa-clock"></i> 朝食時間：07:00〜10:00</span>
+              <span class="dt-meta-item"><i class="fas fa-concierge-bell"></i> 1Fレストラン</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dt-item">
+          <div class="dt-dot">2</div>
+          <div class="dt-header">
+            <span class="dt-time-badge">09:00</span>
+            <span class="dt-title">ホテルロビー集合・専用バスで出発</span>
+            <span class="dt-category cat-transport">🚌 移動</span>
+          </div>
+          <div class="dt-body">
+            <p>1Fホテルロビーに集合後、専用バスでエッフェル塔へ向かいます。バスの中で添乗員より本日の観光概要についてご説明いたします。</p>
+            <div class="dt-tips">
+              <i class="fas fa-camera"></i>
+              <span>カメラや充電器のお忘れなく！ 傘の携帯もおすすめします（5月のパリは雨が多い季節です）。</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dt-item">
+          <div class="dt-dot featured">★</div>
+          <div class="dt-header">
+            <span class="dt-time-badge">09:30</span>
+            <span class="dt-title">エッフェル塔 見学（優先入場）</span>
+            <span class="dt-category cat-sightseeing">🗼 観光</span>
+          </div>
+          <div class="dt-body">
+            <p>パリを代表する建造物、エッフェル塔を見学します。第2展望台（高さ115m）まで昇り、パリ市内を一望。晴れた日にはモンマルトルの丘やノートルダム大聖堂も見渡せます。</p>
+            <div class="dt-tips">
+              <i class="fas fa-star"></i>
+              <span>弊社ツアーは<strong>優先入場チケット</strong>を使用しているため、長蛇の列を待たずにスムーズにご入場いただけます。</span>
+            </div>
+            <div class="dt-meta">
+              <span class="dt-meta-item"><i class="fas fa-clock"></i> 所要時間：約1.5時間</span>
+              <span class="dt-meta-item"><i class="fas fa-ticket-alt"></i> 入場料：含む</span>
+              <span class="dt-meta-item"><i class="fas fa-elevator"></i> 第2展望台まで</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dt-item">
+          <div class="dt-dot featured">★</div>
+          <div class="dt-header">
+            <span class="dt-time-badge">11:30</span>
+            <span class="dt-title">ルーヴル美術館（日本語ガイド付き）</span>
+            <span class="dt-category cat-sightseeing">🖼️ 美術館</span>
+          </div>
+          <div class="dt-body">
+            <p>世界最大級の美術館、ルーヴルを現地日本語ガイドと巡ります。モナ・リザ、ミロのヴィーナス、サモトラケのニケなど必見の名作を約2時間でご案内。ガイドツアー終了後は約30分の自由時間があります。</p>
+            <div class="dt-tips">
+              <i class="fas fa-walking"></i>
+              <span>館内は非常に広大です。歩きやすいスニーカーをお履きください。荷物はクロークに預けることもできます。</span>
+            </div>
+            <div class="dt-meta">
+              <span class="dt-meta-item"><i class="fas fa-clock"></i> 所要時間：約2.5時間</span>
+              <span class="dt-meta-item"><i class="fas fa-user-tie"></i> 日本語ガイド付き</span>
+              <span class="dt-meta-item"><i class="fas fa-ticket-alt"></i> 入場料：含む</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dt-item">
+          <div class="dt-dot">5</div>
+          <div class="dt-header">
+            <span class="dt-time-badge">14:00</span>
+            <span class="dt-title">昼食（各自・自由）</span>
+            <span class="dt-category cat-free">🍽️ 自由食</span>
+          </div>
+          <div class="dt-body">
+            <p>ルーヴル周辺にてお食事をお楽しみください。近くのリヴォリ通りには手頃な価格のカフェが多数あります。</p>
+            <div class="dt-tips">
+              <i class="fas fa-euro-sign"></i>
+              <span>パリのカフェランチの目安は€15〜25程度。「プラ・ドゥ・ジュール（日替わりランチ）」を頼むとお得でボリューミーです！</span>
+            </div>
+            <div class="dt-meta">
+              <span class="dt-meta-item"><i class="fas fa-clock"></i> 約1時間</span>
+              <span class="dt-meta-item"><i class="fas fa-euro-sign"></i> 各自負担</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dt-item">
+          <div class="dt-dot">6</div>
+          <div class="dt-header">
+            <span class="dt-time-badge">15:00</span>
+            <span class="dt-title">シャンゼリゼ通り・凱旋門 散策</span>
+            <span class="dt-category cat-sightseeing">🛍️ 散策</span>
+          </div>
+          <div class="dt-body">
+            <p>パリの中心を貫くシャンゼリゼ通りをグループで散策。ルイ・ヴィトン、シャネル、カルティエなどのブランドショップや、カフェが立ち並ぶ華やかな通りをお楽しみください。</p>
+            <p>通りの突き当たりには凱旋門があります。外観を見学後、希望者は屋上への登頂も可能です（オプション・各自負担）。</p>
+            <div class="dt-meta">
+              <span class="dt-meta-item"><i class="fas fa-clock"></i> 約1.5時間</span>
+              <span class="dt-meta-item"><i class="fas fa-shopping-bag"></i> ショッピング自由</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dt-item">
+          <div class="dt-dot featured">★</div>
+          <div class="dt-header">
+            <span class="dt-time-badge">17:00</span>
+            <span class="dt-title">セーヌ川クルーズ（バトー・パリジャン）</span>
+            <span class="dt-category cat-cruise">🚢 クルーズ</span>
+          </div>
+          <div class="dt-body">
+            <p>夕暮れのセーヌ川をバトー・パリジャンのクルーズ船で遊覧します。エッフェル塔、ノートルダム大聖堂、ポン・ヌフ橋など、川の上からパリの名所を眺める約1時間の優雅なひとときです。</p>
+            <div class="dt-tips">
+              <i class="fas fa-star"></i>
+              <span>船上からのエッフェル塔の眺めは格別です！夕方の光に輝く黄金色のエッフェル塔をぜひカメラに収めてください。</span>
+            </div>
+            <div class="dt-meta">
+              <span class="dt-meta-item"><i class="fas fa-clock"></i> 所要時間：約1時間</span>
+              <span class="dt-meta-item"><i class="fas fa-ticket-alt"></i> 料金：ツアー代金に含む</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dt-item">
+          <div class="dt-dot featured">★</div>
+          <div class="dt-header">
+            <span class="dt-time-badge">19:00</span>
+            <span class="dt-title">フランス料理コースディナー</span>
+            <span class="dt-category cat-meal">🍽️ 夕食</span>
+          </div>
+          <div class="dt-body">
+            <p>セーヌ川沿いのフランス料理レストランにてディナーをお楽しみください。前菜、メイン、デザートのコース料理（グラスワイン付き）をご用意しています。</p>
+            <div class="dt-tips">
+              <i class="fas fa-wine-glass-alt"></i>
+              <span>パリのフランス料理の醍醐味をご体験ください。お料理やワインに関するご質問は添乗員にお気軽にどうぞ。</span>
+            </div>
+            <div class="dt-meta">
+              <span class="dt-meta-item"><i class="fas fa-utensils"></i> コース料理（前菜・メイン・デザート）</span>
+              <span class="dt-meta-item"><i class="fas fa-wine-glass-alt"></i> グラスワイン付き</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dt-item">
+          <div class="dt-dot">9</div>
+          <div class="dt-header">
+            <span class="dt-time-badge">21:00</span>
+            <span class="dt-title">専用バスでホテルへ戻る・就寝</span>
+            <span class="dt-category cat-hotel">🏨 宿泊</span>
+          </div>
+          <div class="dt-body">
+            <p>ディナー後、専用バスでホテルへ戻ります。明日はヴェルサイユ宮殿見学後、ローマへの移動が予定されています。早めにお休みください。</p>
+            <div class="dt-tips">
+              <i class="fas fa-suitcase"></i>
+              <span>翌日は<strong>7:30出発</strong>です。荷物のパッキングは前夜のうちにお済ませください。（ヴェルサイユ見学後そのままローマへ向かいます）</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Google Maps -->
+    <section class="observe-fade" style="margin-bottom:2.5rem;">
+      <div class="section-title">
+        <span class="icon">📍</span>
+        <h2>本日の観光スポット地図</h2>
+      </div>
+      <div class="map-tabs">
+        <button class="map-tab-btn active" onclick="switchMap('map-eiffel', this)">🗼 エッフェル塔</button>
+        <button class="map-tab-btn" onclick="switchMap('map-louvre', this)">🖼️ ルーヴル</button>
+        <button class="map-tab-btn" onclick="switchMap('map-champs', this)">🛣️ シャンゼリゼ</button>
+        <button class="map-tab-btn" onclick="switchMap('map-seine', this)">🚢 セーヌ川</button>
+      </div>
+
+      <div id="map-eiffel" class="map-panel active">
+        <p style="font-size:0.82rem; color:var(--text-medium); margin-bottom:0.75rem;"><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> エッフェル塔 / Tour Eiffel</p>
+        <div class="map-container">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.9!2d2.2944813!3d48.8583701!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e6696a4fdedb0f%3A0xa7c3cf76d89f4dba!2z44Ko44OD44OV44Kp44Or5aGp!5e0!3m2!1sja!2sjp!4v1710000000003" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="エッフェル塔の地図"></iframe>
+        </div>
+      </div>
+
+      <div id="map-louvre" class="map-panel">
+        <p style="font-size:0.82rem; color:var(--text-medium); margin-bottom:0.75rem;"><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> ルーヴル美術館 / Musée du Louvre</p>
+        <div class="map-container">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.3!2d2.3376!3d48.8606!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e671c3d6afa4dd%3A0xd51b31b8b4c40e74!2z44Or44O844O954i25p2l6aSo!5e0!3m2!1sja!2sjp!4v1710000000004" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="ルーヴル美術館の地図"></iframe>
+        </div>
+      </div>
+
+      <div id="map-champs" class="map-panel">
+        <p style="font-size:0.82rem; color:var(--text-medium); margin-bottom:0.75rem;"><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> シャンゼリゼ通り・凱旋門</p>
+        <div class="map-container">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2623.7!2d2.3079!3d48.8730!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66fc47a78ca91%3A0xa2ca53e040abee9e!2z5byV6Y2744Om44KS44K944O844O844Om44O8!5e0!3m2!1sja!2sjp!4v1710000000005" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="シャンゼリゼの地図"></iframe>
+        </div>
+      </div>
+
+      <div id="map-seine" class="map-panel">
+        <p style="font-size:0.82rem; color:var(--text-medium); margin-bottom:0.75rem;"><i class="fas fa-map-marker-alt" style="color:var(--accent);"></i> セーヌ川クルーズ乗り場（バトー・パリジャン）</p>
+        <div class="map-container">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2625.1!2d2.2913!3d48.8563!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e6699e8a2e1f99%3A0xb5d3bf1d553ad83a!2z44Kz44O844K344L844Or44OQ44OD44OI44OR44Oq44K444Kh44Oz5Lmd5YOP5aC05Lu3!5e0!3m2!1sja!2sjp!4v1710000000006" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="バトー・パリジャン乗り場の地図"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- ページナビ -->
+    <div class="page-nav-bottom">
+      <a href="itinerary_day1.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Day 1へ</a>
+      <a href="caution.html" class="btn btn-primary">注意事項・持ち物へ <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-logo"><i class="fas fa-paper-plane"></i> Dream Travel</div>
+    <div class="footer-divider"></div>
+    <div>ドリームトラベル株式会社</div>
+    <div style="margin-top:0.4rem;">〒100-0001 東京都千代田区丸の内1-1-1 丸の内ビルディング 10F</div>
+    <div style="margin-top:0.25rem;">TEL: <a href="tel:0312345678">03-1234-5678</a> ／ 営業時間: 平日 9:00〜18:00</div>
+    <div style="margin-top:1.2rem; font-size:0.7rem; opacity:0.4;">© 2026 Dream Travel Co., Ltd. All rights reserved.</div>
+  </footer>
+
+  <script src="js/nav.js"></script>
+  <script src="js/edit-mode.js"></script>
+  <script>
+    function switchMap(id, btn) {
+      document.querySelectorAll('.map-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.map-tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active');
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.06 });
+    document.querySelectorAll('.observe-fade').forEach(el => observer.observe(el));
+    setTimeout(() => document.querySelector('.page-hero')?.classList.add('loaded'), 100);
+  </script>
+</body>
+</html>

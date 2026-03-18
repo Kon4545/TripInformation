@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day 1 詳細行程｜旅のしおり</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
+  <style>
+
+    /* ===== Day1 専用スタイル ===== */
+
+    /* 詳細タイムライン */
+    .detail-timeline {
+      position: relative;
+      padding-left: 3.25rem;
+    }
+
+    .detail-timeline::before {
+      content: '';
+      position: absolute;
+      left: 1.1rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #1d4ed8, rgba(29,78,216,0.1));
+      border-radius: 2px;
+    }
+
+    .dt-item {
+      position: relative;
+      margin-bottom: 1.75rem;
+      background: var(--bg-white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .dt-item:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateX(4px);
+    }
+
+    .dt-item:last-child { margin-bottom: 0; }
+
+    .dt-dot {
+      position: absolute;
+      left: -2.5rem;
+      top: 1.1rem;
+      width: 1.45rem;
+      height: 1.45rem;
+      background: white;
+      border: 2.5px solid #1d4ed8;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      color: #1d4ed8;
+      font-weight: 700;
+      box-shadow: 0 0 0 4px rgba(29,78,216,0.1);
+    }
+
+    .dt-dot.featured {
+      background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+      border-color: #1d4ed8;
+      color: white;
+      width: 1.65rem;
+      height: 1.65rem;
+      left: -2.6rem;
+      box-shadow: 0 0 0 4px rgba(29,78,216,0.15), 0 4px 10px rgba(29,78,216,0.3);
+    }
+
+    .dt-header {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.9rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, var(--bg-light), var(--bg-white));
+    }
+
+    .dt-time-badge {
+      background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+      color: white;
+      padding: 0.22rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(29,78,216,0.3);
+    }
+
+    .dt-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      flex: 1;
+      font-family: var(--font-serif);
+    }
+
+    .dt-category {
+      font-size: 0.72rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .cat-transport { background: #e0e7ff; color: #3730a3; }
+    .cat-sightseeing { background: #dbeafe; color: #1e40af; }
+    .cat-meal { background: #dcfce7; color: #14532d; }
+    .cat-hotel { background: #fce7f3; color: #9d174d; }
+    .cat-free { background: #fef3c7; color: #92400e; }
+
+    .dt-body { padding: 1.1rem 1.25rem; }
+
+    .dt-body p {
+      font-size: 0.88rem;
+      color: var(--text-medium);
+      line-height: 1.75;
+      margin-bottom: 0.8rem;
+    }
+
+    .dt-body p:last-child { margin-bottom: 0; }
+
+    .dt-tips {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border-left: 3px solid #1d4ed8;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 0.7rem 1rem;
+      font-size: 0.83rem;
+      color: #1e40af;
+      display: flex;
+      gap: 0.55rem;
+      align-items: flex-start;
+      margin-top: 0.85rem;
+    }
+
+    .dt-tips i { flex-shrink: 0; margin-top: 0.18rem; }
+
+    .dt-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.85rem;
+    }
+
+    .dt-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.77rem;
+      color: var(--text-medium);
+      background: var(--bg-light);
+      padding: 0.28rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+    }
+
+    /* フライトカード */
+    .flight-card {
+      background: linear-gradient(135deg, #0f2460, #1d4ed8);
+      color: white;
+      border-radius: var(--radius-md);
+      padding: 1.75rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(29,78,216,0.35);
+    }
+
+    .flight-card::before {
+      content: '✈';
+      position: absolute;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 6rem;
+      opacity: 0.07;
+    }
+
+    .flight-card::after {
+      content: '';
+      position: absolute;
+      top: -40%;
+      left: -10%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(255,255,255,0.06), transparent 70%);
+      border-radius: 50%;
+    }
+
+    .flight-route {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .flight-city { text-align: center; flex: 1; }
+
+    .flight-city .code {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    }
+
+    .flight-city .name {
+      font-size: 0.72rem;
+      opacity: 0.75;
+      margin-top: 0.2rem;
+    }
+
+    .flight-arrow {
+      text-align: center;
+      position: relative;
+      padding: 0 1rem;
+    }
+
+    .flight-arrow::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      height: 1px;
+      background: rgba(255,255,255,0.25);
+    }
+
+    .flight-arrow .plane-icon {
+      position: relative;
+      font-size: 1.4rem;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+      padding: 0.4rem;
+    }
+
+    .flight-info-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      padding-top: 1rem;
+    }
+
+    .flight-info-item { display: flex; flex-direction: column; gap: 0.2rem; }
+
+    .fi-label {
+      font-size: 0.65rem;
+      opacity: 0.65;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .fi-value { font-size: 0.9rem; font-weight: 600; }
+
+    /* 地図タブ */
+    .map-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.1rem;
+      flex-wrap: wrap;
+    }
+
+    .map-tab-btn {
+      padding: 0.45rem 1rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 2px solid var(--border);
+      background: var(--bg-white);
+      color: var(--text-medium);
+      transition: all 0.22s;
+    }
+
+    .map-tab-btn.active {
+      background: linear-gradient(135deg, var(--primary), var(--primary-mid));
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(26,58,92,0.25);
+    }
+
+    .map-tab-btn:hover:not(.active) {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .map-panel { display: none; }
+    .map-panel.active { display: block; }
+
+    @media (max-width: 640px) {
+      .detail-timeline { padding-left: 2.5rem; }
+      .dt-dot { left: -1.95rem; }
+      .dt-dot.featured { left: -2.05rem; }
+      .flight-route { flex-direction: column; gap: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ナビゲーション -->
+  <header class="nav-header">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="logo-icon"><i class="fas fa-paper-plane"></i></span>
+        <div>
+          <span>旅のしおり</span>
+          <span class="logo-sub">Dream Travel</span>
+        </div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="メニュー">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav-menu" id="navMenu">
+        <a href="index.html"><span class="nav-icon">🏠</span><span>ホーム</span></a>
+        <a href="route.html"><span class="nav-icon">🗺️</span><span>行程</span></a>
+        <a href="itinerary_day1.html" class="active"><span class="nav-icon">📅</span><span>Day 1</span></a>
+        <a href="itinerary_day2.html"><span class="nav-icon">📅</span><span>Day 2</span></a>
+        <a href="caution.html"><span class="nav-icon">📋</span><span>注意事項</span></a>
+        <a href="company_information.html"><span class="nav-icon">📞</span><span>会社情報</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ヒーロー -->
+  <section class="page-hero" style="min-height:360px;">
+    <div class="page-hero-bg" style="background-image:url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80'); background-position:center 60%;"></div>
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <div class="page-hero-eyebrow"><i class="fas fa-plane-departure"></i> Day 1 · 2026.05.10</div>
+      <h1>出発〜パリ到着</h1>
+      <p>いよいよヨーロッパの旅が始まります。</p>
+      <div class="page-hero-meta">
+        <span class="meta-tag"><i class="fas fa-plane-departure"></i> 成田 NRT</span>
+        <span class="meta-tag"><i class="fas fa-plane-arrival"></i> パリ CDG</span>
+        <span class="meta-tag"><i class="fas fa-clock"></i> 約12時間45分</span>
+        <span class="meta-tag"><i class="fas fa-moon"></i> パリ泊</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 飛行機の機内イメージ -->
+  <div style="height:180px; overflow:hidden; position:relative;">
+    <img src="https://images.unsplash.com/photo-1556388158-158ea5ccacbd?w=1920&q=80" alt="飛行機の翼" style="width:100%; height:100%; object-fit:cover; object-position:center 40%;" loading="lazy" />
+    <div style="position:absolute; inset:0; background:linear-gradient(to right, rgba(15,36,96,0.6), rgba(15,36,96,0.2), transparent); display:flex; align-items:center; padding:0 2rem;">
+      <div style="color:white;">
+        <div style="font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; text-shadow:0 2px 12px rgba(0,0,0,0.4);">NRT → CDG</div>
+        <div style="font-size:0.82rem; opacity:0.8; margin-top:0.3rem;">Air France AF 290 ／ Departure 10:30</div>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-container">
+
+    <!-- フライト情報 -->
+    <section class="observe-fade" style="margin-bottom:2.5rem;">
+      <div class="section-title">
+        <span class="icon">✈️</span>
+        <h2>フライト情報</h2>
+      </div>
+      <div class="flight-card">
+        <div class="flight-route">
+          <div class="flight-city">
+            <div class="code">NRT</div>
+            <div class="name">成田国際空港</div>
+          </div>
+          <div class="flight-arrow">
+            <span class="plane-icon">✈️</span>
+          </div>
+          <div class="flight-city">
+            <div class="code">CDG</div>
+            <div class="name">パリ・シャルル・ド・ゴール空港</div>
+          </div>
+        </div>
+        <div class="flight-info-row">
+          <div class="flight-info-item">
+            <span class="fi-label">便名</span>
+            <span class="fi-value">AF 290</span>
+          </div>
+          <div class="flight-info-item">
+            <span class="fi-label">出発時刻</span>
+            <span class="fi-value">10:30</span>
+          </div>
+          <div class="flight-info-item">
+            <span class="fi-label">到着時刻（現地）</span>
+            <span class="fi-value">16:15</span>
+          </div>
+          <div class="flight-info-item">
+            <span class="fi-label">フライト時間</span>
+            <span class="fi-value">約12時間45分</span>
+          </div>
+          <div class="flight-info-item">
+            <span class="fi-label">航空会社</span>
+            <span class="fi-value">Air France</span>
+          </div>
+          <div class="flight-info-item">
+            <span class="fi-label">時差</span>
+            <span class="fi-value">−7時間（夏時間）</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 詳細行程 -->
+    <section class="observe-fade" style="margin-bottom:2.5rem;">
+      <div class="section-title">
+        <span class="icon">📋</span>
+        <h2>Day 1 詳細スケジュール</h2>
+      </div>
+      <div class="detail-timeline">
+
+        <div class="dt-item">
+          <div class="dt-dot featured">★</div>
+          <div class="dt-header">
+            <span class="dt-time-badge">08:00</span>
+            <span class="dt-title">成田国際空港 集合</span>
+            <span class="dt-category cat-transport">🚌 集合</span>
+          </div>
+          <div class="dt-body">
+            <p>成田国際空港 第1ターミナル、出発ロビー3階、エールフランスチェックインカウンター前にお集まりください。担当の添乗員・鈴木美咲（スタッフジャケット着用）がお待ちしております。</p>
+            <div class="dt-tips">
+              <i class="fas fa-lightbulb"></i>
+              <span>集合時間の<strong>10分前</strong>にはお越しください。空港内は広いため、余裕をもってお越しいただくことをお勧めします。</span>
+            </div>
+            <div class="dt-meta">
+              <span class="dt-meta-item"><i class="fas fa-map-marker-alt"></i> 第1ターミナル 3F 出発ロビー</span>
+              <span class="dt-meta-item"><i class="fas fa-user-tie"></i> 添乗員：鈴木 美咲</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dt-item">
+          <div class="dt-dot">2</div>
+          <div class="dt-header">
+            <span class="dt-time-badge">08:30</span>
+            <span class="dt-title">航空会社チェックイン・荷物預け</span>
+            <span class="dt-category cat-transport">🏷️ 手続き</span>
+          </div>
+          <div class="dt-body">
+            <p>エールフランスのチェックインカウンターにて搭乗手続きを行います。添乗員が案内いたしますので、パスポートをご準備ください。預け荷物は1名様につき23kg×1個まで無料です。</p>
+            <div class="dt-tips">
+              <i class="fas fa-exclamation-circle"></i>
+              <span>液体物（100ml超）は機内持込不可。化粧品・歯磨き粉等は必ず<strong>預け荷物</strong>に入れるか、100ml以下の容器に入れてジップバッグに入れてください。</span>
+            </div>
+            <div class="dt-meta">
+              <span class="dt-meta-item"><i class="fas fa-weight-hanging"></i> 預け荷物：23kg×1個/人</span>
+              <span class="dt-meta-item"><i class="fas fa-briefcase"></i> 機内持込：7kg以内</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dt-item">
+          <div class="dt-dot">3</div>
+          <div class="dt-header">
+            <span class="dt-time-badge">09:30</span>
+            <span class="dt-title">出国審査・搭乗ゲートへ</span>
+            <span class="dt-category cat-transport">🛂 入出国</span>
+          </div>
+          <div class="dt-body">
+            <p>保安検査・出国審査を通過して、搭乗ゲートへ向かいます。搭乗開始は出発30分前頃の予定です。ゲート番号は搭乗券でご確認ください。</p>
+            <div class="dt-tips">
+              <i class="fas fa-info-circle"></i>
+              <span>空港内でのお買い物（免税品）はこの時間帯に。搭乗ゲートまでは広いため、早めにお移動ください。</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dt-item">
+          <div class="dt-dot featured">✈</div>
+          <div class="dt-header">
+            <span class="dt-time-badge">10:30</span>
+            <span class="dt-title">AF 290便 搭乗・出発</span>
+            <span class="dt-category cat-transport">✈️ フライト</span>
+          </div>
+          <div class="dt-body">
+            <p>エールフランス AF 290便に搭乗し、いよいよパリへ出発！フライト時間は約12時間45分。機内では機内食が2回提供されます。時差は日本より7時間遅れ（夏時間：-7時間）となります。</p>
+            <div class="dt-meta">
+              <span class="dt-meta-item"><i class="fas fa-clock"></i> 約12時間45分</span>
+              <span class="dt-meta-item"><i class="fas fa-utensils"></i> 機内食×2回</span>
+              <span class="dt-meta-item"><i class="fas fa-hourglass-half"></i> 時差：-7時間</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dt-item">
+          <div class="dt-dot">5</div>
+          <div class="dt-header">
+            <span class="dt-time-badge">16:15</span>
+            <span class="dt-title">パリ・シャルル・ド・ゴール空港 到着（現地時間）</span>
+            <span class="dt-category cat-transport">🛬 到着</span>
+          </div>
+          <div class="dt-body">
+            <p>CDG空港に到着後、入国審査を通過し荷物を受け取ります。添乗員の案内のもと、バゲージクレームで全員の荷物がそろっているか確認します。</p>
+            <div class="dt-tips">
+              <i class="fas fa-passport"></i>
+              <span>入国審査では「観光目的」「滞在期間：8日間」「宿泊先：ホテル ル・グラン・パリ」とお伝えください。EU域内のため、シェンゲン入国カード記入は不要です。</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dt-item">
+          <div class="dt-dot">6</div>
+          <div class="dt-header">
+            <span class="dt-time-badge">17:30</span>
+            <span class="dt-title">専用バスでホテルへ移動</span>
+            <span class="dt-category cat-transport">🚌 移動</span>
+          </div>
+          <div class="dt-body">
+            <p>空港からパリ市内ホテルまで専用バスで移動します。所要時間は約50分〜1時間（交通状況による）。車窓からパリ初の景色をお楽しみください。</p>
+            <div class="dt-meta">
+              <span class="dt-meta-item"><i class="fas fa-road"></i> 所要時間：約50〜60分</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dt-item">
+          <div class="dt-dot featured">★</div>
+          <div class="dt-header">
+            <span class="dt-time-badge">19:00</span>
+            <span class="dt-title">ホテル ル・グラン・パリ チェックイン</span>
+            <span class="dt-category cat-hotel">🏨 宿泊</span>
+          </div>
+          <div class="dt-body">
+            <p>本日のご宿泊先「ホテル ル・グラン・パリ」にチェックインします。添乗員が全員分のチェックインをサポートします。ルームキー受け取り後、各自お部屋でゆっくりお休みください。</p>
+            <div class="dt-meta">
+              <span class="dt-meta-item"><i class="fas fa-hotel"></i> ホテル ル・グラン・パリ（4★）</span>
+              <span class="dt-meta-item"><i class="fas fa-wifi"></i> 無料Wi-Fi</span>
+              <span class="dt-meta-item"><i class="fas fa-coffee"></i> 翌朝食：7:00〜10:00</span>
+            </div>
+            <div class="dt-tips">
+              <i class="fas fa-moon"></i>
+              <span>長時間フライトでお疲れの方も多いかと思います。明日はパリ観光の盛りだくさんな一日！ゆっくりご休養ください。</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- パリの写真ギャラリー（チラ見せ） -->
+    <section class="observe-fade" style="margin-bottom:2.5rem;">
+      <div class="section-title">
+        <span class="icon">📸</span>
+        <h2>明日はパリ観光！</h2>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; border-radius:var(--radius-md); overflow:hidden; height:200px;">
+        <div style="overflow:hidden; position:relative;">
+          <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80" alt="エッフェル塔" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" loading="lazy" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform=''" />
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:0.6rem 0.75rem;background:linear-gradient(to top,rgba(0,0,0,0.65),transparent);color:white;font-size:0.75rem;font-weight:700;">🗼 エッフェル塔</div>
+        </div>
+        <div style="overflow:hidden; position:relative;">
+          <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600&q=80" alt="ルーヴル" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" loading="lazy" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform=''" />
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:0.6rem 0.75rem;background:linear-gradient(to top,rgba(0,0,0,0.65),transparent);color:white;font-size:0.75rem;font-weight:700;">🖼️ ルーヴル美術館</div>
+        </div>
+        <div style="overflow:hidden; position:relative;">
+          <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=600&q=80" alt="セーヌ川" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" loading="lazy" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform=''" />
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:0.6rem 0.75rem;background:linear-gradient(to top,rgba(0,0,0,0.65),transparent);color:white;font-size:0.75rem;font-weight:700;">🚢 セーヌ川クルーズ</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Google Maps -->
+    <section class="observe-fade" style="margin-bottom:2.5rem;">
+      <div class="section-title">
+        <span class="icon">📍</span>
+        <h2>地図</h2>
+      </div>
+      <div class="map-tabs">
+        <button class="map-tab-btn active" onclick="switchMap('map-narita', this)">🛫 成田空港</button>
+        <button class="map-tab-btn" onclick="switchMap('map-cdg', this)">✈️ CDG空港</button>
+        <button class="map-tab-btn" onclick="switchMap('map-hotel-paris', this)">🏨 パリ・オペラ地区</button>
+      </div>
+
+      <div id="map-narita" class="map-panel active">
+        <p style="font-size:0.82rem; color:var(--text-medium); margin-bottom:0.75rem;">
+          <i class="fas fa-map-marker-alt" style="color:var(--primary);"></i>
+          成田国際空港 第1ターミナル（集合場所）
+        </p>
+        <div class="map-container">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3248.4!2d140.3864!3d35.7720!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6022f3f5e15d5b57%3A0x637d7c35e7a3e95a!2z5oiR55Sw5Zu96Zqb56WH5Lqa!5e0!3m2!1sja!2sjp!4v1710000000000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="成田国際空港"></iframe>
+        </div>
+      </div>
+
+      <div id="map-cdg" class="map-panel">
+        <p style="font-size:0.82rem; color:var(--text-medium); margin-bottom:0.75rem;">
+          <i class="fas fa-map-marker-alt" style="color:var(--primary);"></i>
+          パリ・シャルル・ド・ゴール国際空港
+        </p>
+        <div class="map-container">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d21004.5!2d2.5479!3d49.0097!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e624b6e1abe15d%3A0xd07a7ee64d22a5e1!2z44K344e344Gy44Or44O844C344O744S644Zy44S6OeOCooODvOOCq44Or5Zu96Zqb56WH5Lqa!5e0!3m2!1sja!2sjp!4v1710000000001" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="CDG空港"></iframe>
+        </div>
+      </div>
+
+      <div id="map-hotel-paris" class="map-panel">
+        <p style="font-size:0.82rem; color:var(--text-medium); margin-bottom:0.75rem;">
+          <i class="fas fa-map-marker-alt" style="color:var(--primary);"></i>
+          パリ市内・オペラ地区（ホテル周辺）
+        </p>
+        <div class="map-container">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2623.9!2d2.3308!3d48.8703!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e38e01a4a4f%3A0x8e91ea1e8e6e5777!2z44Kq44Oa44Op5pu446Kv44On44K6!5e0!3m2!1sja!2sjp!4v1710000000002" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="パリ・オペラ地区"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- アドバイス -->
+    <section class="observe-fade" style="margin-bottom:2.5rem;">
+      <div class="section-title">
+        <span class="icon">💡</span>
+        <h2>Day 1 のポイント</h2>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:0.85rem;">
+        <div class="alert alert-info">
+          <span class="alert-icon">💶</span>
+          <div><strong>通貨について：</strong>フランス（パリ）の通貨はユーロ（€）です。空港の両替所よりも市内の銀行・ATMの方がレートが良い場合が多いです。クレジットカードはほぼどこでも使えます。</div>
+        </div>
+        <div class="alert alert-warning">
+          <span class="alert-icon">📱</span>
+          <div><strong>SIM・Wi-Fiについて：</strong>海外ローミングの設定をご確認ください。機内モードにしてWi-Fiのみ使用することをおすすめします。ホテルの無料Wi-Fiをご活用ください。</div>
+        </div>
+        <div class="alert alert-success">
+          <span class="alert-icon">🕐</span>
+          <div><strong>時差について：</strong>パリは日本時間より<strong>7時間遅れ</strong>です（サマータイム適用中）。体内時計のリセットのために、到着日はできるだけ現地時間に合わせて行動しましょう。</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ページナビ -->
+    <div class="page-nav-bottom">
+      <a href="route.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> 全体行程へ</a>
+      <a href="itinerary_day2.html" class="btn btn-primary">Day 2 詳細へ <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-logo"><i class="fas fa-paper-plane"></i> Dream Travel</div>
+    <div class="footer-divider"></div>
+    <div>ドリームトラベル株式会社</div>
+    <div style="margin-top:0.4rem;">〒100-0001 東京都千代田区丸の内1-1-1 丸の内ビルディング 10F</div>
+    <div style="margin-top:0.25rem;">TEL: <a href="tel:0312345678">03-1234-5678</a> ／ 営業時間: 平日 9:00〜18:00</div>
+    <div style="margin-top:1.2rem; font-size:0.7rem; opacity:0.4;">© 2026 Dream Travel Co., Ltd. All rights reserved.</div>
+  </footer>
+
+  <script src="js/nav.js"></script>
+  <script src="js/edit-mode.js"></script>
+  <script>
+    function switchMap(id, btn) {
+      document.querySelectorAll('.map-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.map-tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active');
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.06 });
+    document.querySelectorAll('.observe-fade').forEach(el => observer.observe(el));
+    setTimeout(() => document.querySelector('.page-hero')?.classList.add('loaded'), 100);
+  </script>
+</body>
+</html>

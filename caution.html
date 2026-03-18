@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>持ち物・注意事項・事故対応｜旅のしおり</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
+  <style>
+
+    /* ===== caution.html 専用スタイル ===== */
+
+    /* タブナビ */
+    .tab-nav {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      background: var(--bg-light);
+      padding: 0.55rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.65rem 1.1rem;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: transparent;
+      color: var(--text-medium);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s;
+      font-family: var(--font-sans);
+    }
+
+    .tab-btn:hover {
+      background: var(--bg-white);
+      color: var(--primary);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--primary), var(--primary-mid));
+      color: white;
+      box-shadow: var(--shadow-md);
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* 持ち物チェックリスト */
+    .checklist-progress-bar {
+      background: var(--bg-light);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .progress-header h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .progress-count {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .progress-track {
+      background: var(--bg-white);
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--accent-gold));
+      border-radius: 999px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    .checklist-category {
+      margin-bottom: 2rem;
+    }
+
+    .checklist-cat-title {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.7rem 1.1rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-mid));
+      color: white;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 0.85rem;
+    }
+
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 0.55rem;
+    }
+
+    .cl-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: var(--bg-white);
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      transition: all 0.22s;
+      user-select: none;
+    }
+
+    .cl-item:hover { border-color: var(--primary); background: var(--primary-light); }
+
+    .cl-item.checked {
+      border-color: var(--success);
+      background: #f0fdf4;
+    }
+
+    .cl-checkbox {
+      width: 1.15rem;
+      height: 1.15rem;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 0.08rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      transition: all 0.22s;
+      color: transparent;
+    }
+
+    .cl-item.checked .cl-checkbox {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+
+    .cl-text {
+      font-size: 0.87rem;
+      color: var(--text-dark);
+      flex: 1;
+      line-height: 1.45;
+    }
+
+    .cl-text small {
+      display: block;
+      color: var(--text-medium);
+      font-size: 0.73rem;
+      margin-top: 0.12rem;
+    }
+
+    .cl-required {
+      font-size: 0.64rem;
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Travel Tips グリッド */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .tip-card {
+      background: var(--bg-white);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .tip-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .tip-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tip-icon-wrap {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .tip-card-header h3 {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .tip-card ul {
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .tip-card ul li {
+      font-size: 0.84rem;
+      color: var(--text-medium);
+      line-height: 1.55;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .tip-card ul li::before {
+      content: '›';
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* 事故対応フロー */
+    .accident-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .flow-step {
+      display: flex;
+      gap: 1.25rem;
+      align-items: flex-start;
+      position: relative;
+      padding-bottom: 1.75rem;
+    }
+
+    .flow-step:last-child { padding-bottom: 0; }
+
+    .flow-step::before {
+      content: '';
+      position: absolute;
+      left: 1.35rem;
+      top: 2.6rem;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--border), transparent);
+    }
+
+    .flow-step:last-child::before { display: none; }
+
+    .flow-num {
+      width: 2.8rem;
+      height: 2.8rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 900;
+      flex-shrink: 0;
+      font-family: var(--font-display);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .flow-body {
+      background: var(--bg-white);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      flex: 1;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .flow-body h3 {
+      font-family: var(--font-serif);
+      font-size: 0.98rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .flow-body > p {
+      font-size: 0.87rem;
+      color: var(--text-medium);
+      line-height: 1.7;
+      margin-bottom: 0.85rem;
+    }
+
+    .flow-detail {
+      background: var(--bg-light);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .flow-detail li {
+      font-size: 0.82rem;
+      color: var(--text-medium);
+      display: flex;
+      gap: 0.45rem;
+      line-height: 1.5;
+    }
+
+    .flow-detail li::before {
+      content: '→';
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* 緊急連絡先クイック */
+    .quick-emergency {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .emergency-quick-card {
+      border-radius: var(--radius-md);
+      padding: 1rem 1.1rem;
+      border: 1px solid var(--border);
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .emergency-quick-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .emergency-quick-card.red { background: linear-gradient(135deg, #fff5f5, #fee2e2); border-color: #fecaca; }
+    .emergency-quick-card.blue { background: linear-gradient(135deg, #eff6ff, #dbeafe); border-color: #bfdbfe; }
+
+    .eq-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+    .eq-label { font-size: 0.75rem; color: var(--text-medium); margin-bottom: 0.3rem; line-height: 1.4; }
+    .eq-number { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--text-dark); }
+
+    .emergency-quick-card.red .eq-number { color: #b91c1c; }
+    .emergency-quick-card.blue .eq-number { color: #1d4ed8; }
+
+    @media (max-width: 640px) {
+      .tips-grid { grid-template-columns: 1fr; }
+      .checklist-grid { grid-template-columns: 1fr; }
+      .quick-emergency { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .quick-emergency { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ナビゲーション -->
+  <header class="nav-header">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="logo-icon"><i class="fas fa-paper-plane"></i></span>
+        <div>
+          <span>旅のしおり</span>
+          <span class="logo-sub">Dream Travel</span>
+        </div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="メニュー">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav-menu" id="navMenu">
+        <a href="index.html"><span class="nav-icon">🏠</span><span>ホーム</span></a>
+        <a href="route.html"><span class="nav-icon">🗺️</span><span>行程</span></a>
+        <a href="itinerary_day1.html"><span class="nav-icon">📅</span><span>Day 1</span></a>
+        <a href="itinerary_day2.html"><span class="nav-icon">📅</span><span>Day 2</span></a>
+        <a href="caution.html" class="active"><span class="nav-icon">📋</span><span>注意事項</span></a>
+        <a href="company_information.html"><span class="nav-icon">📞</span><span>会社情報</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ヒーロー -->
+  <section class="page-hero" style="min-height:340px;">
+    <div class="page-hero-bg" style="background-image:url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1920&q=80'); background-position:center 30%;"></div>
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <div class="page-hero-eyebrow"><i class="fas fa-clipboard-list"></i> Travel Guide</div>
+      <h1>持ち物・注意事項・緊急対応</h1>
+      <p>旅をより安全で快適に楽しむためのガイド</p>
+      <div class="page-hero-meta">
+        <span class="meta-tag">🎒 持ち物チェックリスト</span>
+        <span class="meta-tag">💡 Travel Tips</span>
+        <span class="meta-tag">🚨 緊急時対応</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- バックパック・旅行イメージ -->
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; height:160px;">
+    <div style="overflow:hidden;">
+      <img src="https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=600&q=80" alt="パッキング" style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
+    </div>
+    <div style="overflow:hidden;">
+      <img src="https://images.unsplash.com/photo-1476984251899-8d7fdfc5c92c?w=600&q=80" alt="旅行" style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
+    </div>
+    <div style="overflow:hidden;">
+      <img src="https://images.unsplash.com/photo-1527856263669-12c3a0af2aa6?w=600&q=80" alt="トラベル" style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
+    </div>
+  </div>
+
+  <main class="main-container">
+
+    <!-- タブナビ -->
+    <div class="tab-nav" role="tablist">
+      <button class="tab-btn active" onclick="switchTab('tab-checklist', this)" role="tab">
+        <i class="fas fa-check-square"></i> 持ち物チェックリスト
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-tips', this)" role="tab">
+        <i class="fas fa-lightbulb"></i> Travel Tips
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-accident', this)" role="tab">
+        <i class="fas fa-exclamation-triangle"></i> 緊急時対応
+      </button>
+    </div>
+
+    <!-- ======== タブ1：持ち物チェックリスト ======== -->
+    <div id="tab-checklist" class="tab-content active">
+
+      <!-- 進捗バー -->
+      <div class="checklist-progress-bar">
+        <div class="progress-header">
+          <h3>📦 パッキング進捗</h3>
+          <span class="progress-count" id="progressText">0 / 0</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressBar"></div>
+        </div>
+      </div>
+
+      <!-- 必需品 -->
+      <div class="checklist-category">
+        <div class="checklist-cat-title">
+          <i class="fas fa-star"></i> 必需品（絶対に忘れずに！）
+        </div>
+        <div class="checklist-grid">
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">
+              パスポート
+              <small>有効期限が帰国日より6ヶ月以上あることを確認</small>
+            </div>
+            <span class="cl-required">必須</span>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">
+              旅行保険証・保険証書
+              <small>緊急時の連絡先を確認しておくこと</small>
+            </div>
+            <span class="cl-required">必須</span>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">
+              航空券（Eチケット控え）
+              <small>スマホの画面表示でもOK</small>
+            </div>
+            <span class="cl-required">必須</span>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">
+              現金（ユーロ）
+              <small>€100〜200程度が目安</small>
+            </div>
+            <span class="cl-required">必須</span>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">
+              クレジットカード（VISAまたはMastercard）
+              <small>2枚以上あると安心。暗証番号を事前に確認</small>
+            </div>
+            <span class="cl-required">必須</span>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">
+              スマートフォン・充電器
+              <small>事前にGoogle翻訳・マップのオフラインDLを</small>
+            </div>
+            <span class="cl-required">必須</span>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">
+              この旅のしおり（旅行書類）
+              <small>本サイトをスマホにブックマークしておくと便利</small>
+            </div>
+            <span class="cl-required">必須</span>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">
+              海外用変換プラグ（Cタイプ）
+              <small>ヨーロッパは2ピンの丸型プラグ</small>
+            </div>
+            <span class="cl-required">必須</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 衣類 -->
+      <div class="checklist-category">
+        <div class="checklist-cat-title">
+          <i class="fas fa-tshirt"></i> 衣類・シューズ
+        </div>
+        <div class="checklist-grid">
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">トップス（7〜8日分）<small>洗濯乾燥機使用可能なホテルあり</small></div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">パンツ・スカート（4〜5日分）</div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">歩きやすいスニーカー（必須）<small>石畳が多いため、ヒールは避けること</small></div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">ジャケット・カーディガン<small>朝晩は肌寒いことがある</small></div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">
+              肩・膝を覆う衣類（スカーフ等）
+              <small>バチカン・教会入場に必要</small>
+            </div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">下着・靴下（8日分）<small>圧縮袋を使うとスーツケースが節約できる</small></div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">パジャマ</div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">折りたたみ傘<small>5月のパリは雨が多い</small></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 衛生用品 -->
+      <div class="checklist-category">
+        <div class="checklist-cat-title">
+          <i class="fas fa-pump-soap"></i> 衛生用品・医薬品
+        </div>
+        <div class="checklist-grid">
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">常備薬（胃腸薬・頭痛薬・風邪薬）<small>海外では入手しにくい場合も</small></div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">絆創膏・消毒液</div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">歯ブラシ・歯磨き粉</div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">洗顔料・化粧品<small>機内持ち込みは100ml以下の容器に</small></div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">日焼け止め<small>SPF 30以上を推奨</small></div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">ウェットティッシュ・ポケットティッシュ<small>有料トイレ対策にも</small></div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">マスク（数枚）</div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">虫除けスプレー（春〜夏）</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 便利グッズ -->
+      <div class="checklist-category">
+        <div class="checklist-cat-title">
+          <i class="fas fa-magic"></i> あると便利なもの
+        </div>
+        <div class="checklist-grid">
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">モバイルバッテリー<small>終日観光時のスマホ充電に</small></div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">カメラ・SDカード<small>スマホカメラでも十分</small></div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">エコバッグ<small>欧州ではレジ袋が有料</small></div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">圧縮袋<small>帰りはお土産でかさが増える</small></div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">筆記用具・メモ帳</div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">南京錠（スーツケース用）</div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">ウエストポーチ・貴重品入れ<small>スリ対策に効果的</small></div>
+          </div>
+          <div class="cl-item" onclick="toggleCheck(this)">
+            <div class="cl-checkbox"></div>
+            <div class="cl-text">機内用スリッパ・アイマスク・耳栓</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ======== タブ2：Travel Tips ======== -->
+    <div id="tab-tips" class="tab-content">
+
+      <div class="alert alert-info" style="margin-bottom:1.75rem;">
+        <span class="alert-icon">✈️</span>
+        <div>添乗員の経験から厳選した<strong>現地で役立つ情報</strong>をまとめました。ぜひ出発前にご一読ください！</div>
+      </div>
+
+      <div class="tips-grid">
+
+        <div class="tip-card">
+          <div class="tip-card-header">
+            <div class="tip-icon-wrap" style="background:#dbeafe;">💶</div>
+            <h3>通貨・お金</h3>
+          </div>
+          <ul>
+            <li>3カ国共通でユーロ（€）が使えます</li>
+            <li>クレジットカードがほぼ全店舗で使用可能</li>
+            <li>現金は緊急時用に€100〜200程度で十分</li>
+            <li>両替は空港より市内ATMが有利なレートの場合が多い</li>
+            <li>チップは飲食店でお釣りを残す程度（強制ではない）</li>
+          </ul>
+        </div>
+
+        <div class="tip-card">
+          <div class="tip-card-header">
+            <div class="tip-icon-wrap" style="background:#dcfce7;">🔒</div>
+            <h3>治安・スリ対策</h3>
+          </div>
+          <ul>
+            <li>パリ・バルセロナはスリが多い。貴重品は必ず前に抱えて</li>
+            <li>スマホは取り出したらすぐしまう習慣を</li>
+            <li>ウエストポーチやチャックのあるバッグが安心</li>
+            <li>レストランでバッグは膝の上に置く</li>
+            <li>観光地での「無料プレゼント」には応じないこと</li>
+          </ul>
+        </div>
+
+        <div class="tip-card">
+          <div class="tip-card-header">
+            <div class="tip-icon-wrap" style="background:#fce7f3;">📱</div>
+            <h3>スマホ・通信</h3>
+          </div>
+          <ul>
+            <li>海外ローミングは高額。機内モード+Wi-Fiが節約になる</li>
+            <li>Google翻訳のオフライン辞書を事前にDL</li>
+            <li>Google マップのオフラインマップも事前DLがおすすめ</li>
+            <li>ホテルのWi-Fiパスワードはチェックイン時に確認</li>
+            <li>緊急連絡先はスクリーンショットで保存しておくと安心</li>
+          </ul>
+        </div>
+
+        <div class="tip-card">
+          <div class="tip-card-header">
+            <div class="tip-icon-wrap" style="background:#fef3c7;">🍽️</div>
+            <h3>食事・飲食</h3>
+          </div>
+          <ul>
+            <li>欧州のレストランは食事のペースがゆっくり</li>
+            <li>水は「スティル（炭酸なし）」を頼むと安心</li>
+            <li>ランチは「プラ・ドゥ・ジュール」がお得でボリューム大</li>
+            <li>食物アレルギーは添乗員に事前にお知らせください</li>
+            <li>ハラール・ベジタリアンが必要な場合も要相談</li>
+          </ul>
+        </div>
+
+        <div class="tip-card">
+          <div class="tip-card-header">
+            <div class="tip-icon-wrap" style="background:#f0fdf4;">👗</div>
+            <h3>服装・マナー</h3>
+          </div>
+          <ul>
+            <li>教会・大聖堂内では肌の露出は控えめに</li>
+            <li>バチカンでは半袖・ショートパンツは入場不可</li>
+            <li>高級レストランではドレスコードがある場合も</li>
+            <li>石畳が多いため、ヒールより歩きやすいシューズを</li>
+            <li>5月は日中暖かく、朝晩は肌寒い。重ね着が便利</li>
+          </ul>
+        </div>
+
+        <div class="tip-card">
+          <div class="tip-card-header">
+            <div class="tip-icon-wrap" style="background:#f3e8ff;">🚻</div>
+            <h3>トイレ事情</h3>
+          </div>
+          <ul>
+            <li>有料トイレが多い（€0.5〜1程度）。小銭の用意を</li>
+            <li>観光地内・デパート・マクドナルドなど店舗利用がスムーズ</li>
+            <li>カフェで1杯頼むと快適に利用できることも</li>
+            <li>携帯ウェットティッシュがあると便利</li>
+            <li>添乗員が都度トイレの場所をご案内します</li>
+          </ul>
+        </div>
+
+        <div class="tip-card">
+          <div class="tip-card-header">
+            <div class="tip-icon-wrap" style="background:#fff7ed;">🛒</div>
+            <h3>お買い物</h3>
+          </div>
+          <ul>
+            <li>免税（タックスリファンド）は€100以上の購入が対象</li>
+            <li>免税書類はお店で発行してもらい、空港で手続きを</li>
+            <li>パリ：マドレーヌ広場周辺のデパートが充実</li>
+            <li>ローマ：コロッセオ周辺のお土産屋さんは値段交渉も可</li>
+            <li>バルセロナ：カタルーニャ広場周辺のEl Corte Inglésがおすすめ</li>
+          </ul>
+        </div>
+
+        <div class="tip-card">
+          <div class="tip-card-header">
+            <div class="tip-icon-wrap" style="background:#fef9c3;">⚡</div>
+            <h3>電気・コンセント</h3>
+          </div>
+          <ul>
+            <li>ヨーロッパの電圧は220V（日本は100V）</li>
+            <li>現代の充電器は多くが対応（確認推奨）</li>
+            <li>変換プラグ（Cタイプ）が必要</li>
+            <li>ドライヤーはホテルに備え付けあり</li>
+            <li>コンセントが足りない場合は延長コードがあると便利</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ======== タブ3：事故・緊急時対応 ======== -->
+    <div id="tab-accident" class="tab-content">
+
+      <div class="alert alert-danger" style="margin-bottom:1.75rem;">
+        <span class="alert-icon">🚨</span>
+        <div>
+          <strong>緊急時はまず添乗員にご連絡ください。</strong><br>
+          添乗員が24時間対応します。緊急時でも落ち着いて行動することが最優先です。
+        </div>
+      </div>
+
+      <!-- 緊急連絡先クイック -->
+      <div style="margin-bottom:2.5rem;">
+        <div class="section-title">
+          <span class="icon">📞</span>
+          <h2>緊急連絡先（クイック）</h2>
+        </div>
+        <div class="quick-emergency">
+          <div class="emergency-quick-card red">
+            <div class="eq-icon">🇫🇷</div>
+            <div class="eq-label">フランス 緊急（警察・救急・消防）</div>
+            <div class="eq-number">112</div>
+          </div>
+          <div class="emergency-quick-card red">
+            <div class="eq-icon">🇮🇹</div>
+            <div class="eq-label">イタリア 緊急（警察・救急）</div>
+            <div class="eq-number">112</div>
+          </div>
+          <div class="emergency-quick-card red">
+            <div class="eq-icon">🇪🇸</div>
+            <div class="eq-label">スペイン 緊急（警察・救急）</div>
+            <div class="eq-number">112</div>
+          </div>
+          <div class="emergency-quick-card blue">
+            <div class="eq-icon">📱</div>
+            <div class="eq-label">添乗員・鈴木美咲（24時間）</div>
+            <div class="eq-number">+81-90-1234-5678</div>
+          </div>
+          <div class="emergency-quick-card blue">
+            <div class="eq-icon">🏢</div>
+            <div class="eq-label">ドリームトラベル 緊急デスク</div>
+            <div class="eq-number">+81-3-1234-5678</div>
+          </div>
+          <div class="emergency-quick-card blue">
+            <div class="eq-icon">🏥</div>
+            <div class="eq-label">損保ジャパン 海外緊急コール</div>
+            <div class="eq-number">+81-3-5201-1818</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 事故発生時の対応フロー -->
+      <div style="margin-bottom:2.5rem;">
+        <div class="section-title">
+          <span class="icon">🔄</span>
+          <h2>事故・トラブル発生時の対応フロー</h2>
+        </div>
+        <div class="accident-flow">
+
+          <div class="flow-step">
+            <div class="flow-num" style="background:#fee2e2; color:#991b1b;">1</div>
+            <div class="flow-body">
+              <h3 style="color:#991b1b;">まず安全を確保する</h3>
+              <p>パニックにならず、まず自分と周囲の安全を確認します。危険な場所からは速やかに離れ、安全な場所に移動してください。</p>
+              <div class="flow-detail">
+                <li>事故・犯罪現場からは速やかに離れる</li>
+                <li>怪我がある場合は動かさず安静に</li>
+                <li>周囲の人に助けを求める（「Help!」「Au secours!」）</li>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-num" style="background:#fef3c7; color:#92400e;">2</div>
+            <div class="flow-body">
+              <h3 style="color:#92400e;">添乗員または緊急サービスに連絡</h3>
+              <p>安全を確保したら、すぐに添乗員・鈴木美咲にご連絡ください。命に関わる緊急事態の場合は「112」（全欧州共通）に電話してください。</p>
+              <div class="flow-detail">
+                <li>添乗員携帯：+81-90-1234-5678</li>
+                <li>欧州緊急番号（警察・救急・消防）：112</li>
+                <li>ホテルのフロントに状況を伝える</li>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-num" style="background:#dbeafe; color:#1e40af;">3</div>
+            <div class="flow-body">
+              <h3 style="color:#1e40af;">状況の記録・証拠保全</h3>
+              <p>保険請求や警察への届け出のために、事故・盗難等の状況を記録しておくことが重要です。</p>
+              <div class="flow-detail">
+                <li>スマホで現場・被害品・状況を撮影</li>
+                <li>目撃者がいれば氏名・連絡先を確認</li>
+                <li>いつ・どこで・何が起きたかをメモ</li>
+                <li>紛失・盗難の場合は何を失ったか記録</li>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-num" style="background:#d1fae5; color:#065f46;">4</div>
+            <div class="flow-body">
+              <h3 style="color:#065f46;">警察への届け出（必要な場合）</h3>
+              <p>盗難・犯罪被害に遭った場合は、保険請求のために現地警察への届け出（被害届）が必要です。添乗員が同行・サポートします。</p>
+              <div class="flow-detail">
+                <li>パリ警察（Police Nationale）：17</li>
+                <li>ローマ警察（Carabinieri）：112</li>
+                <li>バルセロナ警察（Mossos d'Esquadra）：112</li>
+                <li>「Police Report」（被害届）の受理番号を必ず控える</li>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-num" style="background:#f3e8ff; color:#6b21a8;">5</div>
+            <div class="flow-body">
+              <h3 style="color:#6b21a8;">旅行保険の活用</h3>
+              <p>医療費・盗難・旅行中止など各種補償が受けられます。保険会社の海外緊急デスクに電話し、指示を仰いでください。</p>
+              <div class="flow-detail">
+                <li>損保ジャパン 海外緊急コール：+81-3-5201-1818</li>
+                <li>医療機関に行く前に保険会社への連絡を推奨</li>
+                <li>領収書・診断書・警察レポートを必ず保管</li>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-num" style="background:#fce7f3; color:#9d174d;">6</div>
+            <div class="flow-body">
+              <h3 style="color:#9d174d;">パスポート・航空券紛失の場合</h3>
+              <p>パスポートを紛失した場合は、現地の日本大使館・領事館へ連絡してください。添乗員がすべての手続きをサポートします。</p>
+              <div class="flow-detail">
+                <li>在フランス日本大使館：+33-1-4888-6200</li>
+                <li>在イタリア日本大使館：+39-06-487991</li>
+                <li>在スペイン日本大使館：+34-91-590-7600</li>
+                <li>緊急渡航書の発行申請が必要</li>
+                <li>事前にパスポートのコピーをスマホに保存しておくこと</li>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- シナリオ別 -->
+      <div style="margin-bottom:2rem;">
+        <div class="section-title">
+          <span class="icon">📌</span>
+          <h2>シナリオ別：よくあるトラブル対応</h2>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:0.85rem;">
+          <div class="alert alert-warning">
+            <span class="alert-icon">🤒</span>
+            <div><strong>体調不良・怪我の場合：</strong>まず添乗員に報告。軽症なら市販薬を使用。症状が重い場合は保険会社に連絡後、病院へ。医療費の領収書・診断書は必ず保管してください。</div>
+          </div>
+          <div class="alert alert-danger">
+            <span class="alert-icon">👜</span>
+            <div><strong>スリ・盗難にあった場合：</strong>追いかけないこと。安全な場所に移動後、添乗員と保険会社に連絡。現地警察で被害届を提出してください。</div>
+          </div>
+          <div class="alert alert-warning">
+            <span class="alert-icon">🚌</span>
+            <div><strong>バス・グループとはぐれた場合：</strong>その場で待機か、最寄りの目印（観光地・ホテル）に移動。添乗員の携帯（+81-90-1234-5678）に電話してください。</div>
+          </div>
+          <div class="alert alert-info">
+            <span class="alert-icon">✈️</span>
+            <div><strong>フライト遅延・欠航の場合：</strong>添乗員が航空会社と交渉します。まず添乗員に連絡してください。旅行保険の「フライト遅延補償」が適用される場合があります。</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ページナビ -->
+    <div class="page-nav-bottom">
+      <a href="itinerary_day2.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Day 2へ</a>
+      <a href="company_information.html" class="btn btn-primary">会社情報・連絡先へ <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-logo"><i class="fas fa-paper-plane"></i> Dream Travel</div>
+    <div class="footer-divider"></div>
+    <div>ドリームトラベル株式会社</div>
+    <div style="margin-top:0.4rem;">〒100-0001 東京都千代田区丸の内1-1-1 丸の内ビルディング 10F</div>
+    <div style="margin-top:0.25rem;">TEL: <a href="tel:0312345678">03-1234-5678</a> ／ 営業時間: 平日 9:00〜18:00</div>
+    <div style="margin-top:1.2rem; font-size:0.7rem; opacity:0.4;">© 2026 Dream Travel Co., Ltd. All rights reserved.</div>
+  </footer>
+
+  <script src="js/nav.js"></script>
+  <script src="js/edit-mode.js"></script>
+  <script>
+    function switchTab(id, btn) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    function toggleCheck(el) {
+      el.classList.toggle('checked');
+      el.querySelector('.cl-checkbox').innerHTML = el.classList.contains('checked') ? '✓' : '';
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const all = document.querySelectorAll('.cl-item');
+      const done = document.querySelectorAll('.cl-item.checked').length;
+      const total = all.length;
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+      document.getElementById('progressBar').style.width = pct + '%';
+      document.getElementById('progressText').textContent = done + ' / ' + total;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.06 });
+    document.querySelectorAll('.observe-fade').forEach(el => observer.observe(el));
+    setTimeout(() => document.querySelector('.page-hero')?.classList.add('loaded'), 100);
+
+    updateProgress();
+  </script>
+</body>
+</html>

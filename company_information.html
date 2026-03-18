@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>会社情報・SNS・緊急連絡先｜旅のしおり</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
+  <style>
+
+    /* ===== company_information 専用スタイル ===== */
+
+    /* 緊急連絡先セクション */
+    .emergency-section {
+      background: linear-gradient(135deg, #7f1d1d, #dc2626);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(220,38,38,0.3);
+    }
+
+    .emergency-section::before {
+      content: '🚨';
+      position: absolute;
+      right: 1.5rem;
+      top: 1rem;
+      font-size: 6rem;
+      opacity: 0.08;
+    }
+
+    .emergency-section::after {
+      content: '';
+      position: absolute;
+      bottom: -40%;
+      left: -10%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(255,255,255,0.05), transparent 70%);
+      border-radius: 50%;
+    }
+
+    .emergency-section h2 {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .emergency-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.85rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .em-card {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: var(--radius-md);
+      padding: 1.1rem 1.25rem;
+      backdrop-filter: blur(12px);
+      transition: background 0.25s;
+    }
+
+    .em-card:hover { background: rgba(255,255,255,0.18); }
+
+    .em-title {
+      font-size: 0.7rem;
+      opacity: 0.75;
+      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .em-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .em-number {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .em-number a { color: white; text-decoration: underline; text-underline-offset: 3px; }
+
+    .em-note {
+      font-size: 0.72rem;
+      opacity: 0.7;
+      margin-top: 0.35rem;
+    }
+
+    /* 担当者カード */
+    .staff-card {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .staff-avatar-section {
+      background: linear-gradient(160deg, var(--primary), var(--primary-mid));
+      color: white;
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 200px;
+      flex: 0 0 200px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .staff-avatar-section::after {
+      content: '✈';
+      position: absolute;
+      bottom: -10px;
+      right: -5px;
+      font-size: 6rem;
+      opacity: 0.07;
+    }
+
+    .staff-avatar {
+      width: 90px;
+      height: 90px;
+      background: rgba(255,255,255,0.18);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      margin-bottom: 0.85rem;
+      border: 3px solid rgba(232,184,75,0.5);
+      box-shadow: 0 0 0 6px rgba(232,184,75,0.12);
+    }
+
+    .staff-title { font-size: 0.7rem; opacity: 0.75; margin-bottom: 0.25rem; letter-spacing: 0.08em; }
+    .staff-name { font-size: 1.15rem; font-weight: 700; font-family: var(--font-serif); }
+
+    .staff-info-section { padding: 1.75rem; flex: 1; }
+
+    .staff-info-section h3 {
+      font-size: 0.88rem;
+      color: var(--text-medium);
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+    }
+
+    .staff-contact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .staff-contact-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      font-size: 0.87rem;
+      color: var(--text-medium);
+    }
+
+    .staff-contact-list li i {
+      color: var(--primary);
+      margin-top: 0.18rem;
+      width: 14px;
+      flex-shrink: 0;
+    }
+
+    /* 会社情報グリッド */
+    .company-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .company-info-item {
+      background: var(--bg-light);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
+      border-left: 3px solid var(--accent);
+    }
+
+    .ci-label {
+      font-size: 0.7rem;
+      color: var(--text-light);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .ci-value {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      font-weight: 500;
+    }
+
+    /* 大使館テーブル */
+    .local-emergency-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      min-width: 560px;
+    }
+
+    .local-emergency-table th {
+      background: linear-gradient(135deg, var(--primary), var(--primary-mid));
+      color: white;
+      padding: 0.85rem 1rem;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    .local-emergency-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .local-emergency-table tr:last-child td { border-bottom: none; }
+    .local-emergency-table tr:nth-child(even) td { background: var(--bg-light); }
+    .local-emergency-table tr:hover td { background: var(--accent-light); transition: background 0.2s; }
+    .local-emergency-table a { color: var(--primary); font-weight: 600; }
+
+    .em-num-big {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #b91c1c;
+    }
+
+    /* SNSカード */
+    .campaign-banner {
+      background: linear-gradient(135deg, var(--primary), var(--primary-mid));
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: 1.75rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .cb-icon { font-size: 2.5rem; flex-shrink: 0; }
+
+    .cb-text h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin-bottom: 0.35rem; }
+    .cb-text p { font-size: 0.84rem; opacity: 0.85; line-height: 1.6; }
+    .cb-text strong { color: var(--accent-gold); }
+
+    .sns-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .sns-card {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    .sns-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .sns-card-header {
+      padding: 1.25rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sns-card-header::after {
+      content: '';
+      position: absolute;
+      right: -20px;
+      top: -20px;
+      width: 80px;
+      height: 80px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+
+    .sns-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .sns-name { font-size: 0.95rem; font-weight: 700; }
+    .sns-handle { font-size: 0.75rem; opacity: 0.8; }
+
+    .sns-card-body { padding: 1.1rem; background: var(--bg-white); }
+
+    .sns-card-body p {
+      font-size: 0.83rem;
+      color: var(--text-medium);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .sns-follow-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: white;
+      padding: 0.5rem 1.2rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      transition: all 0.25s;
+      letter-spacing: 0.04em;
+    }
+
+    .sns-follow-btn:hover {
+      opacity: 0.85;
+      transform: scale(1.04);
+      color: white;
+    }
+
+    /* オリジナルグッズ */
+    .goods-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .goods-card {
+      background: var(--bg-white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    .goods-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .goods-img {
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      transition: transform 0.4s ease;
+    }
+
+    .goods-card:hover .goods-img { transform: scale(1.08); }
+
+    .goods-info { padding: 1rem; }
+
+    .goods-info h4 {
+      font-family: var(--font-serif);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 0.4rem;
+      line-height: 1.4;
+    }
+
+    .goods-price {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.35rem;
+    }
+
+    .goods-info p {
+      font-size: 0.75rem;
+      color: var(--text-medium);
+      line-height: 1.45;
+      margin-bottom: 0.4rem;
+    }
+
+    .goods-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: var(--accent-light);
+      color: #7a5a10;
+      font-weight: 700;
+    }
+
+    .store-banner {
+      background: linear-gradient(135deg, var(--accent), var(--accent-gold));
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow-gold);
+    }
+
+    .banner-text h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: white; margin-bottom: 0.35rem; }
+    .banner-text p { font-size: 0.83rem; color: rgba(255,255,255,0.85); }
+
+    .banner-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: white;
+      color: var(--accent);
+      padding: 0.7rem 1.5rem;
+      border-radius: 999px;
+      font-size: 0.87rem;
+      font-weight: 700;
+      transition: all 0.25s;
+      white-space: nowrap;
+    }
+
+    .banner-btn:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      .staff-card { flex-direction: column; }
+      .staff-avatar-section { flex: none; min-width: unset; flex-direction: row; gap: 1.25rem; padding: 1.5rem; }
+      .sns-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .emergency-cards { grid-template-columns: 1fr 1fr; }
+      .goods-grid { grid-template-columns: 1fr 1fr; }
+      .sns-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .emergency-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ナビゲーション -->
+  <header class="nav-header">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="logo-icon"><i class="fas fa-paper-plane"></i></span>
+        <div>
+          <span>旅のしおり</span>
+          <span class="logo-sub">Dream Travel</span>
+        </div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="メニュー">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="nav-menu" id="navMenu">
+        <a href="index.html"><span class="nav-icon">🏠</span><span>ホーム</span></a>
+        <a href="route.html"><span class="nav-icon">🗺️</span><span>行程</span></a>
+        <a href="itinerary_day1.html"><span class="nav-icon">📅</span><span>Day 1</span></a>
+        <a href="itinerary_day2.html"><span class="nav-icon">📅</span><span>Day 2</span></a>
+        <a href="caution.html"><span class="nav-icon">📋</span><span>注意事項</span></a>
+        <a href="company_information.html" class="active"><span class="nav-icon">📞</span><span>会社情報</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ヒーロー -->
+  <section class="page-hero loaded" style="min-height:340px;">
+    <div class="page-hero-bg" style="background-image:url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=80'); background-position:center;"></div>
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <div class="page-hero-eyebrow"><i class="fas fa-building"></i> Company Information</div>
+      <h1>会社情報・緊急連絡先</h1>
+      <p>MOTO TOURS JAPAN株式会社</p>
+      <div class="page-hero-meta">
+        <span class="meta-tag">📞 緊急連絡先</span>
+        <span class="meta-tag">👤 担当添乗員</span>
+        <span class="meta-tag">📲 公式SNS</span>
+        <span class="meta-tag">🛍️ オリジナルグッズ</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ビジュアルバー -->
+  <div style="height:140px; overflow:hidden; display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:4px;">
+    <div style="overflow:hidden;"><img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=400&q=80" alt="パリ" style="width:100%;height:100%;object-fit:cover;" loading="lazy"/></div>
+    <div style="overflow:hidden;"><img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=400&q=80" alt="ローマ" style="width:100%;height:100%;object-fit:cover;" loading="lazy"/></div>
+    <div style="overflow:hidden;"><img src="https://images.unsplash.com/photo-1583422409516-2895a77efded?w=400&q=80" alt="バルセロナ" style="width:100%;height:100%;object-fit:cover;" loading="lazy"/></div>
+    <div style="overflow:hidden; background:linear-gradient(135deg,var(--primary),var(--primary-mid)); display:flex; align-items:center; justify-content:center; color:white; text-align:center; padding:1rem;">
+      <div><div style="font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700;">Dream Travel</div><div style="font-size:0.72rem; opacity:0.8; margin-top:0.3rem;">夢の旅を、現実に。</div></div>
+    </div>
+  </div>
+
+  <main class="main-container">
+
+    <!-- ===== 緊急連絡先（一番上） ===== -->
+    <section class="observe-fade" style="margin-bottom:2.5rem;">
+      <div class="emergency-section">
+        <h2><i class="fas fa-exclamation-triangle"></i> 緊急連絡先</h2>
+        <div class="emergency-cards">
+          <div class="em-card">
+            <div class="em-title">📱 添乗員（24時間対応）</div>
+            <div class="em-name">🙋 鈴木 美咲</div>
+            <div class="em-number"><a href="tel:+819012345678">+81-90-1234-5678</a></div>
+            <div class="em-note">旅行中は24時間対応いたします</div>
+          </div>
+          <div class="em-card">
+            <div class="em-title">🏢 弊社 緊急デスク</div>
+            <div class="em-name">ドリームトラベル 緊急窓口</div>
+            <div class="em-number"><a href="tel:+81312345678">+81-3-1234-5678</a></div>
+            <div class="em-note">24時間・年中無休対応</div>
+          </div>
+          <div class="em-card">
+            <div class="em-title">🏥 保険会社（海外緊急）</div>
+            <div class="em-name">損保ジャパン 海外緊急コール</div>
+            <div class="em-number"><a href="tel:+81352011818">+81-3-5201-1818</a></div>
+            <div class="em-note">24時間・コレクトコール可</div>
+          </div>
+          <div class="em-card">
+            <div class="em-title">🇪🇺 ヨーロッパ緊急番号（全欧州共通）</div>
+            <div class="em-name">警察・救急・消防</div>
+            <div class="em-number"><a href="tel:112">112</a></div>
+            <div class="em-note">フランス・イタリア・スペイン共通</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 担当添乗員 ===== -->
+    <section class="observe-fade" style="margin-bottom:2.5rem;">
+      <div class="section-title">
+        <span class="icon">👤</span>
+        <h2>担当添乗員</h2>
+      </div>
+      <div class="staff-card">
+        <div class="staff-avatar-section">
+          <div class="staff-avatar">👩</div>
+          <div class="staff-title">担当添乗員</div>
+          <div class="staff-name">鈴木 美咲</div>
+        </div>
+        <div class="staff-info-section">
+          <h3>ヨーロッパ担当 シニアコンシェルジュ ／ 通訳士（英語・フランス語）</h3>
+          <ul class="staff-contact-list">
+            <li><i class="fas fa-phone"></i><span>携帯：<a href="tel:+819012345678">+81-90-1234-5678</a>（旅行中24時間対応）</span></li>
+            <li><i class="fas fa-envelope"></i><span>メール：<a href="mailto:m.suzuki@dreamtravel.co.jp">m.suzuki@dreamtravel.co.jp</a></span></li>
+            <li><i class="fas fa-language"></i><span>対応言語：日本語・英語・フランス語</span></li>
+            <li><i class="fas fa-star"></i><span>ヨーロッパ添乗実績：150回以上</span></li>
+            <li><i class="fas fa-certificate"></i><span>総合旅行業務取扱管理者・通訳案内士（英語・フランス語）</span></li>
+            <li><i class="fas fa-comment-alt"></i><span>「どんな小さなことでもお気軽にご相談ください。楽しい旅のサポートが私の仕事です！」</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 弊社情報 ===== -->
+    <section class="observe-fade" style="margin-bottom:2.5rem;">
+      <div class="section-title">
+        <span class="icon">🏢</span>
+        <h2>弊社（ドリームトラベル株式会社）について</h2>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div style="display:flex; align-items:center; gap:1.25rem; margin-bottom:1.5rem;">
+            <div style="font-size:3.5rem; filter:drop-shadow(0 4px 8px rgba(26,58,92,0.15));">✈️</div>
+            <div>
+              <div style="font-family:var(--font-serif); font-size:1.4rem; font-weight:700; color:var(--primary);">ドリームトラベル株式会社</div>
+              <div style="font-size:0.82rem; color:var(--text-medium); margin-top:0.25rem; letter-spacing:0.05em;">Dream Travel Co., Ltd.</div>
+            </div>
+          </div>
+          <p style="font-size:0.88rem; color:var(--text-medium); line-height:1.9; margin-bottom:1.5rem; padding:1.25rem; background:var(--bg-light); border-radius:var(--radius-sm); border-left:3px solid var(--accent);">
+            1985年創業。「夢の旅を、現実に。」をモットーに、世界100カ国以上への旅行を企画・提供してまいりました。特にヨーロッパ・アジア方面に強く、毎年10,000名以上のお客様をご案内しています。お客様の感動と笑顔が私たちの原動力です。
+          </p>
+          <div class="company-info-grid">
+            <div class="company-info-item">
+              <div class="ci-label"><i class="fas fa-building"></i> 会社名</div>
+              <div class="ci-value">ドリームトラベル株式会社</div>
+            </div>
+            <div class="company-info-item">
+              <div class="ci-label"><i class="fas fa-map-marker-alt"></i> 所在地</div>
+              <div class="ci-value">〒100-0001 東京都千代田区丸の内1-1-1 丸の内ビルディング 10F</div>
+            </div>
+            <div class="company-info-item">
+              <div class="ci-label"><i class="fas fa-phone"></i> 代表電話</div>
+              <div class="ci-value"><a href="tel:0312345678" style="color:var(--primary); font-weight:600;">03-1234-5678</a></div>
+            </div>
+            <div class="company-info-item">
+              <div class="ci-label"><i class="fas fa-envelope"></i> メール</div>
+              <div class="ci-value"><a href="mailto:info@dreamtravel.co.jp" style="color:var(--primary);">info@dreamtravel.co.jp</a></div>
+            </div>
+            <div class="company-info-item">
+              <div class="ci-label"><i class="fas fa-clock"></i> 営業時間</div>
+              <div class="ci-value">平日 9:00〜18:00<br><small style="color:var(--text-medium);">（土日祝・年末年始は休業）</small></div>
+            </div>
+            <div class="company-info-item">
+              <div class="ci-label"><i class="fas fa-id-card"></i> 観光庁長官登録</div>
+              <div class="ci-value">第2-1234号</div>
+            </div>
+            <div class="company-info-item">
+              <div class="ci-label"><i class="fas fa-shield-alt"></i> JATA加盟</div>
+              <div class="ci-value">一般社団法人 日本旅行業協会加盟</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 現地の日本大使館・緊急番号 ===== -->
+    <section class="observe-fade" style="margin-bottom:2.5rem;">
+      <div class="section-title">
+        <span class="icon">🏛️</span>
+        <h2>現地の日本大使館・緊急番号一覧</h2>
+      </div>
+      <div style="overflow-x:auto; border-radius:var(--radius-md); box-shadow:var(--shadow-md);">
+        <table class="local-emergency-table">
+          <thead>
+            <tr>
+              <th>国・都市</th>
+              <th>緊急番号（警察・救急）</th>
+              <th>在外日本大使館</th>
+              <th>住所</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="国・都市"><strong>🇫🇷 フランス・パリ</strong></td>
+              <td data-label="緊急番号"><span class="em-num-big">112 / 17</span><br><small style="color:var(--text-medium);">112: 共通 ／ 17: 警察</small></td>
+              <td data-label="大使館">在フランス日本国大使館<br><a href="tel:+33148886200">+33-1-4888-6200</a></td>
+              <td data-label="住所">7 Avenue Hoche, 75008 Paris</td>
+            </tr>
+            <tr>
+              <td data-label="国・都市"><strong>🇮🇹 イタリア・ローマ</strong></td>
+              <td data-label="緊急番号"><span class="em-num-big">112 / 113</span><br><small style="color:var(--text-medium);">112: 共通 ／ 113: 警察</small></td>
+              <td data-label="大使館">在イタリア日本国大使館<br><a href="tel:+390648799">+39-06-487991</a></td>
+              <td data-label="住所">Via Quintino Sella 60, 00187 Roma</td>
+            </tr>
+            <tr>
+              <td data-label="国・都市"><strong>🇪🇸 スペイン・バルセロナ</strong></td>
+              <td data-label="緊急番号"><span class="em-num-big">112 / 091</span><br><small style="color:var(--text-medium);">112: 共通 ／ 091: 国家警察</small></td>
+              <td data-label="大使館">在スペイン日本国大使館<br><a href="tel:+34915907600">+34-91-590-7600</a></td>
+              <td data-label="住所">C. de Serrano, 109, 28006 Madrid</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== 公式SNS ===== -->
+    <section class="observe-fade" style="margin-bottom:2.5rem;">
+      <div class="section-title">
+        <span class="icon">📲</span>
+        <h2>公式SNS・フォローしてください！</h2>
+      </div>
+
+      <div class="campaign-banner">
+        <div class="cb-icon">📸</div>
+        <div class="cb-text">
+          <h3>旅の写真をシェアしてください！</h3>
+          <p>SNSに旅の写真を投稿の際は <strong>#ドリームトラベル</strong> <strong>#夢のヨーロッパ旅</strong> のタグをつけて投稿してください。弊社の公式アカウントでリポストさせていただきます！</p>
+        </div>
+      </div>
+
+      <div class="sns-grid">
+        <div class="sns-card">
+          <div class="sns-card-header" style="background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);">
+            <div class="sns-icon">📸</div>
+            <div>
+              <div class="sns-name">Instagram</div>
+              <div class="sns-handle">@dreamtravel_official</div>
+            </div>
+          </div>
+          <div class="sns-card-body">
+            <p>世界各地の絶景写真・旅行情報を毎日更新中！旅先で撮った写真もぜひシェアしてください📷</p>
+            <a href="#" class="sns-follow-btn" style="background: linear-gradient(135deg, #833ab4, #fd1d1d);">
+              <i class="fab fa-instagram"></i> フォローする
+            </a>
+          </div>
+        </div>
+
+        <div class="sns-card">
+          <div class="sns-card-header" style="background: linear-gradient(135deg, #1877f2, #0d62d3);">
+            <div class="sns-icon">👥</div>
+            <div>
+              <div class="sns-name">Facebook</div>
+              <div class="sns-handle">DreamTravelJapan</div>
+            </div>
+          </div>
+          <div class="sns-card-body">
+            <p>ツアー情報・最新キャンペーン・旅行情報を発信中！イベントの告知もFacebookで行っています。</p>
+            <a href="#" class="sns-follow-btn" style="background: #1877f2;">
+              <i class="fab fa-facebook-f"></i> いいね！する
+            </a>
+          </div>
+        </div>
+
+        <div class="sns-card">
+          <div class="sns-card-header" style="background: linear-gradient(135deg, #111, #444);">
+            <div class="sns-icon">🐦</div>
+            <div>
+              <div class="sns-name">X（旧Twitter）</div>
+              <div class="sns-handle">@DreamTravel_JP</div>
+            </div>
+          </div>
+          <div class="sns-card-body">
+            <p>旅行に関する最新情報・お得なセール情報をリアルタイムで発信！スタッフの現地レポートも配信中。</p>
+            <a href="#" class="sns-follow-btn" style="background: #111;">
+              <i class="fab fa-x-twitter"></i> フォローする
+            </a>
+          </div>
+        </div>
+
+        <div class="sns-card">
+          <div class="sns-card-header" style="background: linear-gradient(135deg, #00b900, #007a00);">
+            <div class="sns-icon">💬</div>
+            <div>
+              <div class="sns-name">LINE公式アカウント</div>
+              <div class="sns-handle">@dreamtravel</div>
+            </div>
+          </div>
+          <div class="sns-card-body">
+            <p>お問い合わせ・ご予約はLINEでも受付中！友だち追加で旅行情報をお届け。クーポン配布あり🎫</p>
+            <a href="#" class="sns-follow-btn" style="background: #00b900;">
+              <i class="fab fa-line"></i> 友だち追加
+            </a>
+          </div>
+        </div>
+
+        <div class="sns-card">
+          <div class="sns-card-header" style="background: linear-gradient(135deg, #cc0000, #ff0000);">
+            <div class="sns-icon">▶️</div>
+            <div>
+              <div class="sns-name">YouTube</div>
+              <div class="sns-handle">DreamTravel チャンネル</div>
+            </div>
+          </div>
+          <div class="sns-card-body">
+            <p>ツアーのダイジェスト動画・観光スポット紹介動画を公開中！旅の気分を事前に味わえます。</p>
+            <a href="#" class="sns-follow-btn" style="background: #ff0000;">
+              <i class="fab fa-youtube"></i> チャンネル登録
+            </a>
+          </div>
+        </div>
+
+        <div class="sns-card">
+          <div class="sns-card-header" style="background: linear-gradient(135deg, #010101, #69c9d0);">
+            <div class="sns-icon">🎵</div>
+            <div>
+              <div class="sns-name">TikTok</div>
+              <div class="sns-handle">@dreamtravel_jp</div>
+            </div>
+          </div>
+          <div class="sns-card-body">
+            <p>旅のハイライトを短尺動画で紹介！スタッフが現地から直接発信するリアルな旅の情報も配信中。</p>
+            <a href="#" class="sns-follow-btn" style="background: #010101;">
+              <i class="fab fa-tiktok"></i> フォローする
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== オリジナルグッズ ===== -->
+    <section class="observe-fade" style="margin-bottom:2.5rem;">
+      <div class="section-title">
+        <span class="icon">🛍️</span>
+        <h2>弊社オリジナルグッズ</h2>
+      </div>
+
+      <div class="goods-grid">
+        <div class="goods-card">
+          <div class="goods-img" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);">🎒</div>
+          <div class="goods-info">
+            <h4>ドリームトラベル<br>トラベルリュック</h4>
+            <div class="goods-price">¥8,800</div>
+            <p>軽量・大容量の旅行専用リュック</p>
+            <span class="goods-badge">🌟 人気No.1</span>
+          </div>
+        </div>
+        <div class="goods-card">
+          <div class="goods-img" style="background:linear-gradient(135deg,#fce7f3,#fbcfe8);">🧣</div>
+          <div class="goods-info">
+            <h4>オリジナル<br>シルクスカーフ</h4>
+            <div class="goods-price">¥3,300</div>
+            <p>教会・大聖堂でも使えるシルクスカーフ</p>
+            <span class="goods-badge">✈️ 旅行に最適</span>
+          </div>
+        </div>
+        <div class="goods-card">
+          <div class="goods-img" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0);">🧳</div>
+          <div class="goods-info">
+            <h4>TSAロック付き<br>スーツケースベルト</h4>
+            <div class="goods-price">¥1,980</div>
+            <p>海外旅行必需品。TSAロック対応</p>
+          </div>
+        </div>
+        <div class="goods-card">
+          <div class="goods-img" style="background:linear-gradient(135deg,#fef3c7,#fde68a);">🗺️</div>
+          <div class="goods-info">
+            <h4>旅行ガイドブック<br>ヨーロッパ編</h4>
+            <div class="goods-price">¥2,200</div>
+            <p>弊社オリジナル・プロ添乗員監修</p>
+            <span class="goods-badge">📚 新刊</span>
+          </div>
+        </div>
+        <div class="goods-card">
+          <div class="goods-img" style="background:linear-gradient(135deg,#e0e7ff,#c7d2fe);">🔌</div>
+          <div class="goods-info">
+            <h4>万能変換プラグ<br>セット</h4>
+            <div class="goods-price">¥2,750</div>
+            <p>全世界対応・USB-A/C付き</p>
+          </div>
+        </div>
+        <div class="goods-card">
+          <div class="goods-img" style="background:linear-gradient(135deg,#f3e8ff,#e9d5ff);">📷</div>
+          <div class="goods-info">
+            <h4>旅フォト<br>フォトブック</h4>
+            <div class="goods-price">¥5,500〜</div>
+            <p>帰国後の思い出をプロ仕様で製本</p>
+            <span class="goods-badge">📷 帰国後OK</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="store-banner">
+        <div class="banner-text">
+          <h3>🛒 オンラインストアで購入できます！</h3>
+          <p>弊社公式オンラインショップでは全グッズをお取り扱い。旅行前のご注文で<strong>5%OFF！</strong></p>
+        </div>
+        <a href="#" class="banner-btn">
+          <i class="fas fa-shopping-cart"></i> オンラインストアへ
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== アンケート ===== -->
+    <section class="observe-fade" style="margin-bottom:2rem;">
+      <div class="section-title">
+        <span class="icon">📝</span>
+        <h2>ご旅行後のアンケートのお願い</h2>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="alert alert-success" style="margin-bottom:1.25rem;">
+            <span class="alert-icon">🙏</span>
+            <div>
+              ご旅行終了後、<strong>アンケートへのご協力</strong>をお願いしております。お客様のご意見が私たちのサービス向上につながります。ご回答いただいた方には<strong>次回使えるクーポン（1,000円分）</strong>をプレゼント！
+            </div>
+          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:0.85rem;">
+            <a href="#" class="btn btn-primary"><i class="fas fa-clipboard-list"></i> アンケートに答える（5分程度）</a>
+            <a href="#" class="btn btn-outline"><i class="fas fa-star"></i> Googleレビューを書く</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ページナビ -->
+    <div class="page-nav-bottom">
+      <a href="caution.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> 注意事項へ</a>
+      <a href="index.html" class="btn btn-primary"><i class="fas fa-home"></i> トップへ戻る</a>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-logo"><i class="fas fa-paper-plane"></i> Dream Travel</div>
+    <div class="footer-divider"></div>
+    <div>ドリームトラベル株式会社</div>
+    <div style="margin-top:0.4rem;">〒100-0001 東京都千代田区丸の内1-1-1 丸の内ビルディング 10F</div>
+    <div style="margin-top:0.25rem;">TEL: <a href="tel:0312345678">03-1234-5678</a> ／ 営業時間: 平日 9:00〜18:00</div>
+    <div style="margin-top:1.2rem; font-size:0.7rem; opacity:0.4;">© 2026 Dream Travel Co., Ltd. All rights reserved.</div>
+  </footer>
+
+  <script src="js/nav.js"></script>
+  <script src="js/edit-mode.js"></script>
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.06 });
+    document.querySelectorAll('.observe-fade').forEach(el => observer.observe(el));
+    setTimeout(() => document.querySelector('.page-hero')?.classList.add('loaded'), 100);
+  </script>
+</body>
+</html>
