@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Day 3 詳細行程 | 旅のしおり</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="site-logo"><i class="fa-solid fa-paper-plane"></i><span>Moto Tours Japan</span></a>
+    <nav class="nav-menu">
+      <a href="index.html">ホーム</a><a href="route.html">全体行程</a>
+      <a href="itinerary_day1.html">Day 1</a><a href="itinerary_day2.html">Day 2</a>
+      <a href="itinerary_day3.html" class="active">Day 3</a>
+      <a href="caution.html">注意事項</a><a href="company_information.html">会社情報</a>
+    </nav>
+    <img src="MTJ_logo_color_CMYK.jpg" alt="Moto Tours Japan" class="header-logo-img">
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="index.html"><i class="fa-solid fa-house"></i>&ensp;ホーム</a>
+    <a href="route.html"><i class="fa-solid fa-map"></i>&ensp;全体行程</a>
+    <a href="itinerary_day1.html"><i class="fa-solid fa-calendar-day"></i>&ensp;Day 1 詳細</a>
+    <a href="itinerary_day2.html"><i class="fa-solid fa-calendar-day"></i>&ensp;Day 2 詳細</a>
+    <a href="itinerary_day3.html" class="active"><i class="fa-solid fa-calendar-day"></i>&ensp;Day 3 詳細</a>
+    <a href="caution.html"><i class="fa-solid fa-circle-exclamation"></i>&ensp;注意事項</a>
+    <a href="company_information.html"><i class="fa-solid fa-building"></i>&ensp;会社情報</a>
+  </nav>
+</header>
+
+<div class="page-banner" style="background:linear-gradient(135deg,#CC0000,#880000)">
+  <h1><i class="fa-solid fa-paw"></i> Day 3 詳細行程</h1>
+  <p id="bannerSub">—</p>
+</div>
+
+<main><div class="container">
+  <section class="section">
+    <div class="day-strip" id="dayStrip"></div>
+    <h2 class="section-title"><i class="fa-solid fa-list-ol"></i> 詳細タイムライン</h2>
+    <div class="timeline" id="timeline"></div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title"><i class="fa-solid fa-map-location-dot"></i> Day 3 訪問スポット マップ</h2>
+    <div class="alert alert-info" style="margin-bottom:16px">
+      <i class="fa-solid fa-circle-info"></i><span>地図上でピンをクリックすると各スポットの詳細情報が確認できます。</span>
+    </div>
+    <div class="map-wrap"><iframe id="mapFrame" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Day 3 マップ"></iframe></div>
+    <div class="spot-grid" id="spotGrid"></div>
+  </section>
+
+  <div class="page-nav">
+    <a href="itinerary_day2.html" class="btn-nav btn-nav-prev"><i class="fa-solid fa-arrow-left"></i> Day 2 詳細へ</a>
+    <a href="caution.html" class="btn-nav btn-nav-next">注意事項へ <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+</div></main>
+
+<footer class="site-footer">
+  <p><i class="fa-solid fa-paper-plane"></i>&ensp;<span id="footerCompany">Moto Tours Japan株式会社</span></p>
+  <p id="footerCopy">&copy; 2026 Moto Tours Japan Co., Ltd. All Rights Reserved.</p>
+</footer>
+
+<script src="tour-data.js"></script>
+<script>
+const d = getData();
+const day = d.day3;
+const BADGE = {red:'badge-red',blue:'badge-blue',green:'badge-green',gold:'badge-gold'};
+const COLORS = ['#3A5A2A','#2A2A2A','#0D6B4E','#6B1A1A','#8B3A00','#AA0000','#3A1A6B'];
+
+document.getElementById('bannerSub').textContent = day.date + '｜' + day.theme;
+document.getElementById('dayStrip').innerHTML = `
+  <h2><i class="fa-solid fa-calendar-day"></i> Day 3 — ${day.theme}</h2>
+  <div class="day-strip-meta">
+    <span class="day-strip-meta-item"><i class="fa-solid fa-calendar"></i>${day.date}</span>
+    <span class="day-strip-meta-item"><i class="fa-solid fa-hotel"></i>${(d.hotels && d.hotels[1]) ? d.hotels[1].name : ''} 出発</span>
+    <span class="day-strip-meta-item"><i class="fa-solid fa-flag-checkered"></i>${d.meeting.endTime} 解散</span>
+  </div>`;
+document.getElementById('dayStrip').style.background = 'linear-gradient(135deg,#880000,#660000)';
+
+// Timeline
+document.getElementById('timeline').innerHTML = (day.items||[]).map(item=>{
+  const hl = item.isHighlight ? 'highlight' : '';
+  const bdg = item.badge ? `<span class="badge ${BADGE[item.badgeType]||'badge-blue'}" style="margin-left:8px">${item.badge}</span>` : '';
+  return `<div class="tl-item ${hl}">
+    <div class="tl-time">${item.time||''}</div>
+    <div class="tl-card">
+      <div class="tl-card-header">
+        <div class="tl-card-title"><i class="${item.icon||'fa-solid fa-circle'}"></i>${item.title}${bdg}</div>
+      </div>
+      <div class="tl-card-place"><i class="fa-solid fa-location-dot"></i>${item.place||''}</div>
+      <p>${item.desc||''}</p>
+    </div>
+  </div>`;
+}).join('');
+
+// Map
+document.getElementById('mapFrame').src = day.mapEmbed || '';
+
+// Spot grid (highlight items only)
+const spots = (day.items||[]).filter(i=>i.isHighlight);
+document.getElementById('spotGrid').innerHTML = spots.map((s,i)=>`
+<div class="spot-card">
+  <div class="spot-num" style="background:${COLORS[i%COLORS.length]}">${['①','②','③','④','⑤','⑥'][i]||String(i+1)}</div>
+  <div class="spot-info">
+    <div class="name">${s.title}</div>
+    <div class="addr">${s.place||''}</div>
+    <div class="time">${s.time||''}</div>
+  </div>
+</div>`).join('');
+
+document.getElementById('footerCompany').textContent = d.company.name;
+document.getElementById('footerCopy').innerHTML = '&copy; 2026 ' + d.company.nameEn + '. All Rights Reserved.';
+document.getElementById('hamburger').addEventListener('click',function(){ this.classList.toggle('open'); document.getElementById('mobileNav').classList.toggle('open'); });
+</script>
+</body>
+</html>
