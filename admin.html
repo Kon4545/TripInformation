@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>管理者編集画面 | Moto Tours Japan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="tour-data.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-height:100vh}
+/* ── Login ── */
+#loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-card{background:#fff;border-radius:18px;padding:48px 40px;width:100%;max-width:380px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.login-logo{font-size:2.4rem;color:#ed1b23;margin-bottom:12px}
+.login-title{font-size:1.2rem;font-weight:700;color:#1A1A1A;margin-bottom:4px}
+.login-sub{font-size:.8rem;color:#8A8478;margin-bottom:32px}
+.login-input{width:100%;padding:12px 16px;border:1.5px solid #E8E2D8;border-radius:8px;font-size:.95rem;font-family:inherit;outline:none;transition:border-color .2s}
+.login-input:focus{border-color:#ed1b23}
+.login-btn{width:100%;margin-top:14px;padding:13px;background:#1A1A1A;color:#FFDDDD;border:none;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s}
+.login-btn:hover{background:#333333}
+.login-err{margin-top:12px;font-size:.82rem;color:#9B1B1B;display:none}
+/* ── Admin Layout ── */
+#adminScreen{display:none;min-height:100vh;background:#F5F3EF}
+.admin-topbar{background:#1A1A1A;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.admin-topbar-left{display:flex;align-items:center;gap:12px;color:#FFDDDD;font-weight:700;font-size:.95rem}
+.admin-topbar-left i{color:#ed1b23}
+.admin-actions{display:flex;gap:8px}
+.btn{padding:7px 16px;border-radius:7px;font-size:.8rem;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:opacity .2s}
+.btn:hover{opacity:.85}
+.btn-gold{background:#fff;color:#ed1b23;border:1.5px solid #ed1b23}
+.btn-navy{background:rgba(255,255,255,.12);color:#FFDDDD;border:1px solid rgba(255,255,255,.2)}
+.btn-red{background:#9B1B1B;color:#fff}
+.admin-body{display:flex;height:calc(100vh - 56px)}
+/* Sidebar */
+.admin-sidebar{width:220px;flex-shrink:0;background:#fff;border-right:1px solid #E8E2D8;overflow-y:auto;padding:16px 0}
+.sidebar-section{padding:6px 16px;font-size:.68rem;font-weight:700;color:#8A8478;letter-spacing:.1em;text-transform:uppercase;margin-top:12px}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 18px;font-size:.83rem;cursor:pointer;transition:all .2s;border-left:3px solid transparent;color:#5A5650}
+.sidebar-item:hover{background:#FFF5F5;color:#1A1A1A}
+.sidebar-item.active{background:#FFF0F0;color:#c5151b;border-left-color:#ed1b23;font-weight:700}
+.sidebar-item i{width:16px;text-align:center;font-size:.85em}
+/* Main */
+.admin-main{flex:1;overflow-y:auto;padding:28px 32px}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.panel-title{font-size:1.2rem;font-weight:700;color:#1A1A1A;margin-bottom:24px;padding-bottom:12px;border-bottom:2px solid #FFDDDD;display:flex;align-items:center;gap:10px}
+.panel-title i{color:#ed1b23}
+/* Form */
+.form-group{margin-bottom:18px}
+.form-label{display:block;font-size:.78rem;font-weight:700;color:#5A5650;letter-spacing:.05em;margin-bottom:5px;text-transform:uppercase}
+.form-input,.form-textarea,.form-select{width:100%;padding:10px 14px;border:1.5px solid #E8E2D8;border-radius:8px;font-size:.88rem;font-family:inherit;color:#1A1A2E;background:#fff;outline:none;transition:border-color .2s}
+.form-input:focus,.form-textarea:focus{border-color:#ed1b23}
+.form-textarea{resize:vertical;min-height:80px;line-height:1.6}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+/* Dynamic list */
+.dyn-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.dyn-row{display:flex;gap:8px;align-items:flex-start}
+.dyn-row input,.dyn-row textarea{flex:1;padding:8px 12px;border:1.5px solid #E8E2D8;border-radius:7px;font-size:.84rem;font-family:inherit;outline:none;transition:border-color .2s}
+.dyn-row input:focus,.dyn-row textarea:focus{border-color:#ed1b23}
+.dyn-row textarea{min-height:64px;resize:vertical;line-height:1.5}
+.btn-remove{width:32px;height:32px;border-radius:7px;border:none;background:#FEE2E2;color:#9B1B1B;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s;margin-top:2px}
+.btn-remove:hover{background:#FECACA}
+.btn-add{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px dashed #ed1b23;color:#c5151b;background:none;border-radius:7px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-add:hover{background:#FFF0F0}
+/* Schedule item row */
+.sched-item{background:#FFF5F5;border:1px solid #E8E2D8;border-radius:10px;padding:14px;margin-bottom:10px;position:relative}
+.sched-item-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sched-item-handle{color:#ed1b23;font-size:.85rem;cursor:default}
+.sched-item-title{font-size:.8rem;font-weight:700;color:#1A1A1A;flex:1}
+.checklist-group{background:#FFF5F5;border:1px solid #E8E2D8;border-radius:10px;padding:16px;margin-bottom:12px}
+.cg-header{font-size:.85rem;font-weight:700;color:#1A1A1A;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+/* Badge editor */
+.badge-select{padding:5px 10px;border:1.5px solid #E8E2D8;border-radius:7px;font-size:.8rem;font-family:inherit;outline:none}
+.hl-toggle{display:flex;align-items:center;gap:6px;font-size:.8rem;color:#5A5650;cursor:pointer}
+.hl-toggle input{accent-color:#ed1b23;cursor:pointer}
+/* Preview notice */
+.preview-notice{background:#FFF0F0;border:1px solid #FFDDDD;border-radius:10px;padding:16px 20px;font-size:.84rem;color:#9e1016;margin-bottom:24px;display:flex;align-items:flex-start;gap:10px}
+.preview-notice i{color:#ed1b23;margin-top:2px;flex-shrink:0}
+/* Saved toast */
+#toast{position:fixed;bottom:24px;right:24px;background:#1A1A1A;color:#FFDDDD;padding:12px 20px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.3);display:none;align-items:center;gap:8px;z-index:9999}
+#toast.show{display:flex}
+#toast i{color:#ed1b23}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo"><i class="fa-solid fa-paper-plane"></i></div>
+    <div class="login-title">Moto Tours Japan</div>
+    <div class="login-sub">管理者編集画面</div>
+    <input type="password" id="pwInput" class="login-input" placeholder="パスワードを入力" autocomplete="current-password">
+    <button class="login-btn" onclick="doLogin()"><i class="fa-solid fa-lock-open"></i> ログイン</button>
+    <div class="login-err" id="loginErr"><i class="fa-solid fa-circle-exclamation"></i> パスワードが正しくありません</div>
+  </div>
+</div>
+
+<!-- ===== ADMIN ===== -->
+<div id="adminScreen">
+  <div class="admin-topbar">
+    <div class="admin-topbar-left">
+      <i class="fa-solid fa-paper-plane"></i>
+      Moto Tours Japan ── 管理者編集画面
+    </div>
+    <div class="admin-actions">
+      <button class="btn btn-navy" onclick="window.open('index.html','_blank')"><i class="fa-solid fa-eye"></i> プレビュー</button>
+      <button class="btn btn-gold" onclick="saveData()"><i class="fa-solid fa-floppy-disk"></i> 保存</button>
+      <button class="btn btn-gold" onclick="exportFile()" style="background:#fff;color:#c5151b;border-color:#c5151b"><i class="fa-solid fa-download"></i> tour-data.js を書き出す</button>
+      <button class="btn btn-red" onclick="clearOverride()"><i class="fa-solid fa-rotate-left"></i> リセット</button>
+      <button class="btn btn-navy" onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i> ログアウト</button>
+    </div>
+  </div>
+
+  <div class="admin-body">
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+      <div class="sidebar-section">基本設定</div>
+      <div class="sidebar-item active" onclick="showTab('basic')"><i class="fa-solid fa-circle-info"></i> 基本情報</div>
+      <div class="sidebar-item" onclick="showTab('meeting')"><i class="fa-solid fa-clock"></i> 集合・解散</div>
+      <div class="sidebar-item" onclick="showTab('guide')"><i class="fa-solid fa-user-tie"></i> 添乗員・ご挨拶</div>
+      <div class="sidebar-item" onclick="showTab('include')"><i class="fa-solid fa-list-check"></i> 含まれるもの</div>
+      <div class="sidebar-item" onclick="showTab('quicklinks')"><i class="fa-solid fa-compass"></i> しおりコンテンツ</div>
+      <div class="sidebar-section">行程</div>
+      <div class="sidebar-item" onclick="showTab('day1')"><i class="fa-solid fa-sun"></i> Day 1 行程</div>
+      <div class="sidebar-item" onclick="showTab('day2')"><i class="fa-solid fa-star"></i> Day 2 行程</div>
+      <div class="sidebar-item" onclick="showTab('day3')"><i class="fa-solid fa-moon"></i> Day 3 行程</div>
+      <div class="sidebar-item" onclick="showTab('hotel')"><i class="fa-solid fa-hotel"></i> 宿泊施設</div>
+      <div class="sidebar-item" onclick="showTab('highlights')"><i class="fa-solid fa-sparkles"></i> ハイライト</div>
+      <div class="sidebar-section">注意事項</div>
+      <div class="sidebar-item" onclick="showTab('checklist')"><i class="fa-solid fa-suitcase-rolling"></i> 持ち物リスト</div>
+      <div class="sidebar-item" onclick="showTab('tips')"><i class="fa-solid fa-lightbulb"></i> Travel Tips</div>
+      <div class="sidebar-section">会社情報</div>
+      <div class="sidebar-item" onclick="showTab('emergency')"><i class="fa-solid fa-phone-volume"></i> 緊急連絡先</div>
+      <div class="sidebar-item" onclick="showTab('goods')"><i class="fa-solid fa-bag-shopping"></i> グッズ</div>
+      <div class="sidebar-item" onclick="showTab('company')"><i class="fa-solid fa-building"></i> 会社概要</div>
+      <div class="sidebar-section">ツアー後</div>
+      <div class="sidebar-item" onclick="showTab('posttour')"><i class="fa-solid fa-camera-retro"></i> ツアー後コンテンツ</div>
+      <div class="sidebar-section">ツール</div>
+      <div class="sidebar-item" onclick="showTab('urlgen')"><i class="fa-solid fa-link"></i> URLリンク生成</div>
+    </div>
+
+    <!-- Main -->
+    <div class="admin-main">
+      <div class="preview-notice">
+        <i class="fa-solid fa-circle-info"></i>
+        <div>「<strong>保存</strong>」ボタンでブラウザ内に一時保存されます。「<strong>プレビュー</strong>」で確認後、「<strong>tour-data.js を書き出す</strong>」でファイルをダウンロードし、サーバーの <code>tour-data.js</code> と差し替えると本番反映されます。</div>
+      </div>
+
+      <!-- ── 基本情報 ── -->
+      <div id="tab-basic" class="tab-panel active">
+        <div class="panel-title"><i class="fa-solid fa-circle-info"></i> 基本情報</div>
+        <div class="form-grid">
+          <div class="form-group" style="grid-column:1/-1"><label class="form-label">ツアータイトル</label><input id="f_tourTitle" class="form-input"></div>
+          <div class="form-group" style="grid-column:1/-1"><label class="form-label">サブタイトル</label><input id="f_tourSubtitle" class="form-input"></div>
+          <div class="form-group"><label class="form-label">お客様氏名</label><input id="f_customerName" class="form-input"></div>
+          <div class="form-group"><label class="form-label">参加人数</label><input id="f_participantCount" class="form-input"></div>
+          <div class="form-group"><label class="form-label">旅行日程</label><input id="f_tourDates" class="form-input"></div>
+          <div class="form-group"><label class="form-label">エリア</label><input id="f_area" class="form-input"></div>
+        </div>
+        <div style="font-size:.82rem;font-weight:700;color:#1A1A1A;margin:20px 0 12px;padding:8px 14px;background:#EFF3FA;border-radius:8px;border-left:4px solid #ed1b23">
+          <i class="fa-solid fa-image" style="color:#ed1b23"></i>&ensp;ヒーロー背景画像（ツアータイトルの背景）
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+          <!-- プレビュー -->
+          <div id="heroBgPreview" style="width:180px;height:100px;border-radius:10px;border:1.5px dashed #C0C0C0;background:#F4F2EF;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:.75rem;text-align:center;line-height:1.5">
+            <span><i class="fa-solid fa-image" style="font-size:1.4rem;display:block;margin-bottom:4px"></i>プレビュー</span>
+          </div>
+          <div style="flex:1;min-width:200px">
+            <input type="file" id="heroBgFile" accept="image/*" style="display:none" onchange="loadHeroBg(this)">
+            <div style="display:flex;gap:8px;margin-bottom:10px">
+              <button type="button" onclick="document.getElementById('heroBgFile').click()" style="padding:8px 16px;background:#ed1b23;color:#fff;border:none;border-radius:7px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit">
+                <i class="fa-solid fa-upload"></i> 画像を選択
+              </button>
+              <button type="button" id="heroBgClearBtn" onclick="clearHeroBg()" style="padding:8px 14px;background:#fff;color:#9B1B1B;border:1.5px solid #9B1B1B;border-radius:7px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;display:none">
+                <i class="fa-solid fa-xmark"></i> 削除
+              </button>
+            </div>
+            <div style="font-size:.75rem;color:#5A5650;line-height:1.7">
+              JPG・PNG・WEBP 対応。<strong>横長画像（16:9など）</strong>が最適です。<br>
+              画像の上に半透明の赤いオーバーレイをかけ、文字が読みやすくなるよう自動調整されます。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 集合・解散 ── -->
+      <div id="tab-meeting" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-clock"></i> 集合・解散情報</div>
+        <div class="form-grid">
+          <div class="form-group"><label class="form-label">集合場所</label><input id="f_meetPlace" class="form-input"></div>
+          <div class="form-group"><label class="form-label">集合場所（詳細）</label><input id="f_meetPlaceDetail" class="form-input"></div>
+          <div class="form-group"><label class="form-label">集合日付</label><input id="f_meetDate" class="form-input"></div>
+          <div class="form-group"><label class="form-label">集合時間</label><input id="f_meetTime" class="form-input"></div>
+          <div class="form-group"><label class="form-label">解散場所</label><input id="f_endPlace" class="form-input"></div>
+          <div class="form-group"><label class="form-label">解散予定時刻</label><input id="f_endTime" class="form-input"></div>
+          <div class="form-group" style="grid-column:1/-1"><label class="form-label">集合に関する注記</label><input id="f_meetNote" class="form-input"></div>
+        </div>
+        <div style="font-size:.82rem;font-weight:700;color:#1A1A1A;margin:20px 0 12px;padding:8px 14px;background:#EFF3FA;border-radius:8px;border-left:4px solid #ed1b23">
+          <i class="fa-solid fa-map-location-dot" style="color:#ed1b23"></i>&ensp;Google マップ設定
+        </div>
+        <div style="font-size:.78rem;color:#5A5650;margin-bottom:14px;padding:0 2px;line-height:1.7">
+          Google マップのURLをそのまま貼り付けると自動変換を試みます。変換できない場合は<br>
+          Google マップ →「共有」→「<strong>地図を埋め込む</strong>」→ <code style="background:#f0f0f0;border-radius:3px;padding:1px 5px">src="…"</code> の値をコピーしてください。
+        </div>
+        <div class="form-grid">
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label"><i class="fa-solid fa-flag-checkered" style="color:#ed1b23"></i>&ensp;集合場所 マップURL</label>
+            <div style="display:flex;gap:8px;align-items:stretch">
+              <input id="f_meetMapUrl" class="form-input" style="flex:1" placeholder="任意のGoogle マップURLを貼り付け →「変換」" oninput="clearMapStatus('meetMapStatus')">
+              <button type="button" onclick="tryConvert('f_meetMapUrl','meetMapStatus')" style="padding:0 16px;background:#ed1b23;color:#fff;border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;flex-shrink:0"><i class="fa-solid fa-wand-magic-sparkles"></i> 変換</button>
+            </div>
+            <div id="meetMapStatus" style="margin-top:6px;font-size:.78rem;display:none"></div>
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label"><i class="fa-solid fa-circle-check" style="color:#ed1b23"></i>&ensp;解散場所 マップURL</label>
+            <div style="display:flex;gap:8px;align-items:stretch">
+              <input id="f_endMapUrl" class="form-input" style="flex:1" placeholder="任意のGoogle マップURLを貼り付け →「変換」" oninput="clearMapStatus('endMapStatus')">
+              <button type="button" onclick="tryConvert('f_endMapUrl','endMapStatus')" style="padding:0 16px;background:#ed1b23;color:#fff;border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;flex-shrink:0"><i class="fa-solid fa-wand-magic-sparkles"></i> 変換</button>
+            </div>
+            <div id="endMapStatus" style="margin-top:6px;font-size:.78rem;display:none"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 添乗員 ── -->
+      <div id="tab-guide" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-user-tie"></i> 添乗員・ご挨拶</div>
+        <div class="form-grid">
+          <div class="form-group"><label class="form-label">添乗員名</label><input id="f_guideName" class="form-input"></div>
+          <div class="form-group"><label class="form-label">役職</label><input id="f_guideTitle" class="form-input"></div>
+          <div class="form-group"><label class="form-label">電話番号</label><input id="f_guidePhone" class="form-input"></div>
+          <div class="form-group"><label class="form-label">メールアドレス</label><input id="f_guideEmail" class="form-input"></div>
+          <div class="form-group"><label class="form-label">LINE ID</label><input id="f_guideLineId" class="form-input"></div>
+        </div>
+        <div class="form-group"><label class="form-label">ご挨拶文（改行はそのまま反映されます）</label><textarea id="f_guideGreeting" class="form-textarea" style="min-height:200px"></textarea></div>
+      </div>
+
+      <!-- ── 含まれるもの ── -->
+      <div id="tab-include" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-list-check"></i> 含まれるもの / 含まれないもの</div>
+        <div class="form-grid">
+          <div>
+            <div style="font-size:.82rem;font-weight:700;color:#2D6A4F;margin-bottom:10px;"><i class="fa-solid fa-check"></i> 含まれるもの</div>
+            <div id="includesList" class="dyn-list"></div>
+            <button class="btn-add" onclick="addItem('includesList')"><i class="fa-solid fa-plus"></i> 追加</button>
+          </div>
+          <div>
+            <div style="font-size:.82rem;font-weight:700;color:#9B1B1B;margin-bottom:10px;"><i class="fa-solid fa-xmark"></i> 含まれないもの</div>
+            <div id="excludesList" class="dyn-list"></div>
+            <button class="btn-add" onclick="addItem('excludesList')"><i class="fa-solid fa-plus"></i> 追加</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── しおりコンテンツ ── -->
+      <div id="tab-quicklinks" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-compass"></i> しおりのコンテンツ（ホームページ）</div>
+        <div style="font-size:.78rem;color:#5A5650;margin-bottom:16px;line-height:1.7">
+          ホーム画面の「しおりのコンテンツ」カードを編集できます。カードの順番・タイトル・説明文・リンク先・アイコン・色を変更できます。<br>
+          アイコンは <a href="https://fontawesome.com/icons" target="_blank" style="color:#ed1b23">Font Awesome</a> のクラス名（例：<code style="background:#f0f0f0;border-radius:3px;padding:1px 5px">fa-solid fa-map</code>）を入力してください。
+        </div>
+        <div id="quickLinksItems"></div>
+        <button class="btn-add" onclick="addQuickLink()"><i class="fa-solid fa-plus"></i> カードを追加</button>
+      </div>
+
+      <!-- ── Day 1 ── -->
+      <div id="tab-day1" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-sun"></i> Day 1 行程</div>
+        <div class="form-grid" style="margin-bottom:20px">
+          <div class="form-group"><label class="form-label">日付</label><input id="f_day1Date" class="form-input"></div>
+          <div class="form-group"><label class="form-label">テーマ</label><input id="f_day1Theme" class="form-input"></div>
+          <div class="form-group" style="grid-column:1/-1"><label class="form-label">Google Maps 埋め込みURL</label><input id="f_day1Map" class="form-input"></div>
+        </div>
+        <div style="font-size:.82rem;font-weight:700;color:#1A1A1A;margin-bottom:10px;">行程アイテム</div>
+        <div id="day1Items"></div>
+        <button class="btn-add" onclick="addSchedItem('day1Items','day1')"><i class="fa-solid fa-plus"></i> アイテム追加</button>
+      </div>
+
+      <!-- ── Day 2 ── -->
+      <div id="tab-day2" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-star"></i> Day 2 行程</div>
+        <div class="form-grid" style="margin-bottom:20px">
+          <div class="form-group"><label class="form-label">日付</label><input id="f_day2Date" class="form-input"></div>
+          <div class="form-group"><label class="form-label">テーマ</label><input id="f_day2Theme" class="form-input"></div>
+          <div class="form-group" style="grid-column:1/-1"><label class="form-label">Google Maps 埋め込みURL</label><input id="f_day2Map" class="form-input"></div>
+        </div>
+        <div style="font-size:.82rem;font-weight:700;color:#1A1A1A;margin-bottom:10px;">行程アイテム</div>
+        <div id="day2Items"></div>
+        <button class="btn-add" onclick="addSchedItem('day2Items','day2')"><i class="fa-solid fa-plus"></i> アイテム追加</button>
+      </div>
+
+      <!-- ── Day 3 ── -->
+      <div id="tab-day3" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-moon"></i> Day 3 行程</div>
+        <div class="form-grid" style="margin-bottom:20px">
+          <div class="form-group"><label class="form-label">日付</label><input id="f_day3Date" class="form-input"></div>
+          <div class="form-group"><label class="form-label">テーマ</label><input id="f_day3Theme" class="form-input"></div>
+          <div class="form-group" style="grid-column:1/-1"><label class="form-label">Google Maps 埋め込みURL</label><input id="f_day3Map" class="form-input"></div>
+        </div>
+        <div style="font-size:.82rem;font-weight:700;color:#1A1A1A;margin-bottom:10px;">行程アイテム</div>
+        <div id="day3Items"></div>
+        <button class="btn-add" onclick="addSchedItem('day3Items','day3')"><i class="fa-solid fa-plus"></i> アイテム追加</button>
+      </div>
+
+      <!-- ── 宿泊施設 ── -->
+      <div id="tab-hotel" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-hotel"></i> 宿泊施設情報</div>
+        <!-- Hotel 1 -->
+        <div style="font-size:.84rem;font-weight:700;color:#1A1A1A;margin-bottom:12px;padding:8px 14px;background:#EFF3FA;border-radius:8px;border-left:4px solid #ed1b23">
+          <i class="fa-solid fa-moon" style="color:#ed1b23"></i>&ensp;1泊目
+        </div>
+        <div class="form-grid">
+          <div class="form-group"><label class="form-label">泊数ラベル（例：1泊目 京都）</label><input id="f_hotel1Night" class="form-input"></div>
+          <div class="form-group"><label class="form-label">ホテル名</label><input id="f_hotel1Name" class="form-input"></div>
+          <div class="form-group"><label class="form-label">電話番号</label><input id="f_hotel1Phone" class="form-input"></div>
+          <div class="form-group"><label class="form-label">星の数（1〜5）</label><input id="f_hotel1Stars" class="form-input" type="number" min="1" max="5"></div>
+          <div class="form-group" style="grid-column:1/-1"><label class="form-label">住所</label><input id="f_hotel1Address" class="form-input"></div>
+          <div class="form-group"><label class="form-label">チェックイン</label><input id="f_hotel1Checkin" class="form-input"></div>
+          <div class="form-group"><label class="form-label">チェックアウト</label><input id="f_hotel1Checkout" class="form-input"></div>
+          <div class="form-group" style="grid-column:1/-1"><label class="form-label"><i class="fa-solid fa-arrow-up-right-from-square" style="color:#ed1b23"></i>&ensp;公式サイトURL（任意）</label><input id="f_hotel1Url" class="form-input" placeholder="https://www.hotel-example.com/"></div>
+        </div>
+        <div class="form-group" style="margin-bottom:10px"><label class="form-label">施設説明</label><textarea id="f_hotel1Desc" class="form-textarea"></textarea></div>
+        <!-- Hotel 1 Image -->
+        <div style="font-size:.78rem;font-weight:700;color:#5A5650;margin:4px 0 8px;letter-spacing:.05em;text-transform:uppercase">ホテル画像（任意）</div>
+        <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:28px">
+          <div id="hotelImgPreview1" style="width:160px;height:100px;border-radius:8px;border:1.5px dashed #C0C0C0;background:#F4F2EF;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:.72rem;text-align:center;line-height:1.5">
+            <span><i class="fa-solid fa-image" style="font-size:1.3rem;display:block;margin-bottom:4px"></i>未設定</span>
+          </div>
+          <div style="flex:1;min-width:180px">
+            <input type="file" id="hotelImgFile1" accept="image/*" style="display:none" onchange="loadHotelImg(this,1)">
+            <div style="display:flex;gap:8px;margin-bottom:8px">
+              <button type="button" onclick="document.getElementById('hotelImgFile1').click()" style="padding:8px 14px;background:#ed1b23;color:#fff;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit"><i class="fa-solid fa-upload"></i> 画像を選択</button>
+              <button type="button" id="hotelImgClear1" onclick="clearHotelImg(1)" style="padding:8px 12px;background:#fff;color:#9B1B1B;border:1.5px solid #9B1B1B;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;display:none"><i class="fa-solid fa-xmark"></i> 削除</button>
+            </div>
+            <div style="font-size:.72rem;color:#8A8478;line-height:1.7">JPG・PNG・WEBP 対応。横長画像が最適です。<br>設定するとホテルカードの左側（モバイルは上部）に表示されます。</div>
+          </div>
+        </div>
+        <!-- Hotel 2 -->
+        <div style="font-size:.84rem;font-weight:700;color:#1A1A1A;margin-bottom:12px;padding:8px 14px;background:#EFF3FA;border-radius:8px;border-left:4px solid #c5151b">
+          <i class="fa-solid fa-moon" style="color:#c5151b"></i>&ensp;2泊目
+        </div>
+        <div class="form-grid">
+          <div class="form-group"><label class="form-label">泊数ラベル（例：2泊目 大阪）</label><input id="f_hotel2Night" class="form-input"></div>
+          <div class="form-group"><label class="form-label">ホテル名</label><input id="f_hotel2Name" class="form-input"></div>
+          <div class="form-group"><label class="form-label">電話番号</label><input id="f_hotel2Phone" class="form-input"></div>
+          <div class="form-group"><label class="form-label">星の数（1〜5）</label><input id="f_hotel2Stars" class="form-input" type="number" min="1" max="5"></div>
+          <div class="form-group" style="grid-column:1/-1"><label class="form-label">住所</label><input id="f_hotel2Address" class="form-input"></div>
+          <div class="form-group"><label class="form-label">チェックイン</label><input id="f_hotel2Checkin" class="form-input"></div>
+          <div class="form-group"><label class="form-label">チェックアウト</label><input id="f_hotel2Checkout" class="form-input"></div>
+          <div class="form-group" style="grid-column:1/-1"><label class="form-label"><i class="fa-solid fa-arrow-up-right-from-square" style="color:#c5151b"></i>&ensp;公式サイトURL（任意）</label><input id="f_hotel2Url" class="form-input" placeholder="https://www.hotel-example.com/"></div>
+        </div>
+        <div class="form-group" style="margin-bottom:10px"><label class="form-label">施設説明</label><textarea id="f_hotel2Desc" class="form-textarea"></textarea></div>
+        <!-- Hotel 2 Image -->
+        <div style="font-size:.78rem;font-weight:700;color:#5A5650;margin:4px 0 8px;letter-spacing:.05em;text-transform:uppercase">ホテル画像（任意）</div>
+        <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+          <div id="hotelImgPreview2" style="width:160px;height:100px;border-radius:8px;border:1.5px dashed #C0C0C0;background:#F4F2EF;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:.72rem;text-align:center;line-height:1.5">
+            <span><i class="fa-solid fa-image" style="font-size:1.3rem;display:block;margin-bottom:4px"></i>未設定</span>
+          </div>
+          <div style="flex:1;min-width:180px">
+            <input type="file" id="hotelImgFile2" accept="image/*" style="display:none" onchange="loadHotelImg(this,2)">
+            <div style="display:flex;gap:8px;margin-bottom:8px">
+              <button type="button" onclick="document.getElementById('hotelImgFile2').click()" style="padding:8px 14px;background:#ed1b23;color:#fff;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit"><i class="fa-solid fa-upload"></i> 画像を選択</button>
+              <button type="button" id="hotelImgClear2" onclick="clearHotelImg(2)" style="padding:8px 12px;background:#fff;color:#9B1B1B;border:1.5px solid #9B1B1B;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;display:none"><i class="fa-solid fa-xmark"></i> 削除</button>
+            </div>
+            <div style="font-size:.72rem;color:#8A8478;line-height:1.7">JPG・PNG・WEBP 対応。横長画像が最適です。<br>設定するとホテルカードの左側（モバイルは上部）に表示されます。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ハイライト ── -->
+      <div id="tab-highlights" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-sparkles"></i> ツアーハイライト</div>
+        <div id="highlightsList"></div>
+        <button class="btn-add" onclick="addHighlightItem()"><i class="fa-solid fa-plus"></i> ハイライト追加</button>
+      </div>
+
+      <!-- ── 持ち物リスト ── -->
+      <div id="tab-checklist" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-suitcase-rolling"></i> 持ち物チェックリスト</div>
+        <p style="font-size:.82rem;color:#8A8478;margin-bottom:20px;">各グループのアイテムを編集できます。</p>
+        <div id="checklistGroups"></div>
+        <button class="btn-add" onclick="addChecklistGroup()"><i class="fa-solid fa-plus"></i> グループを追加</button>
+      </div>
+
+      <!-- ── Travel Tips ── -->
+      <div id="tab-tips" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-lightbulb"></i> Travel Tips</div>
+        <div id="tipsList"></div>
+        <button class="btn-add" onclick="addTipItem()"><i class="fa-solid fa-plus"></i> Tips追加</button>
+      </div>
+
+      <!-- ── 緊急連絡先 ── -->
+      <div id="tab-emergency" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-phone-volume"></i> 緊急連絡先</div>
+        <div style="font-size:.84rem;font-weight:700;color:#1A1A1A;margin-bottom:10px;">弊社サポートセンター</div>
+        <div class="form-grid" style="margin-bottom:24px">
+          <div class="form-group"><label class="form-label">電話番号（フリーダイヤル）</label><input id="f_emgPhone" class="form-input"></div>
+          <div class="form-group"><label class="form-label">対応時間</label><input id="f_emgHours" class="form-input"></div>
+          <div class="form-group"><label class="form-label">住所</label><input id="f_emgAddress" class="form-input"></div>
+          <div class="form-group"><label class="form-label">メール</label><input id="f_emgEmail" class="form-input"></div>
+        </div>
+        <div style="font-size:.84rem;font-weight:700;color:#1A1A1A;margin-bottom:10px;">その他の緊急連絡先</div>
+        <div id="emgOthersList" class="dyn-list"></div>
+        <button class="btn-add" onclick="addEmgOther()"><i class="fa-solid fa-plus"></i> 追加</button>
+      </div>
+
+      <!-- ── グッズ ── -->
+      <div id="tab-goods" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-bag-shopping"></i> オリジナルグッズ</div>
+        <div id="goodsList"></div>
+        <button class="btn-add" onclick="addGoodsItem()"><i class="fa-solid fa-plus"></i> グッズ追加</button>
+      </div>
+
+      <!-- ── 会社概要 ── -->
+      <div id="tab-company" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-building"></i> 会社概要</div>
+        <div class="form-grid">
+          <div class="form-group"><label class="form-label">会社名（日本語）</label><input id="f_coName" class="form-input"></div>
+          <div class="form-group"><label class="form-label">会社名（英語）</label><input id="f_coNameEn" class="form-input"></div>
+          <div class="form-group" style="grid-column:1/-1"><label class="form-label">住所</label><input id="f_coAddress" class="form-input"></div>
+          <div class="form-group"><label class="form-label">代表電話</label><input id="f_coPhone" class="form-input"></div>
+          <div class="form-group"><label class="form-label">FAX</label><input id="f_coFax" class="form-input"></div>
+          <div class="form-group"><label class="form-label">営業時間</label><input id="f_coHours" class="form-input"></div>
+          <div class="form-group"><label class="form-label">メール</label><input id="f_coEmail" class="form-input"></div>
+          <div class="form-group"><label class="form-label">登録番号</label><input id="f_coReg" class="form-input"></div>
+          <div class="form-group"><label class="form-label">加盟団体</label><input id="f_coAssoc" class="form-input"></div>
+        </div>
+      </div>
+
+      <!-- ── ツアー後 ── -->
+      <div id="tab-posttour" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-camera-retro"></i> ツアー後コンテンツ</div>
+
+        <!-- アンケート -->
+        <div style="font-size:.82rem;font-weight:700;color:#1A1A1A;margin-bottom:12px;padding:8px 14px;background:#EFF3FA;border-radius:8px;border-left:4px solid #ed1b23">
+          <i class="fa-solid fa-clipboard-list" style="color:#ed1b23"></i>&ensp;アンケート設定
+        </div>
+        <div class="form-grid" style="margin-bottom:28px">
+          <div class="form-group" style="grid-column:1/-1"><label class="form-label">アンケートフォームURL</label><input id="pt_surveyUrl" class="form-input" placeholder="https://forms.google.com/..."></div>
+          <div class="form-group"><label class="form-label">アンケートタイトル</label><input id="pt_surveyTitle" class="form-input"></div>
+          <div class="form-group"><label class="form-label">アンケート説明文</label><input id="pt_surveyDesc" class="form-input"></div>
+        </div>
+
+        <!-- 写真 -->
+        <div style="font-size:.82rem;font-weight:700;color:#1A1A1A;margin-bottom:12px;padding:8px 14px;background:#EFF3FA;border-radius:8px;border-left:4px solid #ed1b23">
+          <i class="fa-solid fa-camera-retro" style="color:#ed1b23"></i>&ensp;ツアー写真
+        </div>
+        <!-- アルバムURL -->
+        <div style="background:#F0F7FF;border:1px solid #BDD7F5;border-radius:10px;padding:16px 18px;margin-bottom:18px">
+          <div style="font-size:.8rem;font-weight:700;color:#1558b0;margin-bottom:10px;display:flex;align-items:center;gap:8px">
+            <i class="fa-brands fa-google-drive" style="font-size:1rem"></i> Googleドライブ / Googleフォト アルバムリンク（推奨）
+          </div>
+          <div style="font-size:.75rem;color:#5A5650;margin-bottom:10px;line-height:1.7">
+            GoogleドライブまたはGoogleフォトで写真フォルダ・アルバムを<strong>「リンクを知っている全員が閲覧可」</strong>に設定し、そのURLを貼り付けてください。<br>
+            お客様が「写真アルバムを見る」ボタンをタップすると別タブで開きます。
+          </div>
+          <div class="form-group" style="margin-bottom:0">
+            <label class="form-label"><i class="fa-brands fa-google-drive" style="color:#1a73e8"></i>&ensp;アルバムURL</label>
+            <input id="pt_albumUrl" class="form-input" placeholder="https://drive.google.com/drive/folders/... または https://photos.app.goo.gl/...">
+          </div>
+        </div>
+        <div style="font-size:.78rem;color:#5A5650;margin-bottom:14px;line-height:1.7">
+          追加で個別の写真もアップロードできます（任意）。ファイル選択または画像URLを入力してください。
+        </div>
+        <div id="ptPhotosList"></div>
+        <button class="btn-add" onclick="addPtPhoto()" style="margin-bottom:28px"><i class="fa-solid fa-plus"></i> 写真を追加</button>
+
+        <!-- 動画 -->
+        <div style="font-size:.82rem;font-weight:700;color:#1A1A1A;margin-bottom:12px;padding:8px 14px;background:#EFF3FA;border-radius:8px;border-left:4px solid #ed1b23">
+          <i class="fa-brands fa-youtube" style="color:#ed1b23"></i>&ensp;YouTube動画
+        </div>
+        <div style="font-size:.78rem;color:#5A5650;margin-bottom:14px;line-height:1.7">
+          YouTubeの動画URL（通常URL・短縮URL・埋め込みURL いずれも可）を入力してください。<br>
+          例: <code style="background:#f0f0f0;border-radius:3px;padding:1px 5px">https://youtu.be/XXXXXXXXXXX</code>
+        </div>
+        <div id="ptVideosList"></div>
+        <button class="btn-add" onclick="addPtVideo()" style="margin-bottom:28px"><i class="fa-solid fa-plus"></i> 動画を追加</button>
+
+        <!-- 次のツアー -->
+        <div style="font-size:.82rem;font-weight:700;color:#1A1A1A;margin-bottom:12px;padding:8px 14px;background:#EFF3FA;border-radius:8px;border-left:4px solid #ed1b23">
+          <i class="fa-solid fa-compass" style="color:#ed1b23"></i>&ensp;次のツアー案内
+        </div>
+        <div id="ptNextToursList"></div>
+        <button class="btn-add" onclick="addPtNextTour()"><i class="fa-solid fa-plus"></i> ツアーを追加</button>
+      </div>
+
+      <!-- ── URLリンク生成 ── -->
+      <div id="tab-urlgen" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-link"></i> URLリンク生成</div>
+        <div style="background:#EFF3FA;border:1px solid #D0D9EC;border-radius:10px;padding:16px 20px;margin-bottom:24px;font-size:.84rem;color:#1A1A1A;line-height:1.8">
+          <i class="fa-solid fa-circle-info" style="color:#ed1b23"></i>&ensp;
+          URLの末尾に <code style="background:#fff;border:1px solid #D0D9EC;border-radius:4px;padding:1px 6px;font-size:.82rem">?name=お客様氏名</code> を付けるだけで、アクセスしたお客様のお名前が表示されます。<br>
+          このツールで複数のお客様分のリンクをまとめて生成できます。
+        </div>
+        <div class="form-grid" style="margin-bottom:20px">
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label"><i class="fa-solid fa-globe" style="color:#ed1b23"></i>&ensp;ベースURL（index.htmlのURL）</label>
+            <input id="urlgen_base" class="form-input" placeholder="例: https://yourtour.example.com/index.html">
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label"><i class="fa-solid fa-users" style="color:#ed1b23"></i>&ensp;お客様氏名リスト（1行1名）</label>
+            <textarea id="urlgen_names" class="form-textarea" style="min-height:130px" placeholder="山田 太郎&#10;鈴木 花子&#10;佐藤 次郎"></textarea>
+          </div>
+        </div>
+        <button class="btn btn-gold" onclick="generateUrls()" style="margin-bottom:24px"><i class="fa-solid fa-wand-magic-sparkles"></i> URLを生成する</button>
+        <div id="urlgen_output"></div>
+      </div>
+
+    </div><!-- /admin-main -->
+  </div><!-- /admin-body -->
+</div><!-- /adminScreen -->
+
+<div id="toast"><i class="fa-solid fa-circle-check"></i> <span id="toastMsg">保存しました</span></div>
+
+<script>
+// ── Auth ──────────────────────────────────────────────────────
+function doLogin(){
+  const pw = document.getElementById('pwInput').value;
+  const correct = (typeof TOUR_DATA !== 'undefined' && TOUR_DATA.admin) ? TOUR_DATA.admin.password : 'tabibito2026';
+  if(pw === correct){
+    sessionStorage.setItem('adminAuth','1');
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('adminScreen').style.display='block';
+    initForms();
+  } else {
+    document.getElementById('loginErr').style.display='block';
+  }
+}
+document.getElementById('pwInput').addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+function doLogout(){
+  sessionStorage.removeItem('adminAuth');
+  location.reload();
+}
+if(sessionStorage.getItem('adminAuth')==='1'){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('adminScreen').style.display='block';
+  window.addEventListener('DOMContentLoaded', initForms);
+}
+
+// ── Tab ───────────────────────────────────────────────────────
+function showTab(id){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ── Get current data ─────────────────────────────────────────
+function current(){ return getData(); }
+
+// ── Init forms ───────────────────────────────────────────────
+function initForms(){
+  const d = current();
+  // Basic
+  set('f_tourTitle',      d.basic.tourTitle);
+  set('f_tourSubtitle',   d.basic.tourSubtitle);
+  set('f_customerName',   d.basic.customerName);
+  set('f_participantCount',d.basic.participantCount);
+  set('f_tourDates',      d.basic.tourDates);
+  set('f_area',           d.basic.area);
+  // Hero background image
+  _heroBgData = d.basic.heroBgImage || '';
+  updateHeroBgPreview();
+  // Meeting
+  set('f_meetPlace',      d.meeting.place);
+  set('f_meetPlaceDetail',d.meeting.placeDetail);
+  set('f_meetDate',       d.meeting.date);
+  set('f_meetTime',       d.meeting.time);
+  set('f_endPlace',       d.meeting.endPlace);
+  set('f_endTime',        d.meeting.endTime);
+  set('f_meetNote',       d.meeting.note);
+  set('f_meetMapUrl',     d.meeting.meetMapUrl);
+  set('f_endMapUrl',      d.meeting.endMapUrl);
+  // Guide
+  set('f_guideName',      d.guide.name);
+  set('f_guideTitle',     d.guide.title);
+  set('f_guidePhone',     d.guide.phone);
+  set('f_guideEmail',     d.guide.email);
+  set('f_guideLineId',    d.guide.lineId);
+  set('f_guideGreeting',  d.guide.greeting);
+  // Includes
+  buildSimpleList('includesList', d.includes);
+  buildSimpleList('excludesList', d.excludes);
+  // Day1
+  set('f_day1Date',  d.day1.date);
+  set('f_day1Theme', d.day1.theme);
+  set('f_day1Map',   d.day1.mapEmbed);
+  buildSchedItems('day1Items', d.day1.items, 'day1');
+  // Day2
+  set('f_day2Date',  d.day2.date);
+  set('f_day2Theme', d.day2.theme);
+  set('f_day2Map',   d.day2.mapEmbed);
+  buildSchedItems('day2Items', d.day2.items, 'day2');
+  // Day3
+  const day3 = d.day3 || {};
+  set('f_day3Date',  day3.date);
+  set('f_day3Theme', day3.theme);
+  set('f_day3Map',   day3.mapEmbed);
+  buildSchedItems('day3Items', day3.items || [], 'day3');
+  // Hotels
+  const h1 = (d.hotels && d.hotels[0]) ? d.hotels[0] : (d.hotel || {});
+  const h2 = (d.hotels && d.hotels[1]) ? d.hotels[1] : {};
+  set('f_hotel1Night',    h1.night);
+  set('f_hotel1Name',     h1.name);
+  set('f_hotel1Address',  h1.address);
+  set('f_hotel1Stars',    h1.stars);
+  set('f_hotel1Phone',    h1.phone);
+  set('f_hotel1Checkin',  h1.checkin);
+  set('f_hotel1Checkout', h1.checkout);
+  set('f_hotel1Desc',     h1.desc);
+  set('f_hotel1Url',      h1.url);
+  set('f_hotel2Night',    h2.night);
+  set('f_hotel2Name',     h2.name);
+  set('f_hotel2Address',  h2.address);
+  set('f_hotel2Stars',    h2.stars);
+  set('f_hotel2Phone',    h2.phone);
+  set('f_hotel2Checkin',  h2.checkin);
+  set('f_hotel2Checkout', h2.checkout);
+  set('f_hotel2Desc',     h2.desc);
+  set('f_hotel2Url',      h2.url);
+  // Hotel images
+  _hotel1Img = h1.image || ''; updateHotelImgPreview(1);
+  _hotel2Img = h2.image || ''; updateHotelImgPreview(2);
+  // Quick Links
+  buildQuickLinks(d.quickLinks || []);
+  // Highlights
+  buildHighlights(d.highlights);
+  // Checklist
+  buildChecklistGroups(d.checklist);
+  // Tips
+  buildTips(d.tips);
+  // Emergency
+  set('f_emgPhone',   d.emergency.companyPhone);
+  set('f_emgHours',   d.emergency.companyHours);
+  set('f_emgAddress', d.emergency.companyAddress);
+  set('f_emgEmail',   d.emergency.companyEmail);
+  buildEmgOthers(d.emergency.others);
+  // Goods
+  buildGoods(d.goods);
+  // Company
+  set('f_coName',     d.company.name);
+  set('f_coNameEn',   d.company.nameEn);
+  set('f_coAddress',  d.company.address);
+  set('f_coPhone',    d.company.phone);
+  set('f_coFax',      d.company.fax);
+  set('f_coHours',    d.company.hours);
+  set('f_coEmail',    d.company.email);
+  set('f_coReg',      d.company.registration);
+  set('f_coAssoc',    d.company.association);
+  // Post-tour
+  const pt = d.postTour || {};
+  set('pt_surveyUrl',   (d.survey||{}).url);
+  set('pt_surveyTitle', (d.survey||{}).title);
+  set('pt_surveyDesc',  (d.survey||{}).desc);
+  set('pt_albumUrl', pt.albumUrl || '');
+  buildPtPhotos(pt.photos   || []);
+  buildPtVideos(pt.videos   || []);
+  buildPtNextTours(pt.nextTours || []);
+}
+
+function set(id, val){ const el=document.getElementById(id); if(el) el.value = val ?? ''; }
+function g(id){ return document.getElementById(id)?.value ?? ''; }
+
+// ── Simple list (includes/excludes) ──────────────────────────
+function buildSimpleList(containerId, items){
+  const el=document.getElementById(containerId); el.innerHTML='';
+  (items||[]).forEach(item=>{ el.appendChild(makeSimpleRow(item)); });
+}
+function makeSimpleRow(val=''){
+  const row=document.createElement('div'); row.className='dyn-row';
+  row.innerHTML=`<input type="text" value="${esc(val)}"><button class="btn-remove" onclick="this.parentElement.remove()"><i class="fa-solid fa-trash"></i></button>`;
+  return row;
+}
+function addItem(containerId){ document.getElementById(containerId).appendChild(makeSimpleRow()); }
+function getSimpleList(containerId){ return [...document.querySelectorAll('#'+containerId+' input')].map(i=>i.value).filter(v=>v); }
+
+// ── Schedule items ────────────────────────────────────────────
+function buildSchedItems(containerId, items, day){
+  const el=document.getElementById(containerId); el.innerHTML='';
+  (items||[]).forEach((item,i)=>{ el.appendChild(makeSchedRow(item,day,i)); });
+}
+function makeSchedRow(item={},day,idx){
+  const div=document.createElement('div'); div.className='sched-item';
+  const hl = item.isHighlight ? 'checked' : '';
+  div.innerHTML=`
+    <div class="sched-item-header">
+      <i class="fa-solid fa-grip-vertical sched-item-handle"></i>
+      <div class="sched-item-title">アイテム ${(idx??'')+1}</div>
+      <button class="btn-remove" onclick="this.closest('.sched-item').remove()"><i class="fa-solid fa-trash"></i></button>
+    </div>
+    <div class="form-grid-3">
+      <div class="form-group"><label class="form-label">時刻</label><input class="form-input si-time" value="${esc(item.time||'')}"></div>
+      <div class="form-group"><label class="form-label">タイトル</label><input class="form-input si-title" value="${esc(item.title||'')}"></div>
+      <div class="form-group"><label class="form-label">場所</label><input class="form-input si-place" value="${esc(item.place||'')}"></div>
+    </div>
+    <div class="form-group"><label class="form-label">説明</label><textarea class="form-textarea si-desc" style="min-height:60px">${esc(item.desc||'')}</textarea></div>
+    <div class="form-grid-3">
+      <div class="form-group"><label class="form-label">アイコン (FA class)</label><input class="form-input si-icon" value="${esc(item.icon||'fa-solid fa-circle')}"></div>
+      <div class="form-group"><label class="form-label">バッジテキスト</label><input class="form-input si-badge" value="${esc(item.badge||'')}"></div>
+      <div class="form-group"><label class="form-label">バッジ色</label>
+        <select class="badge-select si-badgeType">
+          ${['','red','blue','green','gold'].map(v=>`<option value="${v}" ${item.badgeType===v?'selected':''}>${v||'なし'}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <label class="hl-toggle"><input type="checkbox" class="si-highlight" ${hl}> ハイライト表示にする</label>
+  `;
+  return div;
+}
+function addSchedItem(containerId,day){ const el=document.getElementById(containerId); el.appendChild(makeSchedRow({},day,el.children.length)); }
+function getSchedItems(containerId){
+  return [...document.querySelectorAll('#'+containerId+' .sched-item')].map(row=>({
+    time:        row.querySelector('.si-time')?.value||'',
+    title:       row.querySelector('.si-title')?.value||'',
+    place:       row.querySelector('.si-place')?.value||'',
+    desc:        row.querySelector('.si-desc')?.value||'',
+    icon:        row.querySelector('.si-icon')?.value||'fa-solid fa-circle',
+    badge:       row.querySelector('.si-badge')?.value||'',
+    badgeType:   row.querySelector('.si-badgeType')?.value||'',
+    isHighlight: row.querySelector('.si-highlight')?.checked||false
+  }));
+}
+
+// ── Highlights ────────────────────────────────────────────────
+function buildHighlights(items){
+  const el=document.getElementById('highlightsList'); el.innerHTML='';
+  (items||[]).forEach(item=>{
+    const row=document.createElement('div'); row.className='sched-item';
+    row.innerHTML=`
+      <div class="sched-item-header">
+        <div class="sched-item-title">ハイライト</div>
+        <button class="btn-remove" onclick="this.closest('.sched-item').remove()"><i class="fa-solid fa-trash"></i></button>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">タイトル</label><input class="form-input hl-title" value="${esc(item.title||'')}"></div>
+        <div class="form-group"><label class="form-label">説明</label><input class="form-input hl-desc" value="${esc(item.desc||'')}"></div>
+        <div class="form-group"><label class="form-label">アイコン (FA class)</label><input class="form-input hl-icon" value="${esc(item.icon||'')}"></div>
+        <div class="form-group"><label class="form-label">カラー (#hex)</label><input class="form-input hl-color" value="${esc(item.color||'')}"></div>
+      </div>
+      <input type="hidden" class="hl-image" value="">
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid #F0EDE8">
+        <div style="font-size:.78rem;font-weight:700;color:#5A5650;margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase">カード画像（任意）</div>
+        <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
+          <div class="hl-img-preview" style="width:120px;height:80px;border-radius:8px;border:1.5px dashed #C0C0C0;background:#F4F2EF;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:.7rem;text-align:center;line-height:1.5">
+            <span><i class="fa-solid fa-image" style="font-size:1.2rem;display:block;margin-bottom:3px"></i>未設定</span>
+          </div>
+          <div>
+            <input type="file" class="hl-img-file" accept="image/*" style="display:none">
+            <div style="display:flex;gap:8px;margin-bottom:6px">
+              <button type="button" class="hl-img-upload-btn" style="padding:7px 14px;background:#ed1b23;color:#fff;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit"><i class="fa-solid fa-upload"></i> 画像を選択</button>
+              <button type="button" class="hl-img-clear-btn" style="padding:7px 12px;background:#fff;color:#9B1B1B;border:1.5px solid #9B1B1B;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;display:none"><i class="fa-solid fa-xmark"></i> 削除</button>
+            </div>
+            <div style="font-size:.72rem;color:#8A8478">設定するとカード背景に画像が表示されます（アイコン・色より優先）</div>
+          </div>
+        </div>
+      </div>`;
+    // Wire up image uploader
+    const hiddenImg  = row.querySelector('.hl-image');
+    const preview    = row.querySelector('.hl-img-preview');
+    const clearBtn   = row.querySelector('.hl-img-clear-btn');
+    const fileInput  = row.querySelector('.hl-img-file');
+    const uploadBtn  = row.querySelector('.hl-img-upload-btn');
+    function setHlImg(data){
+      hiddenImg.value = data;
+      if(data){
+        preview.innerHTML = `<img src="${data}" style="width:100%;height:100%;object-fit:cover;display:block">`;
+        clearBtn.style.display = '';
+      } else {
+        preview.innerHTML = '<span><i class="fa-solid fa-image" style="font-size:1.2rem;display:block;margin-bottom:3px"></i>未設定</span>';
+        clearBtn.style.display = 'none';
+      }
+    }
+    if(item.image) setHlImg(item.image);
+    uploadBtn.addEventListener('click', ()=>fileInput.click());
+    fileInput.addEventListener('change', function(){
+      if(!this.files||!this.files[0]) return;
+      const file=this.files[0];
+      if(!file.type.startsWith('image/')){ showToast('画像ファイルを選択してください'); return; }
+      const reader=new FileReader();
+      reader.onload=e=>{ setHlImg(e.target.result); showToast('画像を読み込みました。「保存」を押して反映してください。'); };
+      reader.readAsDataURL(file);
+    });
+    clearBtn.addEventListener('click', ()=>{ setHlImg(''); fileInput.value=''; });
+    el.appendChild(row);
+  });
+}
+function addHighlightItem(){ buildHighlights([...getHighlights(), {title:'',desc:'',icon:'fa-solid fa-star',color:'#1A1A1A',image:''}]); }
+function getHighlights(){
+  return [...document.querySelectorAll('#highlightsList .sched-item')].map(row=>({
+    title: row.querySelector('.hl-title')?.value||'',
+    desc:  row.querySelector('.hl-desc')?.value||'',
+    icon:  row.querySelector('.hl-icon')?.value||'',
+    color: row.querySelector('.hl-color')?.value||'',
+    image: row.querySelector('.hl-image')?.value||''
+  }));
+}
+
+// ── Checklist ─────────────────────────────────────────────────
+function buildChecklistGroups(groups){
+  const el=document.getElementById('checklistGroups'); el.innerHTML='';
+  (groups||[]).forEach((grp,gi)=>{
+    const div=document.createElement('div'); div.className='checklist-group';
+    div.innerHTML=`<div class="cg-header"><i class="fa-solid fa-grip-vertical" style="color:#ed1b23"></i>グループ ${gi+1}<button class="btn-remove" style="margin-left:auto" onclick="this.closest('.checklist-group').remove()"><i class="fa-solid fa-trash"></i></button></div>
+      <div class="form-grid" style="margin-bottom:10px">
+        <div class="form-group"><label class="form-label">グループ名</label><input class="form-input cg-title" value="${esc(grp.title||'')}"></div>
+        <div class="form-group"><label class="form-label">アイコン</label><input class="form-input cg-icon" value="${esc(grp.icon||'')}"></div>
+        <div class="form-group"><label class="form-label">カラー (#hex)</label><input class="form-input cg-color" value="${esc(grp.color||'')}"></div>
+      </div>
+      <div class="cg-items dyn-list"></div>
+      <button class="btn-add" onclick="addClItem(this)"><i class="fa-solid fa-plus"></i> アイテム追加</button>`;
+    const itemList = div.querySelector('.cg-items');
+    (grp.items||[]).forEach(item=>{ itemList.appendChild(makeSimpleRow(item)); });
+    el.appendChild(div);
+  });
+}
+function addClItem(btn){
+  const list = btn.previousElementSibling;
+  list.appendChild(makeSimpleRow());
+}
+function addChecklistGroup(){
+  const grps = getChecklistGroups();
+  grps.push({title:'新しいグループ',icon:'fa-solid fa-list',color:'#1A1A1A',items:[]});
+  buildChecklistGroups(grps);
+}
+function getChecklistGroups(){
+  return [...document.querySelectorAll('#checklistGroups .checklist-group')].map(grp=>({
+    title: grp.querySelector('.cg-title')?.value||'',
+    icon:  grp.querySelector('.cg-icon')?.value||'',
+    color: grp.querySelector('.cg-color')?.value||'',
+    items: [...grp.querySelectorAll('.cg-items input')].map(i=>i.value).filter(v=>v)
+  }));
+}
+
+// ── Tips ──────────────────────────────────────────────────────
+function buildTips(items){
+  const el=document.getElementById('tipsList'); el.innerHTML='';
+  (items||[]).forEach(item=>{
+    const row=document.createElement('div'); row.className='sched-item';
+    row.innerHTML=`<div class="sched-item-header"><div class="sched-item-title">Tips</div><button class="btn-remove" onclick="this.closest('.sched-item').remove()"><i class="fa-solid fa-trash"></i></button></div>
+      <div class="form-grid" style="margin-bottom:10px">
+        <div class="form-group"><label class="form-label">タイトル</label><input class="form-input tip-title" value="${esc(item.title||'')}"></div>
+        <div class="form-group"><label class="form-label">アイコン</label><input class="form-input tip-icon" value="${esc(item.icon||'')}"></div>
+      </div>
+      <div class="form-group"><label class="form-label">内容</label><textarea class="form-textarea tip-content" style="min-height:80px">${esc(item.content||'')}</textarea></div>`;
+    el.appendChild(row);
+  });
+}
+function addTipItem(){ buildTips([...getTips(), {title:'',icon:'fa-solid fa-lightbulb',iconColor:'#ed1b23',content:''}]); }
+function getTips(){
+  return [...document.querySelectorAll('#tipsList .sched-item')].map(row=>({
+    title:     row.querySelector('.tip-title')?.value||'',
+    icon:      row.querySelector('.tip-icon')?.value||'fa-solid fa-lightbulb',
+    iconColor: '#ed1b23',
+    content:   row.querySelector('.tip-content')?.value||''
+  }));
+}
+
+// ── Emg Others ────────────────────────────────────────────────
+function buildEmgOthers(items){
+  const el=document.getElementById('emgOthersList'); el.innerHTML='';
+  (items||[]).forEach(item=>{
+    const row=document.createElement('div'); row.className='dyn-row';
+    row.innerHTML=`<input type="text" placeholder="名称" value="${esc(item.name||'')}" class="eo-name">
+      <input type="text" placeholder="電話番号" value="${esc(item.phone||'')}" class="eo-phone">
+      <input type="text" placeholder="備考" value="${esc(item.note||'')}" class="eo-note">
+      <button class="btn-remove" onclick="this.parentElement.remove()"><i class="fa-solid fa-trash"></i></button>`;
+    el.appendChild(row);
+  });
+}
+function addEmgOther(){ document.getElementById('emgOthersList').appendChild((() => {
+  const row=document.createElement('div'); row.className='dyn-row';
+  row.innerHTML=`<input type="text" placeholder="名称" class="eo-name"><input type="text" placeholder="電話番号" class="eo-phone"><input type="text" placeholder="備考" class="eo-note"><button class="btn-remove" onclick="this.parentElement.remove()"><i class="fa-solid fa-trash"></i></button>`;
+  return row;
+})()); }
+function getEmgOthers(){
+  return [...document.querySelectorAll('#emgOthersList .dyn-row')].map(row=>({
+    name: row.querySelector('.eo-name')?.value||'', phone: row.querySelector('.eo-phone')?.value||'', note: row.querySelector('.eo-note')?.value||''
+  })).filter(r=>r.name);
+}
+
+// ── Goods ─────────────────────────────────────────────────────
+// ── Post-Tour ─────────────────────────────────────────────────
+
+// 写真
+function buildPtPhotos(items){
+  const el=document.getElementById('ptPhotosList'); el.innerHTML='';
+  (items||[]).forEach((item,i)=>{
+    const row=document.createElement('div'); row.className='sched-item'; row.style.marginBottom='10px';
+    row.innerHTML=`
+      <div class="sched-item-header">
+        <div class="sched-item-title"><i class="fa-solid fa-image" style="color:#ed1b23"></i>&ensp;写真 ${i+1}</div>
+        <button class="btn-remove" onclick="this.closest('.sched-item').remove()"><i class="fa-solid fa-trash"></i></button>
+      </div>
+      <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-bottom:10px">
+        <div class="pt-ph-preview" style="width:100px;height:70px;border-radius:8px;border:1.5px dashed #C0C0C0;background:#F4F2EF;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:.7rem">
+          <span><i class="fa-solid fa-image" style="font-size:1.1rem;display:block;margin-bottom:2px;text-align:center"></i>未設定</span>
+        </div>
+        <div style="flex:1;min-width:180px">
+          <input type="file" class="pt-ph-file" accept="image/*" style="display:none">
+          <div style="display:flex;gap:8px;margin-bottom:6px">
+            <button type="button" class="pt-ph-upload-btn" style="padding:6px 12px;background:#ed1b23;color:#fff;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit"><i class="fa-solid fa-upload"></i> ファイル選択</button>
+          </div>
+          <input type="text" class="form-input pt-ph-url" placeholder="または画像URLを入力" value="${esc(item.src||'')}" style="margin-bottom:6px">
+        </div>
+      </div>
+      <input type="hidden" class="pt-ph-src" value="">
+      <div class="form-group"><label class="form-label">キャプション（任意）</label><input class="form-input pt-ph-caption" value="${esc(item.caption||'')}"></div>`;
+
+    const hidden  = row.querySelector('.pt-ph-src');
+    const preview = row.querySelector('.pt-ph-preview');
+    const fileInput = row.querySelector('.pt-ph-file');
+    const urlInput  = row.querySelector('.pt-ph-url');
+    const uploadBtn = row.querySelector('.pt-ph-upload-btn');
+
+    function setPreview(src){
+      if(src){
+        preview.innerHTML=`<img src="${src}" style="width:100%;height:100%;object-fit:cover;display:block">`;
+      } else {
+        preview.innerHTML='<span><i class="fa-solid fa-image" style="font-size:1.1rem;display:block;margin-bottom:2px;text-align:center"></i>未設定</span>';
+      }
+    }
+
+    // 初期値
+    hidden.value = item.src||'';
+    if(item.src) setPreview(item.src);
+
+    uploadBtn.addEventListener('click',()=>fileInput.click());
+    fileInput.addEventListener('change',function(){
+      if(!this.files||!this.files[0]) return;
+      const file=this.files[0];
+      if(!file.type.startsWith('image/')){ showToast('画像ファイルを選択してください'); return; }
+      const reader=new FileReader();
+      reader.onload=e=>{
+        hidden.value=e.target.result;
+        urlInput.value='';
+        setPreview(e.target.result);
+        showToast('写真を読み込みました');
+      };
+      reader.readAsDataURL(file);
+    });
+    urlInput.addEventListener('input',function(){
+      hidden.value=this.value;
+      setPreview(this.value);
+    });
+
+    el.appendChild(row);
+  });
+}
+function addPtPhoto(){ buildPtPhotos([...getPtPhotos(), {src:'',caption:''}]); }
+function getPtPhotos(){
+  return [...document.querySelectorAll('#ptPhotosList .sched-item')].map(row=>({
+    src:     row.querySelector('.pt-ph-src')?.value||row.querySelector('.pt-ph-url')?.value||'',
+    caption: row.querySelector('.pt-ph-caption')?.value||''
+  })).filter(p=>p.src);
+}
+
+// 動画
+function buildPtVideos(items){
+  const el=document.getElementById('ptVideosList'); el.innerHTML='';
+  (items||[]).forEach((item,i)=>{
+    const row=document.createElement('div'); row.className='sched-item'; row.style.marginBottom='10px';
+    row.innerHTML=`
+      <div class="sched-item-header">
+        <div class="sched-item-title"><i class="fa-brands fa-youtube" style="color:#ed1b23"></i>&ensp;動画 ${i+1}</div>
+        <button class="btn-remove" onclick="this.closest('.sched-item').remove()"><i class="fa-solid fa-trash"></i></button>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">YouTubeタイトル（任意）</label><input class="form-input ptv-title" value="${esc(item.title||'')}"></div>
+        <div class="form-group"><label class="form-label">YouTube URL</label><input class="form-input ptv-url" placeholder="https://youtu.be/..." value="${esc(item.url||'')}"></div>
+      </div>`;
+    el.appendChild(row);
+  });
+}
+function addPtVideo(){ buildPtVideos([...getPtVideos(), {url:'',title:''}]); }
+function getPtVideos(){
+  return [...document.querySelectorAll('#ptVideosList .sched-item')].map(row=>({
+    title: row.querySelector('.ptv-title')?.value||'',
+    url:   row.querySelector('.ptv-url')?.value||''
+  })).filter(v=>v.url);
+}
+
+// 次のツアー
+function buildPtNextTours(items){
+  const el=document.getElementById('ptNextToursList'); el.innerHTML='';
+  (items||[]).forEach((item,i)=>{
+    const row=document.createElement('div'); row.className='sched-item'; row.style.marginBottom='10px';
+    row.innerHTML=`
+      <div class="sched-item-header">
+        <div class="sched-item-title"><i class="fa-solid fa-compass" style="color:#ed1b23"></i>&ensp;ツアー ${i+1}</div>
+        <button class="btn-remove" onclick="this.closest('.sched-item').remove()"><i class="fa-solid fa-trash"></i></button>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">ツアー名</label><input class="form-input ptn-title" value="${esc(item.title||'')}"></div>
+        <div class="form-group"><label class="form-label">リンクURL</label><input class="form-input ptn-url" placeholder="https://..." value="${esc(item.url||'')}"></div>
+        <div class="form-group" style="grid-column:1/-1"><label class="form-label">説明文</label><textarea class="form-textarea ptn-desc" style="min-height:60px">${esc(item.desc||'')}</textarea></div>
+      </div>
+      <input type="hidden" class="ptn-image" value="${esc(item.image||'')}">
+      <div style="margin-top:8px">
+        <div style="font-size:.78rem;font-weight:700;color:#5A5650;margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase">サムネイル画像（任意）</div>
+        <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
+          <div class="ptn-img-preview" style="width:100px;height:64px;border-radius:8px;border:1.5px dashed #C0C0C0;background:#F4F2EF;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:.7rem">
+            <span><i class="fa-solid fa-image" style="font-size:1.1rem;display:block;text-align:center"></i>未設定</span>
+          </div>
+          <div>
+            <input type="file" class="ptn-img-file" accept="image/*" style="display:none">
+            <div style="display:flex;gap:8px;margin-bottom:4px">
+              <button type="button" class="ptn-img-upload-btn" style="padding:6px 12px;background:#ed1b23;color:#fff;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit"><i class="fa-solid fa-upload"></i> 画像を選択</button>
+              <button type="button" class="ptn-img-clear-btn" style="padding:6px 10px;background:#fff;color:#9B1B1B;border:1.5px solid #9B1B1B;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;display:none"><i class="fa-solid fa-xmark"></i> 削除</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+
+    const hidden   = row.querySelector('.ptn-image');
+    const preview  = row.querySelector('.ptn-img-preview');
+    const fileInput= row.querySelector('.ptn-img-file');
+    const uploadBtn= row.querySelector('.ptn-img-upload-btn');
+    const clearBtn = row.querySelector('.ptn-img-clear-btn');
+
+    function setPtnImg(src){
+      hidden.value=src;
+      if(src){ preview.innerHTML=`<img src="${src}" style="width:100%;height:100%;object-fit:cover;display:block">`; clearBtn.style.display=''; }
+      else   { preview.innerHTML='<span><i class="fa-solid fa-image" style="font-size:1.1rem;display:block;text-align:center"></i>未設定</span>'; clearBtn.style.display='none'; }
+    }
+    if(item.image) setPtnImg(item.image);
+    uploadBtn.addEventListener('click',()=>fileInput.click());
+    fileInput.addEventListener('change',function(){
+      if(!this.files||!this.files[0]) return;
+      const reader=new FileReader();
+      reader.onload=e=>{ setPtnImg(e.target.result); showToast('画像を読み込みました'); };
+      reader.readAsDataURL(this.files[0]);
+    });
+    clearBtn.addEventListener('click',()=>{ setPtnImg(''); fileInput.value=''; });
+
+    el.appendChild(row);
+  });
+}
+function addPtNextTour(){ buildPtNextTours([...getPtNextTours(), {title:'',desc:'',url:'',image:''}]); }
+function getPtNextTours(){
+  return [...document.querySelectorAll('#ptNextToursList .sched-item')].map(row=>({
+    title: row.querySelector('.ptn-title')?.value||'',
+    desc:  row.querySelector('.ptn-desc')?.value||'',
+    url:   row.querySelector('.ptn-url')?.value||'',
+    image: row.querySelector('.ptn-image')?.value||''
+  })).filter(t=>t.title);
+}
+
+// ── Quick Links ───────────────────────────────────────────────
+function buildQuickLinks(items) {
+  const el = document.getElementById('quickLinksItems'); el.innerHTML = '';
+  (items || []).forEach((item, idx) => addQuickLinkRow(el, item, idx + 1));
+}
+function addQuickLinkRow(container, item, num) {
+  item = item || {};
+  const row = document.createElement('div'); row.className = 'sched-item';
+  row.innerHTML = `
+    <div class="sched-item-header">
+      <div class="sched-item-title"><i class="fa-solid fa-compass" style="color:#ed1b23"></i>&ensp;カード ${num || ''}</div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button type="button" title="上へ" onclick="moveQL(this,-1)" style="background:none;border:none;cursor:pointer;color:#5A5650;font-size:.85rem;padding:2px 6px"><i class="fa-solid fa-chevron-up"></i></button>
+        <button type="button" title="下へ" onclick="moveQL(this,1)"  style="background:none;border:none;cursor:pointer;color:#5A5650;font-size:.85rem;padding:2px 6px"><i class="fa-solid fa-chevron-down"></i></button>
+        <button class="btn-remove" onclick="this.closest('.sched-item').remove();reNumberQL()"><i class="fa-solid fa-trash"></i></button>
+      </div>
+    </div>
+    <div class="form-grid" style="padding:14px 16px 16px;gap:10px">
+      <div class="form-group"><label class="form-label">タイトル</label><input class="form-input ql-title" value="${esc(item.title||'')}"></div>
+      <div class="form-group"><label class="form-label">リンク先URL</label><input class="form-input ql-url" value="${esc(item.url||'')}" placeholder="route.html"></div>
+      <div class="form-group" style="grid-column:1/-1"><label class="form-label">説明文</label><input class="form-input ql-desc" value="${esc(item.desc||'')}"></div>
+      <div class="form-group"><label class="form-label">アイコン（Font Awesome クラス名）</label><input class="form-input ql-icon" value="${esc(item.icon||'fa-solid fa-star')}" placeholder="fa-solid fa-map"></div>
+      <div class="form-group"><label class="form-label">グラデーション 開始色</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="color" class="ql-color1" value="${item.color1||'#ed1b23'}" style="width:40px;height:34px;border:1px solid #D0D9EC;border-radius:6px;cursor:pointer;padding:2px">
+          <input class="form-input ql-color1-text" value="${esc(item.color1||'#ed1b23')}" style="flex:1;font-family:monospace" placeholder="#ed1b23" oninput="syncColor(this,'ql-color1')">
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">グラデーション 終了色</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="color" class="ql-color2" value="${item.color2||'#9e1016'}" style="width:40px;height:34px;border:1px solid #D0D9EC;border-radius:6px;cursor:pointer;padding:2px">
+          <input class="form-input ql-color2-text" value="${esc(item.color2||'#9e1016')}" style="flex:1;font-family:monospace" placeholder="#9e1016" oninput="syncColor(this,'ql-color2')">
+        </div>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">プレビュー</label>
+        <div class="ql-preview" style="display:flex;align-items:center;gap:14px;padding:10px 14px;border:1px solid #E8E2D8;border-radius:8px;background:#F8F7F5">
+          <div class="ql-prev-icon" style="width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.2rem;flex-shrink:0;background:linear-gradient(135deg,${item.color1||'#ed1b23'},${item.color2||'#9e1016'})"><i class="${esc(item.icon||'fa-solid fa-star')}"></i></div>
+          <div><div class="ql-prev-title" style="font-weight:700;font-size:.88rem;color:#1A1A1A">${esc(item.title||'タイトル')}</div><div class="ql-prev-desc" style="font-size:.75rem;color:#5A5650;margin-top:2px">${esc(item.desc||'説明文')}</div></div>
+        </div>
+      </div>
+    </div>`;
+  // カラーピッカーとテキストを同期
+  row.querySelector('.ql-color1').addEventListener('input', function(){
+    const t = row.querySelector('.ql-color1-text'); t.value = this.value; updateQLPreview(row);
+  });
+  row.querySelector('.ql-color2').addEventListener('input', function(){
+    const t = row.querySelector('.ql-color2-text'); t.value = this.value; updateQLPreview(row);
+  });
+  ['ql-title','ql-desc','ql-icon','ql-color1-text','ql-color2-text'].forEach(cls => {
+    row.querySelector('.'+cls).addEventListener('input', () => updateQLPreview(row));
+  });
+  (container || document.getElementById('quickLinksItems')).appendChild(row);
+}
+function updateQLPreview(row) {
+  const c1 = row.querySelector('.ql-color1-text').value || '#ed1b23';
+  const c2 = row.querySelector('.ql-color2-text').value || '#9e1016';
+  const icon = row.querySelector('.ql-icon').value || 'fa-solid fa-star';
+  const title = row.querySelector('.ql-title').value || 'タイトル';
+  const desc  = row.querySelector('.ql-desc').value  || '説明文';
+  row.querySelector('.ql-prev-icon').style.background = `linear-gradient(135deg,${c1},${c2})`;
+  row.querySelector('.ql-prev-icon').innerHTML = `<i class="${esc(icon)}"></i>`;
+  row.querySelector('.ql-prev-title').textContent = title;
+  row.querySelector('.ql-prev-desc').textContent  = desc;
+}
+function syncColor(textInput, colorClass) {
+  const row = textInput.closest('.sched-item');
+  const picker = row.querySelector('.' + colorClass);
+  const val = textInput.value.trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(val)) picker.value = val;
+  updateQLPreview(row);
+}
+function addQuickLink() {
+  addQuickLinkRow(null, {});
+  reNumberQL();
+}
+function moveQL(btn, dir) {
+  const row = btn.closest('.sched-item');
+  const parent = row.parentElement;
+  const items = [...parent.querySelectorAll(':scope > .sched-item')];
+  const idx = items.indexOf(row);
+  const target = items[idx + dir];
+  if (!target) return;
+  if (dir === -1) parent.insertBefore(row, target);
+  else parent.insertBefore(target, row);
+  reNumberQL();
+}
+function reNumberQL() {
+  document.querySelectorAll('#quickLinksItems > .sched-item').forEach((row, i) => {
+    const t = row.querySelector('.sched-item-title');
+    if (t) t.innerHTML = `<i class="fa-solid fa-compass" style="color:#ed1b23"></i>&ensp;カード ${i + 1}`;
+  });
+}
+function getQuickLinks() {
+  return [...document.querySelectorAll('#quickLinksItems > .sched-item')].map(row => ({
+    title:  row.querySelector('.ql-title').value.trim(),
+    desc:   row.querySelector('.ql-desc').value.trim(),
+    url:    row.querySelector('.ql-url').value.trim(),
+    icon:   row.querySelector('.ql-icon').value.trim(),
+    color1: row.querySelector('.ql-color1-text').value.trim() || row.querySelector('.ql-color1').value,
+    color2: row.querySelector('.ql-color2-text').value.trim() || row.querySelector('.ql-color2').value,
+  })).filter(q => q.title);
+}
+
+function buildGoods(items){
+  const el=document.getElementById('goodsList'); el.innerHTML='';
+  (items||[]).forEach(item=>{
+    const row=document.createElement('div'); row.className='sched-item';
+    row.innerHTML=`<div class="sched-item-header"><div class="sched-item-title">グッズ</div><button class="btn-remove" onclick="this.closest('.sched-item').remove()"><i class="fa-solid fa-trash"></i></button></div>
+      <div class="form-grid">
+        <div class="form-group"><label class="form-label">商品名</label><input class="form-input gd-name" value="${esc(item.name||'')}"></div>
+        <div class="form-group"><label class="form-label">価格</label><input class="form-input gd-price" value="${esc(item.price||'')}"></div>
+        <div class="form-group"><label class="form-label">アイコン</label><input class="form-input gd-icon" value="${esc(item.icon||'')}"></div>
+        <div class="form-group"><label class="form-label">バッジ</label><input class="form-input gd-badge" value="${esc(item.badge||'')}"></div>
+      </div>
+      <div class="form-group"><label class="form-label">説明</label><textarea class="form-textarea gd-desc" style="min-height:54px">${esc(item.desc||'')}</textarea></div>`;
+    el.appendChild(row);
+  });
+}
+function addGoodsItem(){ buildGoods([...getGoods(), {name:'',price:'',icon:'fa-solid fa-gift',iconBg:'#ed1b23',desc:'',badge:'在庫あり',badgeType:'green'}]); }
+function getGoods(){
+  return [...document.querySelectorAll('#goodsList .sched-item')].map(row=>({
+    name:row.querySelector('.gd-name')?.value||'', price:row.querySelector('.gd-price')?.value||'',
+    icon:row.querySelector('.gd-icon')?.value||'', iconBg:'#ed1b23',
+    desc:row.querySelector('.gd-desc')?.value||'',
+    badge:row.querySelector('.gd-badge')?.value||'', badgeType:'green'
+  }));
+}
+
+// ── Save / Export ─────────────────────────────────────────────
+function collectData(){
+  const d = JSON.parse(JSON.stringify(current())); // deep clone as base
+  d.basic = { tourTitle:g('f_tourTitle'), tourSubtitle:g('f_tourSubtitle'), customerName:g('f_customerName'), participantCount:g('f_participantCount'), tourDates:g('f_tourDates'), area:g('f_area'), heroBgImage:_heroBgData };
+  d.meeting = { place:g('f_meetPlace'), placeDetail:g('f_meetPlaceDetail'), date:g('f_meetDate'), time:g('f_meetTime'), endPlace:g('f_endPlace'), endTime:g('f_endTime'), note:g('f_meetNote'), meetMapUrl:g('f_meetMapUrl'), endMapUrl:g('f_endMapUrl') };
+  d.guide = { name:g('f_guideName'), title:g('f_guideTitle'), phone:g('f_guidePhone'), email:g('f_guideEmail'), lineId:g('f_guideLineId'), greeting:g('f_guideGreeting') };
+  d.includes = getSimpleList('includesList');
+  d.excludes = getSimpleList('excludesList');
+  d.day1 = { date:g('f_day1Date'), theme:g('f_day1Theme'), mapEmbed:g('f_day1Map'), items:getSchedItems('day1Items') };
+  d.day2 = { date:g('f_day2Date'), theme:g('f_day2Theme'), mapEmbed:g('f_day2Map'), items:getSchedItems('day2Items') };
+  d.day3 = { date:g('f_day3Date'), theme:g('f_day3Theme'), mapEmbed:g('f_day3Map'), items:getSchedItems('day3Items') };
+  const hotelsArr = [
+    { night:g('f_hotel1Night'), name:g('f_hotel1Name'), address:g('f_hotel1Address'), stars:parseInt(g('f_hotel1Stars'))||4, phone:g('f_hotel1Phone'), checkin:g('f_hotel1Checkin'), checkout:g('f_hotel1Checkout'), wifi:true, desc:g('f_hotel1Desc'), url:g('f_hotel1Url'), image:_hotel1Img },
+    { night:g('f_hotel2Night'), name:g('f_hotel2Name'), address:g('f_hotel2Address'), stars:parseInt(g('f_hotel2Stars'))||4, phone:g('f_hotel2Phone'), checkin:g('f_hotel2Checkin'), checkout:g('f_hotel2Checkout'), wifi:true, desc:g('f_hotel2Desc'), url:g('f_hotel2Url'), image:_hotel2Img }
+  ].filter(h => h.name);
+  d.hotels = hotelsArr;
+  d.hotel = hotelsArr[0] || {}; // backward compat
+  d.quickLinks = getQuickLinks();
+  d.highlights = getHighlights();
+  d.checklist = getChecklistGroups();
+  d.tips = getTips();
+  d.emergency = { companyPhone:g('f_emgPhone'), companyHours:g('f_emgHours'), companyAddress:g('f_emgAddress'), companyEmail:g('f_emgEmail'), others:getEmgOthers() };
+  d.goods = getGoods();
+  d.company = { name:g('f_coName'), nameEn:g('f_coNameEn'), address:g('f_coAddress'), phone:g('f_coPhone'), fax:g('f_coFax'), hours:g('f_coHours'), email:g('f_coEmail'), registration:g('f_coReg'), association:g('f_coAssoc') };
+  d.survey = { url:g('pt_surveyUrl'), title:g('pt_surveyTitle'), desc:g('pt_surveyDesc') };
+  d.postTour = {
+    albumUrl:  g('pt_albumUrl'),
+    photos:    getPtPhotos(),
+    videos:    getPtVideos(),
+    nextTours: getPtNextTours()
+  };
+  d.sns = current().sns; // keep SNS as-is (not in UI yet)
+  return d;
+}
+function saveData(){
+  localStorage.setItem('TOUR_DATA_OVERRIDE', JSON.stringify(collectData()));
+  showToast('保存しました。プレビューで確認できます。');
+}
+function clearOverride(){
+  if(confirm('一時保存データをリセットし、tour-data.js の内容に戻しますか？')){
+    localStorage.removeItem('TOUR_DATA_OVERRIDE');
+    initForms();
+    showToast('リセットしました。');
+  }
+}
+function exportFile(){
+  const data = collectData();
+  const js = generateTourDataJs(data);
+  const blob = new Blob([js], {type:'text/javascript;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='tour-data.js'; a.click();
+  URL.revokeObjectURL(url);
+  showToast('tour-data.js を書き出しました。サーバーにアップロードして反映してください。');
+}
+function generateTourDataJs(d){
+  return `// ================================================================
+//  Moto Tours Japan ── ツアーデータ設定ファイル  tour-data.js
+//  admin.html から生成  ${new Date().toLocaleString('ja-JP')}
+// ================================================================
+// ※ このファイルはテキストエディタ（メモ帳、VS Code 等）で開いてください。
+//   ダブルクリックで開こうとすると Windows Script Host がエラーを出す場合があります。
+//   → 右クリック →「プログラムから開く」→「メモ帳」などを選択してください。
+if (typeof window === 'undefined') {
+  (function() {
+    try { var W = WScript; if (W) { W.Quit(0); } } catch(e) {}
+  })();
+}
+
+const TOUR_DATA = ${JSON.stringify(d, null, 2)};
+
+function getData() {
+  try {
+    const override = localStorage.getItem('TOUR_DATA_OVERRIDE');
+    if (override) return JSON.parse(override);
+  } catch(e) {}
+  return TOUR_DATA;
+}
+`;
+}
+
+// ── Hero Background Image ────────────────────────────────────
+let _heroBgData = '';
+let _hotel1Img  = '';
+let _hotel2Img  = '';
+
+function loadHeroBg(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  if (!file.type.startsWith('image/')) {
+    showToast('画像ファイルを選択してください');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    _heroBgData = e.target.result;
+    updateHeroBgPreview();
+    showToast('画像を読み込みました。「保存」を押して反映してください。');
+  };
+  reader.readAsDataURL(file);
+}
+
+function updateHeroBgPreview() {
+  const preview = document.getElementById('heroBgPreview');
+  const clearBtn = document.getElementById('heroBgClearBtn');
+  if (!preview) return;
+  if (_heroBgData) {
+    preview.innerHTML = `<img src="${_heroBgData}" style="width:100%;height:100%;object-fit:cover;display:block">`;
+    if (clearBtn) clearBtn.style.display = '';
+  } else {
+    preview.innerHTML = '<span><i class="fa-solid fa-image" style="font-size:1.4rem;display:block;margin-bottom:4px"></i>プレビュー</span>';
+    if (clearBtn) clearBtn.style.display = 'none';
+  }
+}
+
+function clearHeroBg() {
+  _heroBgData = '';
+  const f = document.getElementById('heroBgFile');
+  if (f) f.value = '';
+  updateHeroBgPreview();
+  showToast('背景画像を削除しました。「保存」を押して反映してください。');
+}
+
+// ── Hotel Images ─────────────────────────────────────────────
+function loadHotelImg(input, num) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  if (!file.type.startsWith('image/')) { showToast('画像ファイルを選択してください'); return; }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    if (num === 1) _hotel1Img = e.target.result;
+    else           _hotel2Img = e.target.result;
+    updateHotelImgPreview(num);
+    showToast('画像を読み込みました。「保存」を押して反映してください。');
+  };
+  reader.readAsDataURL(file);
+}
+function updateHotelImgPreview(num) {
+  const preview  = document.getElementById('hotelImgPreview' + num);
+  const clearBtn = document.getElementById('hotelImgClear'   + num);
+  const img      = num === 1 ? _hotel1Img : _hotel2Img;
+  if (!preview) return;
+  if (img) {
+    preview.innerHTML = `<img src="${img}" style="width:100%;height:100%;object-fit:cover;display:block">`;
+    if (clearBtn) clearBtn.style.display = '';
+  } else {
+    preview.innerHTML = '<span><i class="fa-solid fa-image" style="font-size:1.3rem;display:block;margin-bottom:4px"></i>未設定</span>';
+    if (clearBtn) clearBtn.style.display = 'none';
+  }
+}
+function clearHotelImg(num) {
+  if (num === 1) _hotel1Img = '';
+  else           _hotel2Img = '';
+  const f = document.getElementById('hotelImgFile' + num);
+  if (f) f.value = '';
+  updateHotelImgPreview(num);
+  showToast('画像を削除しました。「保存」を押して反映してください。');
+}
+
+// ── Google Maps URL Converter ────────────────────────────────
+function convertGoogleMapsUrl(raw) {
+  const url = raw.trim();
+  if (!url) return { ok: false, msg: 'URLを入力してください。' };
+
+  // ① すでに埋め込みURL
+  if (url.includes('google.com/maps/embed')) {
+    return { ok: true, url, msg: '✓ 埋め込みURL（変換不要）' };
+  }
+
+  // ② 短縮URL（maps.app.goo.gl / goo.gl）→ 変換不可
+  if (/maps\.app\.goo\.gl|goo\.gl/.test(url)) {
+    return { ok: false, msg: '短縮URLは自動変換できません。\nGoogle マップ →「共有」→「地図を埋め込む」→ src値をコピーしてください。' };
+  }
+
+  if (/google\.com\/maps|maps\.google\.com/.test(url)) {
+    // ③ pb= パラメーターがある → 直接変換
+    const pbMatch = url.match(/[?&!]pb=([^&?#\s]+)/);
+    if (pbMatch) {
+      return { ok: true, url: 'https://www.google.com/maps/embed?pb=' + pbMatch[1], msg: '✓ 埋め込みURLに変換しました。' };
+    }
+
+    // ④ q= パラメーターがある
+    const qMatch = url.match(/[?&]q=([^&?#]+)/);
+    if (qMatch) {
+      return { ok: true, url: 'https://maps.google.com/maps?q=' + qMatch[1] + '&output=embed', msg: '✓ 埋め込みURLに変換しました。' };
+    }
+
+    // ⑤ /place/ URL → 座標を抽出
+    const coordMatch = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+),(\d+(?:\.\d+)?)z/);
+    if (coordMatch) {
+      return {
+        ok: true,
+        url: `https://maps.google.com/maps?q=${coordMatch[1]},${coordMatch[2]}&z=${Math.round(coordMatch[3])}&output=embed`,
+        msg: '✓ 座標から埋め込みURLに変換しました。（表示がずれる場合は「地図を埋め込む」から取得してください）'
+      };
+    }
+
+    // ⑥ /place/ URL → 場所名を抽出
+    const placeMatch = url.match(/\/maps\/place\/([^/@?&+]+)/);
+    if (placeMatch) {
+      const name = decodeURIComponent(placeMatch[1].replace(/\+/g, ' '));
+      return {
+        ok: true,
+        url: 'https://maps.google.com/maps?q=' + encodeURIComponent(name) + '&output=embed',
+        msg: '✓ 場所名から変換しました。ピンの位置がずれる場合は「地図を埋め込む」から取得してください。'
+      };
+    }
+
+    // ⑦ /dir/ URL（ルート）→ 変換不可
+    if (url.includes('/maps/dir/')) {
+      return { ok: false, msg: 'ルート（経路）URLは自動変換できません。\nGoogle マップ →「共有」→「地図を埋め込む」→ src値をコピーしてください。' };
+    }
+  }
+
+  return { ok: false, msg: 'Google マップのURLを認識できませんでした。\n「共有」→「地図を埋め込む」→ src値をコピーしてください。' };
+}
+
+function tryConvert(inputId, statusId) {
+  const input  = document.getElementById(inputId);
+  const status = document.getElementById(statusId);
+  const result = convertGoogleMapsUrl(input.value);
+
+  status.style.display = 'block';
+  if (result.ok) {
+    input.value = result.url;
+    input.style.borderColor = '#2D6A4F';
+    status.style.color      = '#064E3B';
+    status.style.background = '#D1FAE5';
+    status.style.border     = '1px solid #6EE7B7';
+  } else {
+    input.style.borderColor = '#9B1B1B';
+    status.style.color      = '#9B1B1B';
+    status.style.background = '#FEE2E2';
+    status.style.border     = '1px solid #FCA5A5';
+  }
+  status.style.padding     = '8px 12px';
+  status.style.borderRadius= '7px';
+  status.style.lineHeight  = '1.6';
+  status.style.whiteSpace  = 'pre-line';
+  status.innerHTML = (result.ok
+    ? '<i class="fa-solid fa-circle-check"></i> '
+    : '<i class="fa-solid fa-circle-exclamation"></i> ')
+    + result.msg;
+}
+
+function clearMapStatus(statusId) {
+  const el = document.getElementById(statusId);
+  if (!el) return;
+  el.style.display = 'none';
+  const inputId = statusId === 'meetMapStatus' ? 'f_meetMapUrl' : 'f_endMapUrl';
+  document.getElementById(inputId).style.borderColor = '';
+}
+
+// ── Toast ────────────────────────────────────────────────────
+function showToast(msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ── URL Link Generator ───────────────────────────────────────
+function generateUrls(){
+  const base  = document.getElementById('urlgen_base').value.trim();
+  const names = document.getElementById('urlgen_names').value
+                  .split('\n').map(s=>s.trim()).filter(s=>s);
+  const out   = document.getElementById('urlgen_output');
+  if(!base){
+    out.innerHTML='<div style="color:#9B1B1B;font-size:.85rem"><i class="fa-solid fa-circle-exclamation"></i>&ensp;ベースURLを入力してください。</div>';
+    return;
+  }
+  if(!names.length){
+    out.innerHTML='<div style="color:#9B1B1B;font-size:.85rem"><i class="fa-solid fa-circle-exclamation"></i>&ensp;お客様氏名を1行以上入力してください。</div>';
+    return;
+  }
+  const sep = base.includes('?') ? '&' : '?';
+  const rows = names.map((name,i)=>{
+    const url = base + sep + 'name=' + encodeURIComponent(name);
+    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border:1px solid #E8E2D8;border-radius:8px;margin-bottom:8px">
+      <span style="min-width:22px;height:22px;border-radius:50%;background:#ed1b23;color:#fff;font-size:.72rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center">${i+1}</span>
+      <span style="font-size:.82rem;font-weight:700;color:#1A1A1A;min-width:120px;white-space:nowrap">${esc(name)} 様</span>
+      <input type="text" value="${esc(url)}" readonly style="flex:1;padding:6px 10px;border:1.5px solid #E8E2D8;border-radius:6px;font-size:.78rem;color:#5A5650;background:#F8F7F5;outline:none">
+      <button onclick="copyUrl(this,'${esc(url)}')" style="padding:6px 12px;background:#ed1b23;color:#fff;border:none;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit">
+        <i class="fa-solid fa-copy"></i> コピー
+      </button>
+    </div>`;
+  }).join('');
+  out.innerHTML=`<div style="font-size:.8rem;font-weight:700;color:#5A5650;margin-bottom:10px">${names.length}件のURLを生成しました</div>${rows}
+  <button onclick="copyAllUrls()" style="margin-top:8px;padding:8px 16px;background:#1A1A1A;color:#fff;border:none;border-radius:7px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit">
+    <i class="fa-solid fa-copy"></i> 全URLをまとめてコピー
+  </button>`;
+}
+function copyUrl(btn, url){
+  navigator.clipboard.writeText(url).then(()=>{
+    btn.innerHTML='<i class="fa-solid fa-check"></i> コピー済';
+    btn.style.background='#2D6A4F';
+    setTimeout(()=>{ btn.innerHTML='<i class="fa-solid fa-copy"></i> コピー'; btn.style.background='#ed1b23'; },2000);
+  });
+}
+function copyAllUrls(){
+  const base  = document.getElementById('urlgen_base').value.trim();
+  const names = document.getElementById('urlgen_names').value
+                  .split('\n').map(s=>s.trim()).filter(s=>s);
+  const sep   = base.includes('?') ? '&' : '?';
+  const all   = names.map(n => n + '　' + base + sep + 'name=' + encodeURIComponent(n)).join('\n');
+  navigator.clipboard.writeText(all).then(()=>showToast('全URLをコピーしました'));
+}
+
+// ── Util ─────────────────────────────────────────────────────
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+</body>
+</html>
