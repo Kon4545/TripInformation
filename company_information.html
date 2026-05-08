@@ -323,6 +323,26 @@
 .survey-btn:hover { background: transparent; color: #fff; border-color: #fff; transform: translateY(-2px); }
 .survey-note { font-size: .76rem; color: rgba(255,255,255,.45); line-height: 1.6; }
 
+/* ── Goods CTA ──────────────────────────────────── */
+.goods-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px 16px;
+  background: #ed1b23;
+  color: #fff;
+  border-radius: 10px;
+  font-size: .85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background .2s, transform .18s;
+  margin-top: 6px;
+  letter-spacing: .02em;
+}
+.goods-cta-btn:hover { background: #9e1016; transform: translateY(-2px); }
+
 /* ── Page Nav ─────────────────────────────────────── */
 .page-nav { background: var(--navy-dark); padding: 40px 0; }
 .page-nav-inner { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
@@ -372,7 +392,7 @@
   <div class="header-inner">
     <a href="index.html" class="site-logo">
       <i class="fa-solid fa-paper-plane"></i>
-      <span id="hCompanyName">Moto Tours Japan</span>
+      <span id="hCompanyName">MOTO TOURS JAPAN</span>
     </a>
     <nav class="nav-menu">
       <a href="index.html">ホーム</a>
@@ -384,7 +404,7 @@
       <a href="company_information.html" class="active">会社情報</a>
       <a href="post_tour.html">ツアー後</a>
     </nav>
-    <img src="MTJ_logo_color_CMYK.jpg" alt="Moto Tours Japan" class="header-logo-img">
+    <img src="MTJ_logo_color_CMYK.jpg" alt="MOTO TOURS JAPAN" class="header-logo-img">
     <button class="hamburger" id="hamburger" aria-label="メニュー">
       <span></span><span></span><span></span>
     </button>
@@ -407,37 +427,7 @@
   <div class="container">
     <p class="banner-eyebrow"><i class="fa-solid fa-building"></i>&nbsp; COMPANY INFO</p>
     <h1 class="banner-title">会社情報・連絡先</h1>
-    <p class="banner-subtitle">オリジナルグッズ・SNS・緊急連絡先</p>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════════
-     ▼ オリジナルグッズ
-═════════════════════════════════════════════════ -->
-<section class="goods-section">
-  <div class="container">
-    <div class="section-head">
-      <div class="section-divider"></div>
-      <p class="section-eyebrow">ORIGINAL GOODS</p>
-      <h2 class="section-title">オリジナルグッズ</h2>
-      <p class="section-subtitle">旅の記念にMoto Tours Japanオリジナルグッズはいかがでしょうか</p>
-    </div>
-    <div class="goods-grid" id="goodsGrid"></div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════════
-     ▼ SNS
-═════════════════════════════════════════════════ -->
-<section class="sns-section">
-  <div class="container">
-    <div class="section-head">
-      <div class="section-divider"></div>
-      <p class="section-eyebrow" style="color:var(--gold)">FOLLOW US</p>
-      <h2 class="section-title" style="color:var(--gold-light)">公式 SNS</h2>
-      <p class="section-subtitle" style="color:rgba(255,255,255,.5)">旅の情報・キャンペーンを発信中！フォローして最新情報をチェック</p>
-    </div>
-    <div class="sns-grid" id="snsGrid"></div>
+    <p class="banner-subtitle">緊急連絡先・オリジナルグッズ・公式SNS</p>
   </div>
 </section>
 
@@ -459,6 +449,36 @@
     <!-- その他緊急連絡先 -->
     <p class="emg-others-title"><i class="fa-solid fa-phone-volume" style="color:var(--gold);margin-right:8px"></i>その他の緊急連絡先</p>
     <div class="emergency-grid" id="emergencyGrid"></div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     ▼ オリジナルグッズ
+═════════════════════════════════════════════════ -->
+<section class="goods-section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-divider"></div>
+      <p class="section-eyebrow">ORIGINAL GOODS</p>
+      <h2 class="section-title">オリジナルグッズ</h2>
+      <p class="section-subtitle">旅の記念にMOTO TOURS JAPANオリジナルグッズはいかがでしょうか</p>
+    </div>
+    <div class="goods-grid" id="goodsGrid"></div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     ▼ SNS
+═════════════════════════════════════════════════ -->
+<section class="sns-section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-divider"></div>
+      <p class="section-eyebrow" style="color:var(--gold)">FOLLOW US</p>
+      <h2 class="section-title" style="color:var(--gold-light)">公式 SNS</h2>
+      <p class="section-subtitle" style="color:rgba(255,255,255,.5)">旅の情報・キャンペーンを発信中！フォローして最新情報をチェック</p>
+    </div>
+    <div class="sns-grid" id="snsGrid"></div>
   </div>
 </section>
 
@@ -514,9 +534,9 @@
   <div class="container footer-inner">
     <div class="footer-logo">
       <i class="fa-solid fa-paper-plane"></i>
-      <span id="fCompanyName">Moto Tours Japan</span>
+      <span id="fCompanyName">MOTO TOURS JAPAN</span>
     </div>
-    <p class="footer-copy">&copy; <span id="fYear"></span> <span id="fCompanyNameEn">Moto Tours Japan Co., Ltd.</span></p>
+    <p class="footer-copy">&copy; <span id="fYear"></span> <span id="fCompanyNameEn">MOTO TOURS JAPAN Co., Ltd.</span></p>
   </div>
 </footer>
 
@@ -557,6 +577,16 @@ function renderGoods() {
     var imgHtml = g.image
       ? '<div class="goods-img"><img src="' + esc(g.image) + '" alt="' + esc(g.name) + '"></div>'
       : '';
+    var priceHtml = g.price
+      ? '<span class="goods-price">' + esc(g.price) +
+          '<span style="font-size:.68rem;font-weight:400;color:var(--text-muted);margin-left:4px">（税込）</span>' +
+        '</span>'
+      : '';
+    var ctaHtml = g.buyUrl
+      ? '<a href="' + esc(g.buyUrl) + '" target="_blank" rel="noopener noreferrer" class="goods-cta-btn">' +
+          '<i class="fa-solid fa-cart-shopping"></i> 購入はこちら' +
+        '</a>'
+      : '';
     html +=
       '<div class="goods-card">' +
         imgHtml +
@@ -569,8 +599,9 @@ function renderGoods() {
         '<p class="goods-desc">' + esc(g.desc) + '</p>' +
         '<div class="goods-footer">' +
           badgeHtml(g.badge, g.badgeType) +
-          '<span class="goods-price">' + esc(g.price) + '</span>' +
+          priceHtml +
         '</div>' +
+        ctaHtml +
       '</div>';
   });
   document.getElementById('goodsGrid').innerHTML = html;
@@ -674,7 +705,7 @@ function renderCompany() {
 ───────────────────────────────────────────── */
 function renderCommon() {
   var d = getData();
-  document.getElementById('hCompanyName').textContent   = d.company.name;
+  document.getElementById('hCompanyName').textContent   = d.company.name.toUpperCase() || 'MOTO TOURS JAPAN株式会社';
   document.getElementById('fCompanyName').textContent   = d.company.name;
   document.getElementById('fCompanyNameEn').textContent = d.company.nameEn;
   document.getElementById('fYear').textContent          = new Date().getFullYear();
@@ -706,9 +737,9 @@ function renderCommon() {
    初期化
 ───────────────────────────────────────────── */
 renderCommon();
+renderEmergency();
 renderGoods();
 renderSns();
-renderEmergency();
 renderCompany();
 </script>
 </body>

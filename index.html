@@ -14,7 +14,7 @@
 
 <header class="site-header">
   <div class="header-inner">
-    <a href="index.html" class="site-logo"><i class="fa-solid fa-paper-plane"></i><span id="hCompanyName">Moto Tours Japan</span></a>
+    <a href="index.html" class="site-logo"><i class="fa-solid fa-paper-plane"></i><span id="hCompanyName">MOTO TOURS JAPAN</span></a>
     <nav class="nav-menu">
       <a href="index.html" class="active">ホーム</a>
       <a href="route.html">全体行程</a>
@@ -25,7 +25,7 @@
       <a href="company_information.html">会社情報</a>
       <a href="post_tour.html">ツアー後</a>
     </nav>
-    <img src="MTJ_logo_color_CMYK.jpg" alt="Moto Tours Japan" class="header-logo-img">
+    <img src="MTJ_logo_color_CMYK.jpg" alt="MOTO TOURS JAPAN" class="header-logo-img">
     <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </div>
   <nav class="mobile-nav" id="mobileNav">
@@ -51,25 +51,21 @@
 <main>
 <div class="container">
 
-  <section class="section">
-    <!-- Customer banner -->
-    <div class="customer-banner" id="customerBanner">
-      <i class="fa-solid fa-user-tie"></i>
-      <div><div class="label">ご参加のお客様</div><div class="name" id="customerName">—</div></div>
-    </div>
-
-    <!-- Meeting info -->
-    <h2 class="section-title"><i class="fa-solid fa-clock"></i> 集合・解散情報</h2>
-    <div class="grid grid-3" id="meetingCards"></div>
-    <div class="meeting-maps" id="meetingMaps"></div>
-    <div id="shuttleBlock"></div>
-  </section>
-
-  <!-- Greeting -->
+  <!-- Greeting（最初に表示） -->
   <section class="section">
     <h2 class="section-title"><i class="fa-solid fa-envelope-open-text"></i> 担当添乗員からのご挨拶</h2>
     <div class="greeting-box" id="greetingBox"></div>
-    <div class="guide-cards" id="guideCards"></div>
+  </section>
+
+  <!-- Meeting info -->
+  <section class="section">
+    <h2 class="section-title"><i class="fa-solid fa-clock"></i> 集合・解散情報</h2>
+    <!-- マップを最初に表示 -->
+    <div class="meeting-maps" id="meetingMaps"></div>
+    <!-- 集合・解散カード -->
+    <div class="grid grid-3" id="meetingCards"></div>
+    <!-- 送迎 -->
+    <div id="shuttleBlock"></div>
   </section>
 
   <!-- Includes / Excludes -->
@@ -93,12 +89,18 @@
     <div class="grid grid-3" id="quickLinksGrid"></div>
   </section>
 
+  <!-- FAQ -->
+  <section class="section" id="faqSection" style="display:none">
+    <h2 class="section-title"><i class="fa-solid fa-circle-question"></i> よくある質問</h2>
+    <div id="faqList"></div>
+  </section>
+
 </div>
 </main>
 
 <footer class="site-footer">
-  <p><i class="fa-solid fa-paper-plane"></i>&ensp;<span id="footerCompany">Moto Tours Japan株式会社</span></p>
-  <p id="footerCopy">&copy; 2026 Moto Tours Japan Co., Ltd. All Rights Reserved.</p>
+  <p><i class="fa-solid fa-paper-plane"></i>&ensp;<span id="footerCompany">MOTO TOURS JAPAN株式会社</span></p>
+  <p id="footerCopy">&copy; 2026 MOTO TOURS JAPAN Co., Ltd. All Rights Reserved.</p>
 </footer>
 
 <script src="tour-data.js"></script>
@@ -107,7 +109,7 @@ function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,
 const d = getData();
 // Page title
 document.getElementById('pageTitle').textContent = '旅のしおり | ' + d.basic.tourTitle;
-document.getElementById('hCompanyName').textContent = d.company.name.replace('株式会社','').trim() || 'Moto Tours Japan';
+document.getElementById('hCompanyName').textContent = d.company.name.toUpperCase() || 'MOTO TOURS JAPAN株式会社';
 // Hero
 document.getElementById('heroTitle').innerHTML = d.basic.tourTitle.replace('・','<span style="color:var(--white)">・</span>');
 // Hero background image
@@ -125,10 +127,24 @@ document.getElementById('heroChips').innerHTML = [
   ['fa-solid fa-users', d.basic.participantCount],
   ['fa-solid fa-location-dot', d.basic.area]
 ].map(([ico,txt])=>`<span class="hero-chip"><i class="${ico}"></i>${txt}</span>`).join('');
-// Customer（URLパラメーター ?name= があればそちらを優先）
-const _urlName = new URLSearchParams(window.location.search).get('name');
-const _customerName = _urlName ? _urlName : d.basic.customerName;
-document.getElementById('customerName').textContent = _customerName + ' 様';
+
+// 担当添乗員からのご挨拶（複数担当者対応）
+const guides = (d.guides && d.guides.length) ? d.guides : (d.guide ? [d.guide] : []);
+const primaryGuide = guides[0] || {};
+document.getElementById('greetingBox').innerHTML =
+  '<div class="greeting-from">' +
+  guides.map(g => `
+    <div class="greeting-from-item">
+      <div class="greeting-avatar"><i class="fa-solid fa-circle-user"></i></div>
+      <div>
+        <div class="greeting-from-name">${esc(g.name)}</div>
+        <div class="greeting-from-title">${esc(g.title)}</div>
+      </div>
+    </div>`).join('') +
+  '</div>' +
+  `<div class="greeting-text">${esc(primaryGuide.greeting || '')}</div>` +
+  `<div class="greeting-sign">${esc(d.company.name)}　担当 ${guides.map(g => g.name.split('（')[0]).join(' / ')}</div>`;
+
 // Meeting cards
 const mc = [
   {icon: d.meeting.meetIcon || 'fa-solid fa-flag-checkered', color: d.meeting.meetIconColor || '', label:'集合場所',      value:d.meeting.place,    sub:d.meeting.placeDetail},
@@ -144,19 +160,31 @@ document.getElementById('meetingCards').innerHTML = mc.map(c=>`
     <div class="sub">${c.sub}</div>
   </div>
 </div>`).join('');
-// Meeting maps（URLが設定されている場合のみ表示）
+
+// Meeting maps（集合・解散が同じURLの場合は1枚だけ表示）
 (function(){
   const maps = [];
-  if (d.meeting.meetMapUrl) maps.push({
-    icon: d.meeting.meetIcon || 'fa-solid fa-flag-checkered',
-    label: '集合場所マップ &nbsp;' + d.meeting.place,
-    url: d.meeting.meetMapUrl
-  });
-  if (d.meeting.endMapUrl) maps.push({
-    icon: d.meeting.endIcon || 'fa-solid fa-circle-check',
-    label: '解散場所マップ &nbsp;' + d.meeting.endPlace,
-    url: d.meeting.endMapUrl
-  });
+  const meetUrl = d.meeting.meetMapUrl;
+  const endUrl  = d.meeting.endMapUrl;
+  if (meetUrl && endUrl && meetUrl === endUrl) {
+    // 集合・解散が同じ場所 → マップ1枚
+    maps.push({
+      icon:  d.meeting.meetIcon || 'fa-solid fa-flag-checkered',
+      label: '集合・解散場所マップ &nbsp;' + d.meeting.place,
+      url:   meetUrl
+    });
+  } else {
+    if (meetUrl) maps.push({
+      icon:  d.meeting.meetIcon || 'fa-solid fa-flag-checkered',
+      label: '集合場所マップ &nbsp;' + d.meeting.place,
+      url:   meetUrl
+    });
+    if (endUrl) maps.push({
+      icon:  d.meeting.endIcon || 'fa-solid fa-circle-check',
+      label: '解散場所マップ &nbsp;' + d.meeting.endPlace,
+      url:   endUrl
+    });
+  }
   document.getElementById('meetingMaps').innerHTML = maps.map(m => `
     <div class="meeting-map-block">
       <div class="meeting-map-label"><i class="${m.icon}"></i>${m.label}</div>
@@ -165,6 +193,7 @@ document.getElementById('meetingCards').innerHTML = mc.map(c=>`
       </div>
     </div>`).join('');
 })();
+
 // Shuttle info
 (function(){
   const sh = d.meeting.shuttle || {};
@@ -188,52 +217,47 @@ document.getElementById('meetingCards').innerHTML = mc.map(c=>`
   document.getElementById('shuttleBlock').innerHTML = `
     <div class="shuttle-block">
       <div class="shuttle-header"><i class="fa-solid fa-van-shuttle"></i>送迎をご希望の方へ</div>
+      <div style="background:#FFF8EC;border:1px solid #F5C97A;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:.88rem;color:#7A4500;display:flex;align-items:center;gap:8px">
+        <i class="fa-solid fa-flag" style="color:#9e1016;flex-shrink:0"></i>
+        集合場所にはMOTO TOURS JAPANのロゴを持ったスタッフがお待ちしております。
+      </div>
       ${sh.note ? `<div class="shuttle-note">${esc(sh.note)}</div>` : ''}
       ${pickupsHtml ? `<div class="shuttle-pickup-list">${pickupsHtml}</div>` : ''}
       ${metaHtml   ? `<div class="shuttle-meta">${metaHtml}</div>` : ''}
     </div>`;
 })();
-// Guide greeting（複数担当者対応）
-const guides = (d.guides && d.guides.length) ? d.guides : (d.guide ? [d.guide] : []);
-const primaryGuide = guides[0] || {};
-// 挨拶ボックス：全員の名前を並べ、ご挨拶文は1人目から
-document.getElementById('greetingBox').innerHTML =
-  '<div class="greeting-from">' +
-  guides.map(g => `
-    <div class="greeting-from-item">
-      <div class="greeting-avatar"><i class="fa-solid fa-circle-user"></i></div>
-      <div>
-        <div class="greeting-from-name">${esc(g.name)}</div>
-        <div class="greeting-from-title">${esc(g.title)}</div>
-      </div>
-    </div>`).join('') +
-  '</div>' +
-  `<div class="greeting-text">${esc(primaryGuide.greeting || '')}</div>` +
-  `<div class="greeting-sign">${esc(d.company.name)}　担当 ${guides.map(g => g.name.split('（')[0]).join(' / ')}</div>`;
-// 担当者連絡先カード（全員）
-document.getElementById('guideCards').innerHTML = guides.map(g => `
-  <div class="guide-contact-card">
-    <div class="guide-contact-avatar"><i class="fa-solid fa-circle-user"></i></div>
-    <div style="flex:1">
-      <div class="guide-contact-name">${esc(g.name)}</div>
-      <div class="guide-contact-role">${esc(g.title)}</div>
-      ${g.phone  ? `<div class="guide-contact-row"><i class="fa-solid fa-phone"></i><a href="tel:${esc(g.phone)}">${esc(g.phone)}</a></div>` : ''}
-      ${g.email  ? `<div class="guide-contact-row"><i class="fa-solid fa-envelope"></i><a href="mailto:${esc(g.email)}">${esc(g.email)}</a></div>` : ''}
-      ${g.lineId ? `<div class="guide-contact-row"><i class="fa-brands fa-line" style="color:#06C755"></i>${esc(g.lineId)}</div>` : ''}
-    </div>
-  </div>`).join('');
+
 // Includes / Excludes
 function renderList(el, items, icon, cls){
   el.innerHTML = items.map(i=>`<div class="include-item"><i class="${icon}"></i><span>${i}</span></div>`).join('');
 }
 renderList(document.getElementById('includesList'), d.includes, 'fa-solid fa-check', 'yes');
 renderList(document.getElementById('excludesList'), d.excludes, 'fa-solid fa-xmark', 'no');
+
 // Quick links
 document.getElementById('quickLinksGrid').innerHTML = (d.quickLinks || []).map(q => `
   <a href="${q.url}" class="quick-link-card">
     <div class="quick-link-img" style="background:linear-gradient(135deg,${q.color1},${q.color2})"><i class="${q.icon}"></i></div>
     <div class="quick-link-body"><h3>${q.title}</h3><p>${q.desc}</p></div>
   </a>`).join('');
+
+// FAQ
+const faqs = d.faq || [];
+if (faqs.length) {
+  document.getElementById('faqSection').style.display = '';
+  document.getElementById('faqList').innerHTML = faqs.map(item => `
+    <div style="background:#fff;border:1px solid #E8E2D8;border-radius:12px;padding:18px 20px;margin-bottom:12px">
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
+        <i class="fa-solid fa-circle-question" style="color:#9e1016;font-size:1.1rem;flex-shrink:0;margin-top:2px"></i>
+        <span style="font-weight:700;color:#1A1A2E;font-size:.96rem;line-height:1.6">${esc(item.q)}</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;padding-left:2px">
+        <i class="fa-solid fa-comment-dots" style="color:#5A5650;font-size:1rem;flex-shrink:0;margin-top:3px;margin-left:2px"></i>
+        <span style="color:#5A5650;font-size:.92rem;line-height:1.7;white-space:pre-line">${esc(item.a)}</span>
+      </div>
+    </div>`).join('');
+}
+
 // Footer
 document.getElementById('footerCompany').textContent = d.company.name;
 document.getElementById('footerCopy').innerHTML = '&copy; 2026 ' + d.company.nameEn + '. All Rights Reserved.';

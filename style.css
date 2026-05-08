@@ -90,6 +90,7 @@ ul { list-style: none; }
   align-items: center;
   gap: 10px;
   color: var(--gold-light);
+  text-transform: uppercase;
   font-family: var(--font-serif);
   font-size: 1.05rem;
   font-weight: 700;

@@ -235,15 +235,14 @@
   flex-shrink: 0;
 }
 .acc-item.open .acc-arrow { transform: rotate(180deg); }
-.acc-body {
-  display: block !important; /* style.css の display:none を上書き */
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height .4s cubic-bezier(.4,0,.2,1);
+/* style.css の .acc-body より高い specificity で上書き (0,2,0 vs 0,1,0) */
+.tips-section .acc-body {
+  display: none;
+  padding: 0;
 }
-.acc-item.open .acc-body {
-  max-height: 9999px;
-  transition: max-height 0.6s ease;
+/* open 時は 0,4,0 で display:none をすべて上書き */
+.tips-section .acc-item.open .acc-body {
+  display: block;
 }
 .acc-body-inner {
   padding: 0 22px 22px 76px;
@@ -358,7 +357,7 @@
   <div class="header-inner">
     <a href="index.html" class="site-logo">
       <i class="fa-solid fa-paper-plane"></i>
-      <span id="hCompanyName">Moto Tours Japan</span>
+      <span id="hCompanyName">MOTO TOURS JAPAN</span>
     </a>
     <nav class="nav-menu">
       <a href="index.html">ホーム</a>
@@ -370,7 +369,7 @@
       <a href="company_information.html">会社情報</a>
       <a href="post_tour.html">ツアー後</a>
     </nav>
-    <img src="MTJ_logo_color_CMYK.jpg" alt="Moto Tours Japan" class="header-logo-img">
+    <img src="MTJ_logo_color_CMYK.jpg" alt="MOTO TOURS JAPAN" class="header-logo-img">
     <button class="hamburger" id="hamburger" aria-label="メニュー">
       <span></span><span></span><span></span>
     </button>
@@ -500,9 +499,9 @@
   <div class="container footer-inner">
     <div class="footer-logo">
       <i class="fa-solid fa-paper-plane"></i>
-      <span id="fCompanyName">Moto Tours Japan</span>
+      <span id="fCompanyName">MOTO TOURS JAPAN</span>
     </div>
-    <p class="footer-copy">&copy; <span id="fYear"></span> <span id="fCompanyNameEn">Moto Tours Japan Co., Ltd.</span></p>
+    <p class="footer-copy">&copy; <span id="fYear"></span> <span id="fCompanyNameEn">MOTO TOURS JAPAN Co., Ltd.</span></p>
   </div>
 </footer>
 
@@ -705,7 +704,7 @@ function toggleAcc(i) {
 ───────────────────────────────────────────── */
 function renderCommon() {
   var d = getData();
-  document.getElementById('hCompanyName').textContent    = d.company.name;
+  document.getElementById('hCompanyName').textContent    = d.company.name.toUpperCase() || 'MOTO TOURS JAPAN株式会社';
   document.getElementById('fCompanyName').textContent    = d.company.name;
   document.getElementById('fCompanyNameEn').textContent  = d.company.nameEn;
   document.getElementById('fYear').textContent           = new Date().getFullYear();
@@ -747,19 +746,28 @@ function renderEmergencySteps() {
   var listEl = document.getElementById('emgStepList');
   if (!listEl) return;
   listEl.innerHTML = steps.map(function(s, i) {
-    var tagHtml = (s.tag)
+    var tagHtml = s.tag
       ? '<span class="step-tag tag-' + esc(s.tagType || 'red') + '">' + esc(s.tag) + '</span>'
       : '';
+    var iconHtml = s.icon
+      ? '<div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#ed1b23,#9e1016);display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(158,16,22,.28);flex-shrink:0;margin-top:10px">' +
+          '<i class="' + esc(s.icon) + '" style="color:#fff;font-size:1.1rem"></i>' +
+        '</div>'
+      : '';
     var isLast = (i === steps.length - 1);
+    var bodyInner = iconHtml
+      ? '<div style="display:flex;align-items:flex-start;gap:14px">' + iconHtml +
+          '<div style="flex:1"><p class="step-title">' + esc(s.title) + ' ' + tagHtml + '</p>' +
+          '<p class="step-desc">' + esc(s.desc) + '</p></div>' +
+        '</div>'
+      : '<p class="step-title">' + esc(s.title) + ' ' + tagHtml + '</p>' +
+        '<p class="step-desc">' + esc(s.desc) + '</p>';
     return '<div class="step-item">' +
       '<div class="step-left">' +
         '<div class="step-num">' + (i + 1) + '</div>' +
         (isLast ? '' : '<div class="step-line"></div>') +
       '</div>' +
-      '<div class="step-body">' +
-        '<p class="step-title">' + esc(s.title) + ' ' + tagHtml + '</p>' +
-        '<p class="step-desc">' + esc(s.desc) + '</p>' +
-      '</div>' +
+      '<div class="step-body">' + bodyInner + '</div>' +
     '</div>';
   }).join('');
 }

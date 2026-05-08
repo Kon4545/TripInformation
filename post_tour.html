@@ -202,7 +202,7 @@
   <div class="header-inner">
     <a href="index.html" class="site-logo">
       <i class="fa-solid fa-paper-plane"></i>
-      <span id="hCompanyName">Moto Tours Japan</span>
+      <span id="hCompanyName">MOTO TOURS JAPAN</span>
     </a>
     <nav class="nav-menu">
       <a href="index.html">ホーム</a>
@@ -214,7 +214,7 @@
       <a href="company_information.html">会社情報</a>
       <a href="post_tour.html" class="active">ツアー後</a>
     </nav>
-    <img src="MTJ_logo_color_CMYK.jpg" alt="Moto Tours Japan" class="header-logo-img">
+    <img src="MTJ_logo_color_CMYK.jpg" alt="MOTO TOURS JAPAN" class="header-logo-img">
     <button class="hamburger" id="hamburger" aria-label="メニュー">
       <span></span><span></span><span></span>
     </button>
@@ -272,6 +272,10 @@
       <h2 class="section-title"><i class="fa-brands fa-youtube"></i> ツアー動画</h2>
       <p class="section-subtitle">ツアーをまとめた動画です。ぜひご覧ください</p>
     </div>
+    <div style="display:flex;align-items:center;gap:10px;background:#1A1A2E;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px 18px;margin-bottom:22px">
+      <i class="fa-solid fa-lock" style="color:var(--gold);font-size:.95rem;flex-shrink:0"></i>
+      <span style="font-size:.83rem;color:rgba(255,255,255,.75)">この動画はツアー参加者のみに共有されている<strong style="color:var(--gold)">限定公開</strong>動画です。URLの第三者への共有はご遠慮ください。</span>
+    </div>
     <div class="pt-video-grid" id="videoGrid"></div>
   </div>
 </section>
@@ -282,10 +286,13 @@
     <div class="section-head">
       <div class="section-divider"></div>
       <p class="section-eyebrow">QUESTIONNAIRE</p>
-      <h2 class="section-title"><i class="fa-solid fa-clipboard-list"></i> アンケート</h2>
-      <p class="section-subtitle">今後のサービス向上のため、ご協力をお願いいたします</p>
+      <h2 class="section-title"><i class="fa-solid fa-clipboard-list"></i> アンケート・口コミ</h2>
+      <p class="section-subtitle">ご感想・評価をお聞かせください</p>
     </div>
-    <div class="survey-card" id="surveyCard"></div>
+    <div style="display:flex;flex-wrap:wrap;gap:24px;justify-content:center">
+      <div class="survey-card" id="surveyCard" style="flex:1;min-width:280px;max-width:540px"></div>
+      <div class="survey-card" id="gmapReviewCard" style="flex:1;min-width:280px;max-width:540px;display:none"></div>
+    </div>
   </div>
 </section>
 
@@ -296,7 +303,7 @@
       <div class="section-divider"></div>
       <p class="section-eyebrow">NEXT ADVENTURE</p>
       <h2 class="section-title"><i class="fa-solid fa-compass"></i> 次のツアーのご案内</h2>
-      <p class="section-subtitle">次の旅もMoto Tours Japanと一緒に</p>
+      <p class="section-subtitle">次の旅もMOTO TOURS JAPANと一緒に</p>
     </div>
     <div class="pt-nexttour-grid" id="nextTourGrid"></div>
   </div>
@@ -319,8 +326,8 @@
 <!-- ▼ Footer -->
 <footer class="site-footer">
   <div class="container footer-inner">
-    <div class="footer-logo"><i class="fa-solid fa-paper-plane"></i><span id="fCompanyName">Moto Tours Japan</span></div>
-    <p class="footer-copy">&copy; <span id="fYear"></span> <span id="fCompanyNameEn">Moto Tours Japan Co., Ltd.</span></p>
+    <div class="footer-logo"><i class="fa-solid fa-paper-plane"></i><span id="fCompanyName">MOTO TOURS JAPAN</span></div>
+    <p class="footer-copy">&copy; <span id="fYear"></span> <span id="fCompanyNameEn">MOTO TOURS JAPAN Co., Ltd.</span></p>
   </div>
 </footer>
 
@@ -352,7 +359,7 @@ function render(){
   const d = getData();
   const pt = d.postTour || {};
   document.title = 'ツアー後 | ' + (d.basic.tourTitle || '旅のしおり');
-  document.getElementById('hCompanyName').textContent = d.company.name;
+  document.getElementById('hCompanyName').textContent = d.company.name.toUpperCase() || 'MOTO TOURS JAPAN株式会社';
   document.getElementById('fCompanyName').textContent = d.company.name;
   document.getElementById('fCompanyNameEn').textContent = d.company.nameEn;
   document.getElementById('fYear').textContent = new Date().getFullYear();
@@ -394,10 +401,12 @@ function render(){
       </div>`).join('');
   }
 
-  // ③ アンケート
+  // ③ アンケート＋Googleマップ口コミ
   const sv = d.survey || {};
-  if(sv.url){
+  if(sv.url || sv.mapReviewUrl){
     document.getElementById('surveySection').style.display = '';
+  }
+  if(sv.url){
     document.getElementById('surveyCard').innerHTML =
       '<span class="survey-eyebrow"><i class="fa-solid fa-clipboard-list" style="margin-right:6px"></i>QUESTIONNAIRE</span>' +
       '<div class="survey-icon-wrap"><i class="fa-solid fa-star-half-stroke"></i></div>' +
@@ -405,6 +414,21 @@ function render(){
       '<p class="survey-desc">' + esc(sv.desc || '今後のサービス向上のため、ぜひアンケートへのご協力をお願いいたします。') + '</p>' +
       '<a href="' + esc(sv.url) + '" target="_blank" rel="noopener" class="survey-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i> アンケートに回答する</a>' +
       '<p class="survey-note">※ 別タブで外部アンケートフォームが開きます。<br>ご回答は任意です。ご協力いただけますと幸いです。</p>';
+  }
+  if(sv.mapReviewUrl){
+    var gmapCard = document.getElementById('gmapReviewCard');
+    gmapCard.style.display = '';
+    gmapCard.innerHTML =
+      '<span class="survey-eyebrow" style="color:#FBBC04"><i class="fa-brands fa-google" style="margin-right:6px"></i>GOOGLE MAPS REVIEW</span>' +
+      '<div class="survey-icon-wrap" style="background:rgba(251,188,4,.15);border:2px solid rgba(251,188,4,.35)">' +
+        '<i class="fa-solid fa-star" style="color:#FBBC04;font-size:1.5rem"></i>' +
+      '</div>' +
+      '<p class="survey-title">Googleマップに口コミを投稿</p>' +
+      '<p class="survey-desc">ツアーのご感想をGoogleマップの口コミとして投稿していただけると、私たちの大きな励みになります。ぜひ評価をお願いいたします！</p>' +
+      '<a href="' + esc(sv.mapReviewUrl) + '" target="_blank" rel="noopener" class="survey-btn" style="background:#fff;color:var(--navy);border:2px solid #fff">' +
+        '<i class="fa-brands fa-google" style="color:#EA4335"></i>&ensp;口コミを書く' +
+      '</a>' +
+      '<p class="survey-note">※ 別タブでGoogleマップの口コミページが開きます。<br>ご投稿は任意です。ご協力いただけますと幸いです。</p>';
   }
 
   // ④ 次のツアー

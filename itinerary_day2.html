@@ -11,7 +11,7 @@
 <body>
 <header class="site-header">
   <div class="header-inner">
-    <a href="index.html" class="site-logo"><i class="fa-solid fa-paper-plane"></i><span>Moto Tours Japan</span></a>
+    <a href="index.html" class="site-logo"><i class="fa-solid fa-paper-plane"></i><span>MOTO TOURS JAPAN株式会社</span></a>
     <nav class="nav-menu">
       <a href="index.html">ホーム</a><a href="route.html">全体行程</a>
       <a href="itinerary_day1.html">Day 1</a><a href="itinerary_day2.html" class="active">Day 2</a>
@@ -19,7 +19,7 @@
       <a href="caution.html">注意事項</a><a href="company_information.html">会社情報</a>
       <a href="post_tour.html">ツアー後</a>
     </nav>
-    <img src="MTJ_logo_color_CMYK.jpg" alt="Moto Tours Japan" class="header-logo-img">
+    <img src="MTJ_logo_color_CMYK.jpg" alt="MOTO TOURS JAPAN" class="header-logo-img">
     <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </div>
   <nav class="mobile-nav" id="mobileNav">
@@ -48,11 +48,7 @@
 
   <section class="section">
     <h2 class="section-title"><i class="fa-solid fa-map-location-dot"></i> Day 2 訪問スポット マップ</h2>
-    <div class="alert alert-info" style="margin-bottom:16px">
-      <i class="fa-solid fa-circle-info"></i><span>地図上でピンをクリックすると各スポットの詳細情報が確認できます。</span>
-    </div>
-    <div class="map-wrap"><iframe id="mapFrame" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Day 2 マップ"></iframe></div>
-    <div class="spot-grid" id="spotGrid"></div>
+    <div id="routeIllust"></div>
   </section>
 
   <div class="page-nav">
@@ -62,8 +58,8 @@
 </div></main>
 
 <footer class="site-footer">
-  <p><i class="fa-solid fa-paper-plane"></i>&ensp;<span id="footerCompany">Moto Tours Japan株式会社</span></p>
-  <p id="footerCopy">&copy; 2026 Moto Tours Japan Co., Ltd. All Rights Reserved.</p>
+  <p><i class="fa-solid fa-paper-plane"></i>&ensp;<span id="footerCompany">MOTO TOURS JAPAN株式会社</span></p>
+  <p id="footerCopy">&copy; 2026 MOTO TOURS JAPAN Co., Ltd. All Rights Reserved.</p>
 </footer>
 
 <script src="tour-data.js"></script>
@@ -71,7 +67,6 @@
 const d = getData();
 const day = d.day2;
 const BADGE = {red:'badge-red',blue:'badge-blue',green:'badge-green',gold:'badge-gold'};
-const COLORS = ['#6B1A1A','#8B3A00','#3A1A6B','#1A1A1A','#2D6A4F','#c5151b'];
 
 document.getElementById('bannerSub').textContent = day.date + '｜' + day.theme;
 document.getElementById('dayStrip').innerHTML = `
@@ -84,10 +79,8 @@ document.getElementById('dayStrip').innerHTML = `
 document.getElementById('dayStrip').style.background = 'linear-gradient(135deg,#c5151b,#9e1016)';
 
 document.getElementById('timeline').innerHTML = (day.items||[]).map(item=>{
-  const hl = item.isHighlight ? 'highlight' : '';
   const bdg = item.badge ? `<span class="badge ${BADGE[item.badgeType]||'badge-blue'}" style="margin-left:8px">${item.badge}</span>` : '';
-  return `<div class="tl-item ${hl}">
-    <div class="tl-time">${item.time||''}</div>
+  return `<div class="tl-item">
     <div class="tl-card">
       <div class="tl-card-header">
         <div class="tl-card-title"><i class="${item.icon||'fa-solid fa-circle'}"></i>${item.title}${bdg}</div>
@@ -98,18 +91,56 @@ document.getElementById('timeline').innerHTML = (day.items||[]).map(item=>{
   </div>`;
 }).join('');
 
-document.getElementById('mapFrame').src = day.mapEmbed || '';
-
-const spots = (day.items||[]).filter(i=>i.isHighlight);
-document.getElementById('spotGrid').innerHTML = spots.map((s,i)=>`
-<div class="spot-card">
-  <div class="spot-num" style="background:${COLORS[i%COLORS.length]}">${['①','②','③','④','⑤','⑥'][i]||String(i+1)}</div>
-  <div class="spot-info">
-    <div class="name">${s.title}</div>
-    <div class="addr">${s.place||''}</div>
-    <div class="time">${s.time||''}</div>
-  </div>
-</div>`).join('');
+// Route Illustration
+(function(){
+  const items = day.items || [];
+  const STOP_COLORS = ['#ed1b23','#9e1016','#c5151b','#8B3A00','#2D6A4F','#1A3A6B','#0D6A4E','#6B1A1A'];
+  const el = document.getElementById('routeIllust');
+  if (!el || !items.length) return;
+  const stopsHtml = items.map((item, i) => {
+    const color = STOP_COLORS[i % STOP_COLORS.length];
+    const isLast = i === items.length - 1;
+    const bdg = item.badge ? `<span class="badge badge-${item.badgeType||'blue'}" style="margin-left:6px">${item.badge}</span>` : '';
+    return `<div style="display:flex;align-items:flex-start">
+        <div style="display:flex;flex-direction:column;align-items:center;width:40px;flex-shrink:0">
+          <div style="width:34px;height:34px;border-radius:50%;background:${color};display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.2);flex-shrink:0">
+            <i class="${item.icon||'fa-solid fa-map-pin'}" style="color:#fff;font-size:.8rem"></i>
+          </div>
+          ${!isLast ? `<div style="width:2px;flex:1;min-height:28px;background:repeating-linear-gradient(to bottom,#CBD5E1 0,#CBD5E1 5px,transparent 5px,transparent 10px);margin:4px 0"></div>` : ''}
+        </div>
+        <div style="padding-left:12px;padding-bottom:${isLast?'0':'22px'};padding-top:4px;flex:1;min-width:0">
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:2px">
+            <span style="width:18px;height:18px;border-radius:50%;background:${color};color:#fff;font-size:.6rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">${i+1}</span>
+            <span style="font-weight:700;color:#1A1A2E;font-size:.93rem;line-height:1.4">${item.title}</span>${bdg}
+          </div>
+          ${item.place ? `<div style="font-size:.78rem;color:#7A7068;display:flex;align-items:center;gap:3px;margin-bottom:3px"><i class="fa-solid fa-location-dot" style="color:#ed1b23;font-size:.68rem;flex-shrink:0"></i>${item.place}</div>` : ''}
+          ${item.desc ? `<div style="font-size:.8rem;color:#5A5650;line-height:1.55">${item.desc}</div>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+  el.innerHTML = `
+    <div style="background:#fff;border:1px solid #E8E2D8;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06)">
+      <div style="background:linear-gradient(135deg,#1A1A2E 0%,#2C3E6B 100%);padding:14px 20px;display:flex;align-items:center;gap:12px">
+        <div style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="fa-solid fa-route" style="color:#fff;font-size:1.1rem"></i>
+        </div>
+        <div>
+          <div style="color:#fff;font-weight:700;font-size:.92rem;letter-spacing:.03em">Day 2 ルートマップ</div>
+          <div style="color:rgba(255,255,255,.55);font-size:.73rem;margin-top:1px">${items.length}スポット</div>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+          <div style="width:8px;height:8px;border-radius:50%;background:#ed1b23"></div>
+          <div style="width:28px;height:2px;background:rgba(255,255,255,.25);border-radius:2px"></div>
+          <i class="fa-solid fa-car" style="color:rgba(255,255,255,.5);font-size:.8rem"></i>
+          <div style="width:28px;height:2px;background:rgba(255,255,255,.25);border-radius:2px"></div>
+          <div style="width:8px;height:8px;border-radius:50%;background:#2D6A4F"></div>
+        </div>
+      </div>
+      <div style="padding:20px 20px 16px">
+        ${stopsHtml}
+      </div>
+    </div>`;
+})();
 
 document.getElementById('footerCompany').textContent = d.company.name;
 document.getElementById('footerCopy').innerHTML = '&copy; 2026 ' + d.company.nameEn + '. All Rights Reserved.';
