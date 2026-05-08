@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>全体行程 | 旅のしおり</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="site-logo"><i class="fa-solid fa-paper-plane"></i><span>MOTO TOURS JAPAN株式会社</span></a>
+    <nav class="nav-menu">
+      <a href="index.html">ホーム</a><a href="route.html" class="active">全体行程</a>
+      <a href="itinerary_day1.html">Day 1</a><a href="itinerary_day2.html">Day 2</a>
+      <a href="itinerary_day3.html">Day 3</a>
+      <a href="caution.html">注意事項</a><a href="company_information.html">会社情報</a>
+      <a href="post_tour.html">ツアー後</a>
+    </nav>
+    <img src="MTJ_logo_color_CMYK.jpg" alt="MOTO TOURS JAPAN" class="header-logo-img">
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="index.html"><i class="fa-solid fa-house"></i>&ensp;ホーム</a>
+    <a href="route.html" class="active"><i class="fa-solid fa-map"></i>&ensp;全体行程</a>
+    <a href="itinerary_day1.html"><i class="fa-solid fa-calendar-day"></i>&ensp;Day 1 詳細</a>
+    <a href="itinerary_day2.html"><i class="fa-solid fa-calendar-day"></i>&ensp;Day 2 詳細</a>
+    <a href="itinerary_day3.html"><i class="fa-solid fa-calendar-day"></i>&ensp;Day 3 詳細</a>
+    <a href="caution.html"><i class="fa-solid fa-circle-exclamation"></i>&ensp;注意事項</a>
+    <a href="company_information.html"><i class="fa-solid fa-building"></i>&ensp;会社情報</a>
+    <a href="post_tour.html"><i class="fa-solid fa-camera-retro"></i>&ensp;ツアー後</a>
+  </nav>
+</header>
+
+<div class="page-banner">
+  <h1><i class="fa-solid fa-map"></i> 全体行程</h1>
+  <p>3日間の旅程をひと目で確認</p>
+</div>
+
+<main><div class="container">
+
+  <!-- 全体行程表 -->
+  <section class="section">
+    <h2 class="section-title"><i class="fa-solid fa-calendar-days"></i> 全体行程表</h2>
+    <div class="alert alert-info">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>各日の詳細行程は
+        <a href="itinerary_day1.html"><strong>Day 1</strong></a> /
+        <a href="itinerary_day2.html"><strong>Day 2</strong></a> /
+        <a href="itinerary_day3.html"><strong>Day 3</strong></a>
+        のページでご確認いただけます。</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="route-table">
+        <thead><tr><th style="width:110px">時刻</th><th>内容</th><th style="width:110px">備考</th></tr></thead>
+        <tbody id="routeTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Highlights -->
+  <section class="section">
+    <h2 class="section-title"><i class="fa-solid fa-star"></i> ツアーハイライト</h2>
+    <div class="grid grid-3" id="highlightsGrid"></div>
+  </section>
+
+  <!-- Hotels -->
+  <section class="section">
+    <h2 class="section-title"><i class="fa-solid fa-hotel"></i> 宿泊施設情報</h2>
+    <div id="hotelCards"></div>
+    <div class="alert alert-info" id="hotelNoteBox" style="margin-top:16px;display:none">
+      <i class="fa-solid fa-circle-info"></i>
+      <span id="hotelNoteText"></span>
+    </div>
+  </section>
+
+</div></main>
+
+<footer class="site-footer">
+  <p><i class="fa-solid fa-paper-plane"></i>&ensp;<span id="footerCompany">MOTO TOURS JAPAN株式会社</span></p>
+  <p id="footerCopy">&copy; 2026 MOTO TOURS JAPAN Co., Ltd. All Rights Reserved.</p>
+</footer>
+
+<script src="tour-data.js"></script>
+<script>
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+const d = getData();
+const BADGE = {red:'badge-red',blue:'badge-blue',green:'badge-green',gold:'badge-gold'};
+function badge(text,type){ return text ? `<span class="badge ${BADGE[type]||'badge-blue'}">${esc(text)}</span>` : ''; }
+
+// Day header colors
+const DAY_COLORS = ['#ed1b23', '#c5151b', '#9e1016'];
+
+// ── 全体行程表（場所列なし・テーマ表示なし） ─────────────────────
+function buildTable(){
+  const days = [d.day1, d.day2, d.day3].filter(Boolean);
+  let rows = '';
+  days.forEach((day, idx) => {
+    const hdr = DAY_COLORS[idx] || '#1A1A1A';
+    // 日付のみ表示（サブタイトル・テーマは省略）
+    rows += `<tr class="day-header"><td colspan="3" style="background:${hdr}"><i class="fa-solid fa-calendar-day"></i>&ensp;${esc(day.date)}</td></tr>`;
+    (day.items||[]).forEach(item=>{
+      const descHtml = item.desc ? `<br><span style="font-size:.82rem;color:var(--text-mid)">${esc(item.desc)}</span>` : '';
+      const badgeHtml = badge(item.badge, item.badgeType);
+      rows += `<tr>
+        <td data-label="時刻"><strong>${esc(item.time||'')}</strong></td>
+        <td data-label="内容"><strong>${esc(item.title||'')}</strong>${descHtml}</td>
+        <td data-label="備考">${badgeHtml}</td>
+      </tr>`;
+    });
+  });
+  document.getElementById('routeTableBody').innerHTML = rows;
+}
+buildTable();
+
+// ── ツアーハイライト（イラスト表示） ─────────────────────────────
+document.getElementById('highlightsGrid').innerHTML = (d.highlights||[]).map(h => {
+  const color = h.color || '#9e1016';
+  // アイコンのみのイラストスタイル（商用利用フリー）
+  return `
+<div class="hl-card">
+  <div class="hl-card-img" style="background:linear-gradient(145deg,${esc(color)},${esc(color)}bb);position:relative;overflow:hidden">
+    <div style="position:absolute;top:-24px;right:-24px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.08)"></div>
+    <div style="position:absolute;bottom:-18px;left:-18px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.06)"></div>
+    <div style="position:relative;z-index:1;width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.18)">
+      <i class="${esc(h.icon)}" style="font-size:1.8rem;color:#fff"></i>
+    </div>
+  </div>
+  <div class="hl-card-body"><h3>${esc(h.title)}</h3><p>${esc(h.desc)}</p></div>
+</div>`;
+}).join('');
+
+// ── 宿泊施設情報（星・wifi非表示・アメニティ対応） ────────────────
+const hotels = d.hotels || (d.hotel ? [d.hotel] : []);
+document.getElementById('hotelCards').innerHTML = hotels.map((h,i) => {
+  // 泊数ラベルから括弧内を削除（例:「1泊目（Day1→Day2）」→「1泊目」）
+  const nightText = (h.night || '').replace(/（[^）]*）/g,'').replace(/\([^)]*\)/g,'').trim();
+  const nightLabel = nightText
+    ? `<div style="display:inline-block;background:var(--gold);color:#fff;font-size:.72rem;font-weight:700;padding:3px 12px;border-radius:99px;margin-bottom:12px;letter-spacing:.06em">${esc(nightText)}</div>`
+    : '';
+  const imgHtml = h.image
+    ? `<div class="hotel-card-img" style="padding:0;overflow:hidden"><img src="${h.image}" style="width:100%;height:100%;object-fit:cover;display:block"></div>`
+    : `<div class="hotel-card-img"><i class="fa-solid fa-hotel"></i></div>`;
+  const amenitiesHtml = (h.amenities && h.amenities.length)
+    ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:14px">
+        ${h.amenities.map(a => `<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:#F5F3EF;border:1px solid #E8E2D8;border-radius:99px;font-size:.76rem;color:#5A5650"><i class="fa-solid fa-check" style="color:#2D6A4F;font-size:.68rem"></i>${esc(a)}</span>`).join('')}
+      </div>`
+    : '';
+  return `<div class="hotel-card" style="${i > 0 ? 'margin-top:20px' : ''}">
+    ${imgHtml}
+    <div class="hotel-card-body">
+      ${nightLabel}
+      <h3>${esc(h.name)}</h3>
+      <div class="hotel-meta">
+        ${h.address ? `<div class="hotel-meta-item"><i class="fa-solid fa-location-dot"></i>${esc(h.address)}</div>` : ''}
+        ${h.phone   ? `<div class="hotel-meta-item"><i class="fa-solid fa-phone"></i>${esc(h.phone)}</div>` : ''}
+        ${h.checkin ? `<div class="hotel-meta-item"><i class="fa-solid fa-right-to-bracket"></i>チェックイン：${esc(h.checkin)}</div>` : ''}
+        ${h.checkout? `<div class="hotel-meta-item"><i class="fa-solid fa-right-from-bracket"></i>チェックアウト：${esc(h.checkout)}</div>` : ''}
+      </div>
+      ${h.desc ? `<p class="desc">${esc(h.desc)}</p>` : ''}
+      ${amenitiesHtml}
+      ${h.url ? `<a href="${h.url}" target="_blank" rel="noopener noreferrer" class="hotel-official-btn"><i class="fa-solid fa-arrow-up-right-from-square"></i>&ensp;公式サイトへ</a>` : ''}
+    </div>
+  </div>`;
+}).join('');
+
+// Hotel note
+(function(){
+  const note = d.hotelNote || '';
+  const box  = document.getElementById('hotelNoteBox');
+  const txt  = document.getElementById('hotelNoteText');
+  if(note && box && txt){ txt.textContent = note; box.style.display = ''; }
+})();
+
+document.getElementById('footerCompany').textContent = d.company.name;
+document.getElementById('footerCopy').innerHTML = '&copy; 2026 ' + d.company.nameEn + '. All Rights Reserved.';
+document.getElementById('hamburger').addEventListener('click',function(){ this.classList.toggle('open'); document.getElementById('mobileNav').classList.toggle('open'); });
+</script>
+</body>
+</html>
