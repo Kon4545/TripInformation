@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>管理者編集画面 | Moto Tours Japan</title>
+<title>管理者編集画面 | MOTO TOURS JAPAN</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="tour-data.js"></script>
+<!-- SheetJS: Excel読み込みライブラリ -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-height:100vh}
@@ -91,7 +93,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
 <div id="loginScreen">
   <div class="login-card">
     <div class="login-logo"><i class="fa-solid fa-paper-plane"></i></div>
-    <div class="login-title">Moto Tours Japan</div>
+    <div class="login-title">MOTO TOURS JAPAN</div>
     <div class="login-sub">管理者編集画面</div>
     <input type="password" id="pwInput" class="login-input" placeholder="パスワードを入力" autocomplete="current-password">
     <button class="login-btn" onclick="doLogin()"><i class="fa-solid fa-lock-open"></i> ログイン</button>
@@ -100,19 +102,31 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
 </div>
 
 <!-- ===== ADMIN ===== -->
-<div id="adminScreen">
+<div id="adminScreen"
+  ondragover="xlOnDragover(event)"
+  ondragleave="xlOnDragleave(event)"
+  ondrop="xlOnDrop(event)">
   <div class="admin-topbar">
     <div class="admin-topbar-left">
       <i class="fa-solid fa-paper-plane"></i>
-      Moto Tours Japan ── 管理者編集画面
+      MOTO TOURS JAPAN ── 管理者編集画面
     </div>
     <div class="admin-actions">
       <button class="btn btn-navy" onclick="window.open('index.html','_blank')"><i class="fa-solid fa-eye"></i> プレビュー</button>
+      <button class="btn" onclick="document.getElementById('xlsxFileInput').click()" style="background:#1e5c2e;color:#fff;border:none" title="旅のしおり_編集シート.xlsx をドロップまたはクリックして選択"><i class="fa-solid fa-file-excel"></i> Excelから読み込む</button>
+      <input type="file" id="xlsxFileInput" accept=".xlsx,.xls" style="display:none" onchange="xlOnFileChange(this)">
       <button class="btn btn-gold" onclick="saveData()"><i class="fa-solid fa-floppy-disk"></i> 保存</button>
       <button class="btn btn-gold" onclick="exportFile()" style="background:#fff;color:#c5151b;border-color:#c5151b"><i class="fa-solid fa-download"></i> tour-data.js を書き出す</button>
       <button class="btn btn-red" onclick="clearOverride()"><i class="fa-solid fa-rotate-left"></i> リセット</button>
       <button class="btn btn-navy" onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i> ログアウト</button>
     </div>
+  </div>
+
+  <!-- Excel ドラッグ&ドロップ オーバーレイ -->
+  <div id="xlsDragOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(20,60,20,0.82);align-items:center;justify-content:center;flex-direction:column;gap:18px;pointer-events:none">
+    <i class="fa-solid fa-file-excel" style="font-size:5rem;color:#6fcf97"></i>
+    <div style="color:#fff;font-size:1.6rem;font-weight:700">Excelファイルをドロップして読み込む</div>
+    <div style="color:#b2dfb2;font-size:.95rem">旅のしおり_編集シート.xlsx をここにドロップしてください</div>
   </div>
 
   <div class="admin-body">
@@ -156,7 +170,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
         <div class="form-grid">
           <div class="form-group" style="grid-column:1/-1"><label class="form-label">ツアータイトル</label><input id="f_tourTitle" class="form-input"></div>
           <div class="form-group" style="grid-column:1/-1"><label class="form-label">サブタイトル</label><input id="f_tourSubtitle" class="form-input"></div>
-          <div class="form-group"><label class="form-label">お客様氏名</label><input id="f_customerName" class="form-input"></div>
           <div class="form-group"><label class="form-label">参加人数</label><input id="f_participantCount" class="form-input"></div>
           <div class="form-group"><label class="form-label">旅行日程</label><input id="f_tourDates" class="form-input"></div>
           <div class="form-group"><label class="form-label">エリア</label><input id="f_area" class="form-input"></div>
@@ -305,12 +318,20 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
           <div class="form-group" style="grid-column:1/-1">
             <label class="form-label"><i class="fa-solid fa-flag-checkered" style="color:#ed1b23"></i>&ensp;集合場所 マップURL</label>
             <div style="display:flex;gap:8px;align-items:stretch">
-              <input id="f_meetMapUrl" class="form-input" style="flex:1" placeholder="任意のGoogle マップURLを貼り付け →「変換」" oninput="clearMapStatus('meetMapStatus')">
+              <input id="f_meetMapUrl" class="form-input" style="flex:1" placeholder="任意のGoogle マップURLを貼り付け →「変換」" oninput="clearMapStatus('meetMapStatus');syncSameLocUrl()">
               <button type="button" onclick="tryConvert('f_meetMapUrl','meetMapStatus')" style="padding:0 16px;background:#ed1b23;color:#fff;border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;flex-shrink:0"><i class="fa-solid fa-wand-magic-sparkles"></i> 変換</button>
             </div>
             <div id="meetMapStatus" style="margin-top:6px;font-size:.78rem;display:none"></div>
           </div>
+          <!-- 集合・解散が同じ場所のトグル -->
           <div class="form-group" style="grid-column:1/-1">
+            <label class="hl-toggle" style="display:inline-flex;align-items:center;gap:8px;font-size:.85rem;font-weight:700;color:#5A5650;padding:10px 16px;background:#F0F7FF;border:1px solid #D0D9EC;border-radius:8px;cursor:pointer">
+              <input type="checkbox" id="f_sameMeetEnd" style="accent-color:#ed1b23;cursor:pointer;width:16px;height:16px" onchange="toggleSameMeetEnd(this.checked)">
+              <i class="fa-solid fa-link" style="color:#ed1b23"></i>
+              集合場所と解散場所が同じ（マップを1枚にまとめる）
+            </label>
+          </div>
+          <div class="form-group" style="grid-column:1/-1" id="endMapUrlGroup">
             <label class="form-label"><i class="fa-solid fa-circle-check" style="color:#ed1b23"></i>&ensp;解散場所 マップURL</label>
             <div style="display:flex;gap:8px;align-items:stretch">
               <input id="f_endMapUrl" class="form-input" style="flex:1" placeholder="任意のGoogle マップURLを貼り付け →「変換」" oninput="clearMapStatus('endMapStatus')">
@@ -325,7 +346,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
       <div id="tab-guide" class="tab-panel">
         <div class="panel-title"><i class="fa-solid fa-user-tie"></i> 担当添乗員・ご挨拶</div>
         <div style="font-size:.78rem;color:#5A5650;margin-bottom:16px;line-height:1.7">
-          担当添乗員を1人以上登録できます。<strong>1人目のご挨拶文</strong>がホームページの挨拶欄に表示されます。全員の連絡先カードが表示されます。
+          担当添乗員を1人以上登録できます。<strong>1人目のご挨拶文</strong>がホームページの挨拶欄に表示されます。
         </div>
         <div id="guidesList"></div>
         <button class="btn-add" onclick="addGuideItem()"><i class="fa-solid fa-plus"></i> 担乗員を追加</button>
@@ -334,6 +355,30 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
       <!-- ── 含まれるもの ── -->
       <div id="tab-include" class="tab-panel">
         <div class="panel-title"><i class="fa-solid fa-list-check"></i> 含まれるもの / 含まれないもの</div>
+        <!-- 宿泊・食事 自動計算ツール -->
+        <div style="background:#EFF3FA;border:1px solid #D0D9EC;border-radius:10px;padding:16px 18px;margin-bottom:24px">
+          <div style="font-size:.82rem;font-weight:700;color:#1A1A1A;margin-bottom:14px"><i class="fa-solid fa-calculator" style="color:#ed1b23"></i>&ensp;宿泊・食事 自動計算</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">
+            <div class="form-group" style="margin:0">
+              <label class="form-label">宿泊数（泊）</label>
+              <input id="calc_nights" type="number" min="0" class="form-input" placeholder="例：2" oninput="autoCalcMeals()">
+            </div>
+            <div class="form-group" style="margin:0">
+              <label class="form-label">朝食（回）</label>
+              <input id="calc_breakfast" type="number" min="0" class="form-input">
+            </div>
+            <div class="form-group" style="margin:0">
+              <label class="form-label">昼食（回）</label>
+              <input id="calc_lunch" type="number" min="0" class="form-input">
+            </div>
+            <div class="form-group" style="margin:0">
+              <label class="form-label">夕食（回）</label>
+              <input id="calc_dinner" type="number" min="0" class="form-input">
+            </div>
+          </div>
+          <button class="btn btn-gold" onclick="insertCalcItems()" style="font-size:.78rem"><i class="fa-solid fa-wand-magic-sparkles"></i>&ensp;宿泊費・食事を「含まれるもの」に自動挿入</button>
+          <div style="font-size:.72rem;color:#8A8478;margin-top:8px;line-height:1.7">宿泊数を入力すると朝食・夕食回数が自動計算されます。昼食は必要に応じて手動入力してください。「自動挿入」で含まれるものリストに追加します。</div>
+        </div>
         <div class="form-grid">
           <div>
             <div style="font-size:.82rem;font-weight:700;color:#2D6A4F;margin-bottom:10px;"><i class="fa-solid fa-check"></i> 含まれるもの</div>
@@ -357,6 +402,16 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
         </div>
         <div id="quickLinksItems"></div>
         <button class="btn-add" onclick="addQuickLink()"><i class="fa-solid fa-plus"></i> カードを追加</button>
+
+        <!-- FAQ -->
+        <div style="font-size:.82rem;font-weight:700;color:#1A1A1A;margin:32px 0 12px;padding:8px 14px;background:#EFF3FA;border-radius:8px;border-left:4px solid #ed1b23">
+          <i class="fa-solid fa-circle-question" style="color:#ed1b23"></i>&ensp;よくある質問（FAQ）
+        </div>
+        <div style="font-size:.75rem;color:#5A5650;margin-bottom:14px;line-height:1.7">
+          ホームページに表示するFAQを編集できます。登録したQ&Aはホームページの「よくある質問」セクションに表示されます。
+        </div>
+        <div id="faqItems"></div>
+        <button class="btn-add" onclick="addFaqItem()"><i class="fa-solid fa-plus"></i> Q&A を追加</button>
       </div>
 
       <!-- ── Day 1 ── -->
@@ -412,16 +467,22 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
           <i class="fa-solid fa-moon" style="color:#ed1b23"></i>&ensp;1泊目
         </div>
         <div class="form-grid">
-          <div class="form-group"><label class="form-label">泊数ラベル（例：1泊目 京都）</label><input id="f_hotel1Night" class="form-input"></div>
+          <div class="form-group"><label class="form-label">泊数ラベル（例：1泊目）</label><input id="f_hotel1Night" class="form-input" placeholder="例：1泊目"></div>
           <div class="form-group"><label class="form-label">ホテル名</label><input id="f_hotel1Name" class="form-input"></div>
           <div class="form-group"><label class="form-label">電話番号</label><input id="f_hotel1Phone" class="form-input"></div>
-          <div class="form-group"><label class="form-label">星の数（1〜5）</label><input id="f_hotel1Stars" class="form-input" type="number" min="1" max="5"></div>
           <div class="form-group" style="grid-column:1/-1"><label class="form-label">住所</label><input id="f_hotel1Address" class="form-input"></div>
           <div class="form-group"><label class="form-label">チェックイン</label><input id="f_hotel1Checkin" class="form-input"></div>
           <div class="form-group"><label class="form-label">チェックアウト</label><input id="f_hotel1Checkout" class="form-input"></div>
           <div class="form-group" style="grid-column:1/-1"><label class="form-label"><i class="fa-solid fa-arrow-up-right-from-square" style="color:#ed1b23"></i>&ensp;公式サイトURL（任意）</label><input id="f_hotel1Url" class="form-input" placeholder="https://www.hotel-example.com/"></div>
         </div>
         <div class="form-group" style="margin-bottom:10px"><label class="form-label">施設説明</label><textarea id="f_hotel1Desc" class="form-textarea"></textarea></div>
+        <!-- アメニティ -->
+        <div style="font-size:.8rem;font-weight:700;color:#5A5650;margin:8px 0 8px;display:flex;align-items:center;gap:6px;letter-spacing:.05em;text-transform:uppercase">
+          <i class="fa-solid fa-soap" style="color:#ed1b23"></i> アメニティ・設備（任意）
+        </div>
+        <div style="font-size:.72rem;color:#8A8478;margin-bottom:8px">例：無料Wi-Fi、バスタオル、シャンプー、ヘアドライヤー、大浴場など</div>
+        <div id="hotel1AmenitiesList" class="dyn-list"></div>
+        <button class="btn-add" onclick="addItem('hotel1AmenitiesList')" style="margin-bottom:20px"><i class="fa-solid fa-plus"></i> アメニティを追加</button>
         <!-- Hotel 1 Image -->
         <div style="font-size:.78rem;font-weight:700;color:#5A5650;margin:4px 0 8px;letter-spacing:.05em;text-transform:uppercase">ホテル画像（任意）</div>
         <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:28px">
@@ -442,16 +503,22 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
           <i class="fa-solid fa-moon" style="color:#c5151b"></i>&ensp;2泊目
         </div>
         <div class="form-grid">
-          <div class="form-group"><label class="form-label">泊数ラベル（例：2泊目 大阪）</label><input id="f_hotel2Night" class="form-input"></div>
+          <div class="form-group"><label class="form-label">泊数ラベル（例：2泊目）</label><input id="f_hotel2Night" class="form-input" placeholder="例：2泊目"></div>
           <div class="form-group"><label class="form-label">ホテル名</label><input id="f_hotel2Name" class="form-input"></div>
           <div class="form-group"><label class="form-label">電話番号</label><input id="f_hotel2Phone" class="form-input"></div>
-          <div class="form-group"><label class="form-label">星の数（1〜5）</label><input id="f_hotel2Stars" class="form-input" type="number" min="1" max="5"></div>
           <div class="form-group" style="grid-column:1/-1"><label class="form-label">住所</label><input id="f_hotel2Address" class="form-input"></div>
           <div class="form-group"><label class="form-label">チェックイン</label><input id="f_hotel2Checkin" class="form-input"></div>
           <div class="form-group"><label class="form-label">チェックアウト</label><input id="f_hotel2Checkout" class="form-input"></div>
           <div class="form-group" style="grid-column:1/-1"><label class="form-label"><i class="fa-solid fa-arrow-up-right-from-square" style="color:#c5151b"></i>&ensp;公式サイトURL（任意）</label><input id="f_hotel2Url" class="form-input" placeholder="https://www.hotel-example.com/"></div>
         </div>
         <div class="form-group" style="margin-bottom:10px"><label class="form-label">施設説明</label><textarea id="f_hotel2Desc" class="form-textarea"></textarea></div>
+        <!-- アメニティ -->
+        <div style="font-size:.8rem;font-weight:700;color:#5A5650;margin:8px 0 8px;display:flex;align-items:center;gap:6px;letter-spacing:.05em;text-transform:uppercase">
+          <i class="fa-solid fa-soap" style="color:#c5151b"></i> アメニティ・設備（任意）
+        </div>
+        <div style="font-size:.72rem;color:#8A8478;margin-bottom:8px">例：無料Wi-Fi、バスタオル、シャンプー、ヘアドライヤー、大浴場など</div>
+        <div id="hotel2AmenitiesList" class="dyn-list"></div>
+        <button class="btn-add" onclick="addItem('hotel2AmenitiesList')" style="margin-bottom:20px"><i class="fa-solid fa-plus"></i> アメニティを追加</button>
         <!-- Hotel 2 Image -->
         <div style="font-size:.78rem;font-weight:700;color:#5A5650;margin:4px 0 8px;letter-spacing:.05em;text-transform:uppercase">ホテル画像（任意）</div>
         <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
@@ -472,6 +539,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
       <!-- ── ハイライト ── -->
       <div id="tab-highlights" class="tab-panel">
         <div class="panel-title"><i class="fa-solid fa-sparkles"></i> ツアーハイライト</div>
+        <div style="background:#FFF8EC;border:1px solid #F5C97A;border-radius:10px;padding:12px 16px;margin-bottom:18px;font-size:.82rem;color:#7A4500;display:flex;align-items:flex-start;gap:8px">
+          <i class="fa-solid fa-circle-info" style="flex-shrink:0;margin-top:2px"></i>
+          <span>ハイライトは<strong>アイコン＋カラー</strong>のイラスト形式で表示されます。タイトル・説明文・アイコン・カラーを設定してください。アイコンは <a href="https://fontawesome.com/icons" target="_blank" style="color:#7A4500">Font Awesome</a> のクラス名を使用します。</span>
+        </div>
         <div id="highlightsList"></div>
         <button class="btn-add" onclick="addHighlightItem()"><i class="fa-solid fa-plus"></i> ハイライト追加</button>
       </div>
@@ -562,6 +633,15 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
           <div class="form-group" style="grid-column:1/-1"><label class="form-label">アンケートフォームURL</label><input id="pt_surveyUrl" class="form-input" placeholder="https://forms.google.com/..."></div>
           <div class="form-group"><label class="form-label">アンケートタイトル</label><input id="pt_surveyTitle" class="form-input"></div>
           <div class="form-group"><label class="form-label">アンケート説明文</label><input id="pt_surveyDesc" class="form-input"></div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label"><i class="fa-brands fa-google" style="color:#EA4335;margin-right:4px"></i>Googleマップ 口コミURL（任意）</label>
+            <input id="pt_mapReviewUrl" class="form-input" placeholder="https://maps.google.com/maps?cid=... または短縮URL">
+            <div style="font-size:.74rem;color:#8A8478;margin-top:5px;line-height:1.7">
+              <i class="fa-solid fa-circle-info" style="color:#ed1b23;margin-right:3px"></i>
+              入力するとツアー後ページに「Googleマップで口コミを書く」カードが表示されます。<br>
+              取得方法：Googleマップでご自身のビジネスを検索 → 「口コミ」タブ → 「口コミを書く」ボタンを右クリックして「リンクをコピー」
+            </div>
+          </div>
         </div>
 
         <!-- 写真 -->
@@ -677,7 +757,6 @@ function initForms(){
   // Basic
   set('f_tourTitle',      d.basic.tourTitle);
   set('f_tourSubtitle',   d.basic.tourSubtitle);
-  set('f_customerName',   d.basic.customerName);
   set('f_participantCount',d.basic.participantCount);
   set('f_tourDates',      d.basic.tourDates);
   set('f_area',           d.basic.area);
@@ -694,6 +773,10 @@ function initForms(){
   set('f_meetNote',       d.meeting.note);
   set('f_meetMapUrl',     d.meeting.meetMapUrl);
   set('f_endMapUrl',      d.meeting.endMapUrl);
+  // 集合・解散が同じ場所トグル
+  const _sameLoc = !!(d.meeting.meetMapUrl && d.meeting.meetMapUrl === d.meeting.endMapUrl);
+  const _sameEl = document.getElementById('f_sameMeetEnd');
+  if (_sameEl) { _sameEl.checked = _sameLoc; toggleSameMeetEnd(_sameLoc); }
   // Meeting icons & colors
   const _mIC = d.meeting.meetIconColor || '#9e1016';
   const _dIC = d.meeting.dateIconColor || '#9e1016';
@@ -745,26 +828,28 @@ function initForms(){
   set('f_hotel1Night',    h1.night);
   set('f_hotel1Name',     h1.name);
   set('f_hotel1Address',  h1.address);
-  set('f_hotel1Stars',    h1.stars);
   set('f_hotel1Phone',    h1.phone);
   set('f_hotel1Checkin',  h1.checkin);
   set('f_hotel1Checkout', h1.checkout);
   set('f_hotel1Desc',     h1.desc);
   set('f_hotel1Url',      h1.url);
+  buildSimpleList('hotel1AmenitiesList', h1.amenities || []);
   set('f_hotel2Night',    h2.night);
   set('f_hotel2Name',     h2.name);
   set('f_hotel2Address',  h2.address);
-  set('f_hotel2Stars',    h2.stars);
   set('f_hotel2Phone',    h2.phone);
   set('f_hotel2Checkin',  h2.checkin);
   set('f_hotel2Checkout', h2.checkout);
   set('f_hotel2Desc',     h2.desc);
   set('f_hotel2Url',      h2.url);
+  buildSimpleList('hotel2AmenitiesList', h2.amenities || []);
   // Hotel images
   _hotel1Img = h1.image || ''; updateHotelImgPreview(1);
   _hotel2Img = h2.image || ''; updateHotelImgPreview(2);
   // Quick Links
   buildQuickLinks(d.quickLinks || []);
+  // FAQ
+  buildFaqItems(d.faq || []);
   // Highlights
   buildHighlights(d.highlights);
   // Checklist
@@ -795,9 +880,10 @@ function initForms(){
   buildSns(d.sns || []);
   // Post-tour
   const pt = d.postTour || {};
-  set('pt_surveyUrl',   (d.survey||{}).url);
-  set('pt_surveyTitle', (d.survey||{}).title);
-  set('pt_surveyDesc',  (d.survey||{}).desc);
+  set('pt_surveyUrl',      (d.survey||{}).url);
+  set('pt_surveyTitle',    (d.survey||{}).title);
+  set('pt_surveyDesc',     (d.survey||{}).desc);
+  set('pt_mapReviewUrl',   (d.survey||{}).mapReviewUrl || '');
   set('pt_albumUrl', pt.albumUrl || '');
   buildPtPhotos(pt.photos   || []);
   buildPtVideos(pt.videos   || []);
@@ -946,73 +1032,82 @@ function buildHighlights(items){
   const el=document.getElementById('highlightsList'); el.innerHTML='';
   (items||[]).forEach(item=>{
     const row=document.createElement('div'); row.className='sched-item';
+    const initColor = item.color||'#9e1016';
     row.innerHTML=`
       <div class="sched-item-header">
-        <div class="sched-item-title">ハイライト</div>
+        <div class="sched-item-title"><i class="fa-solid fa-sparkles" style="color:#ed1b23"></i>&ensp;ハイライト</div>
         <button class="btn-remove" onclick="this.closest('.sched-item').remove()"><i class="fa-solid fa-trash"></i></button>
       </div>
-      <div class="form-grid">
-        <div class="form-group"><label class="form-label">タイトル</label><input class="form-input hl-title" value="${esc(item.title||'')}"></div>
-        <div class="form-group"><label class="form-label">説明</label><input class="form-input hl-desc" value="${esc(item.desc||'')}"></div>
-        <div class="form-group"><label class="form-label">アイコン (FA class)</label><input class="form-input hl-icon" value="${esc(item.icon||'')}"></div>
-        <div class="form-group"><label class="form-label">カラー (#hex)</label><input class="form-input hl-color" value="${esc(item.color||'')}"></div>
-      </div>
-      <input type="hidden" class="hl-image" value="">
-      <div style="margin-top:10px;padding-top:10px;border-top:1px solid #F0EDE8">
-        <div style="font-size:.78rem;font-weight:700;color:#5A5650;margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase">カード画像（任意）</div>
-        <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
-          <div class="hl-img-preview" style="width:120px;height:80px;border-radius:8px;border:1.5px dashed #C0C0C0;background:#F4F2EF;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:.7rem;text-align:center;line-height:1.5">
-            <span><i class="fa-solid fa-image" style="font-size:1.2rem;display:block;margin-bottom:3px"></i>未設定</span>
-          </div>
-          <div>
-            <input type="file" class="hl-img-file" accept="image/*" style="display:none">
-            <div style="display:flex;gap:8px;margin-bottom:6px">
-              <button type="button" class="hl-img-upload-btn" style="padding:7px 14px;background:#ed1b23;color:#fff;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit"><i class="fa-solid fa-upload"></i> 画像を選択</button>
-              <button type="button" class="hl-img-clear-btn" style="padding:7px 12px;background:#fff;color:#9B1B1B;border:1.5px solid #9B1B1B;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;display:none"><i class="fa-solid fa-xmark"></i> 削除</button>
+      <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:4px">
+        <!-- イラストプレビュー -->
+        <div class="hl-illust-preview" style="width:70px;height:70px;flex-shrink:0;border-radius:12px;background:linear-gradient(145deg,${esc(initColor)},${esc(initColor)}bb);display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.15)">
+          <i class="${esc(item.icon||'fa-solid fa-star')}"></i>
+        </div>
+        <div style="flex:1">
+          <div class="form-grid">
+            <div class="form-group"><label class="form-label">タイトル</label><input class="form-input hl-title" value="${esc(item.title||'')}"></div>
+            <div class="form-group"><label class="form-label">説明</label><input class="form-input hl-desc" value="${esc(item.desc||'')}"></div>
+            <div class="form-group">
+              <label class="form-label">アイコン (FA class)</label>
+              <input class="form-input hl-icon" value="${esc(item.icon||'fa-solid fa-star')}" oninput="updateHlPreview(this)">
             </div>
-            <div style="font-size:.72rem;color:#8A8478">設定するとカード背景に画像が表示されます（アイコン・色より優先）</div>
+            <div class="form-group">
+              <label class="form-label">カラー (#hex)</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <input type="color" class="hl-color-picker" value="${esc(initColor)}" style="width:36px;height:32px;border:1px solid #D0D9EC;border-radius:6px;cursor:pointer;padding:2px;flex-shrink:0" oninput="syncHlColor(this)">
+                <input class="form-input hl-color" value="${esc(initColor)}" placeholder="#9e1016" style="font-family:monospace" oninput="syncHlColorText(this)">
+              </div>
+            </div>
           </div>
         </div>
       </div>`;
-    // Wire up image uploader
-    const hiddenImg  = row.querySelector('.hl-image');
-    const preview    = row.querySelector('.hl-img-preview');
-    const clearBtn   = row.querySelector('.hl-img-clear-btn');
-    const fileInput  = row.querySelector('.hl-img-file');
-    const uploadBtn  = row.querySelector('.hl-img-upload-btn');
-    function setHlImg(data){
-      hiddenImg.value = data;
-      if(data){
-        preview.innerHTML = `<img src="${data}" style="width:100%;height:100%;object-fit:cover;display:block">`;
-        clearBtn.style.display = '';
-      } else {
-        preview.innerHTML = '<span><i class="fa-solid fa-image" style="font-size:1.2rem;display:block;margin-bottom:3px"></i>未設定</span>';
-        clearBtn.style.display = 'none';
-      }
-    }
-    if(item.image) setHlImg(item.image);
-    uploadBtn.addEventListener('click', ()=>fileInput.click());
-    fileInput.addEventListener('change', function(){
-      if(!this.files||!this.files[0]) return;
-      const file=this.files[0];
-      if(!file.type.startsWith('image/')){ showToast('画像ファイルを選択してください'); return; }
-      const reader=new FileReader();
-      reader.onload=e=>{ setHlImg(e.target.result); showToast('画像を読み込みました。「保存」を押して反映してください。'); };
-      reader.readAsDataURL(file);
+    // イラストプレビューをリアルタイム更新
+    const preview = row.querySelector('.hl-illust-preview');
+    row.querySelector('.hl-icon').addEventListener('input', function(){
+      preview.innerHTML = `<i class="${esc(this.value.trim()||'fa-solid fa-star')}"></i>`;
     });
-    clearBtn.addEventListener('click', ()=>{ setHlImg(''); fileInput.value=''; });
+    row.querySelector('.hl-color').addEventListener('input', function(){
+      const c = this.value.trim();
+      if(/^#[0-9a-fA-F]{3,6}$/.test(c)){
+        preview.style.background = `linear-gradient(145deg,${c},${c}bb)`;
+        row.querySelector('.hl-color-picker').value = c;
+      }
+    });
+    row.querySelector('.hl-color-picker').addEventListener('input', function(){
+      row.querySelector('.hl-color').value = this.value;
+      preview.style.background = `linear-gradient(145deg,${this.value},${this.value}bb)`;
+    });
     el.appendChild(row);
   });
 }
-function addHighlightItem(){ buildHighlights([...getHighlights(), {title:'',desc:'',icon:'fa-solid fa-star',color:'#1A1A1A',image:''}]); }
+function addHighlightItem(){ buildHighlights([...getHighlights(), {title:'',desc:'',icon:'fa-solid fa-star',color:'#9e1016'}]); }
 function getHighlights(){
   return [...document.querySelectorAll('#highlightsList .sched-item')].map(row=>({
     title: row.querySelector('.hl-title')?.value||'',
     desc:  row.querySelector('.hl-desc')?.value||'',
-    icon:  row.querySelector('.hl-icon')?.value||'',
-    color: row.querySelector('.hl-color')?.value||'',
-    image: row.querySelector('.hl-image')?.value||''
+    icon:  row.querySelector('.hl-icon')?.value||'fa-solid fa-star',
+    color: row.querySelector('.hl-color')?.value||'#9e1016',
+    image: ''
   }));
+}
+function updateHlPreview(input){
+  const row = input.closest('.sched-item');
+  const preview = row.querySelector('.hl-illust-preview');
+  if (preview) preview.innerHTML = `<i class="${esc(input.value.trim()||'fa-solid fa-star')}"></i>`;
+}
+function syncHlColor(picker){
+  const row = picker.closest('.sched-item');
+  row.querySelector('.hl-color').value = picker.value;
+  const p = row.querySelector('.hl-illust-preview');
+  if(p) p.style.background = `linear-gradient(145deg,${picker.value},${picker.value}bb)`;
+}
+function syncHlColorText(input){
+  const row = input.closest('.sched-item');
+  const val = input.value.trim();
+  const picker = row.querySelector('.hl-color-picker');
+  if(/^#[0-9a-fA-F]{6}$/.test(val) && picker) picker.value = val;
+  const p = row.querySelector('.hl-illust-preview');
+  if(p && /^#[0-9a-fA-F]{3,6}$/.test(val)) p.style.background = `linear-gradient(145deg,${val},${val}bb)`;
 }
 
 // ── Checklist ─────────────────────────────────────────────────
@@ -1103,6 +1198,7 @@ function buildEmgSteps(items){
   const el = document.getElementById('emgStepsList'); el.innerHTML = '';
   (items||[]).forEach((s, idx) => {
     const row = document.createElement('div'); row.className = 'sched-item';
+    const initIcon = s.icon || 'fa-solid fa-circle-check';
     row.innerHTML = `
       <div class="sched-item-header">
         <div class="sched-item-title"><i class="fa-solid fa-circle-check" style="color:#ed1b23;margin-right:6px"></i>手順 ${idx+1}</div>
@@ -1112,6 +1208,16 @@ function buildEmgSteps(items){
         <div class="form-group" style="grid-column:1/-1">
           <label class="form-label">タイトル</label>
           <input class="form-input es-title" value="${esc(s.title||'')}">
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label class="form-label">アイコン（Font Awesome クラス）</label>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="es-icon-preview" style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#ed1b23,#9e1016);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 8px rgba(158,16,22,.25)">
+              <i class="${esc(initIcon)}" style="color:#fff;font-size:.95rem"></i>
+            </div>
+            <input class="form-input es-icon" placeholder="例: fa-solid fa-phone-volume" value="${esc(initIcon)}" oninput="updateEmgStepIcon(this)" style="flex:1">
+          </div>
+          <div style="font-size:.75rem;color:#8A8478;margin-top:4px"><i class="fa-solid fa-circle-info" style="color:#ed1b23;margin-right:3px"></i>Font Awesome アイコン名を入力（例: fa-solid fa-shield-halved）</div>
         </div>
         <div class="form-group">
           <label class="form-label">バッジテキスト（任意）</label>
@@ -1133,17 +1239,22 @@ function buildEmgSteps(items){
     el.appendChild(row);
   });
 }
+function updateEmgStepIcon(input){
+  const preview = input.parentElement.querySelector('.es-icon-preview i');
+  if (preview) preview.className = (input.value.trim() || 'fa-solid fa-circle-check');
+}
 function renumberEmgSteps(){
   document.querySelectorAll('#emgStepsList .sched-item-title').forEach((t,i)=>{
     t.innerHTML = `<i class="fa-solid fa-circle-check" style="color:#ed1b23;margin-right:6px"></i>手順 ${i+1}`;
   });
 }
 function addEmgStep(){
-  buildEmgSteps([...getEmgSteps(), {title:'',tag:'',tagType:'',desc:''}]);
+  buildEmgSteps([...getEmgSteps(), {title:'',icon:'fa-solid fa-circle-check',tag:'',tagType:'',desc:''}]);
 }
 function getEmgSteps(){
   return [...document.querySelectorAll('#emgStepsList .sched-item')].map(row=>({
     title:   row.querySelector('.es-title')?.value||'',
+    icon:    row.querySelector('.es-icon')?.value.trim()||'fa-solid fa-circle-check',
     tag:     row.querySelector('.es-tag')?.value||'',
     tagType: row.querySelector('.es-tagtype')?.value||'',
     desc:    row.querySelector('.es-desc')?.value||''
@@ -1576,11 +1687,19 @@ function buildGoods(items){
       </div>
       <div class="form-grid">
         <div class="form-group"><label class="form-label">商品名</label><input class="form-input gd-name" value="${esc(item.name||'')}"></div>
-        <div class="form-group"><label class="form-label">価格</label><input class="form-input gd-price" value="${esc(item.price||'')}"></div>
+        <div class="form-group">
+          <label class="form-label">価格（税込）</label>
+          <input class="form-input gd-price" value="${esc(item.price||'')}" placeholder="例: ¥1,980">
+        </div>
         <div class="form-group"><label class="form-label">アイコン（FA クラス名）</label><input class="form-input gd-icon" value="${esc(item.icon||'')}" placeholder="fa-solid fa-gift"></div>
         <div class="form-group"><label class="form-label">バッジ</label><input class="form-input gd-badge" value="${esc(item.badge||'')}" placeholder="在庫あり"></div>
       </div>
       <div class="form-group" style="margin-bottom:10px"><label class="form-label">説明</label><textarea class="form-textarea gd-desc" style="min-height:54px">${esc(item.desc||'')}</textarea></div>
+      <div class="form-group" style="margin-bottom:10px">
+        <label class="form-label"><i class="fa-solid fa-cart-shopping" style="color:#ed1b23;margin-right:4px"></i>購入ページURL（任意）</label>
+        <input class="form-input gd-buyurl" placeholder="https://..." value="${esc(item.buyUrl||'')}">
+        <div style="font-size:.74rem;color:#8A8478;margin-top:3px">入力するとグッズカードに「購入はこちら」ボタンが表示されます</div>
+      </div>
       <input type="hidden" class="gd-image" value="">
       <div style="padding-top:10px;border-top:1px solid #F0EDE8">
         <div style="font-size:.78rem;font-weight:700;color:#5A5650;margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase">グッズ画像（任意）</div>
@@ -1628,25 +1747,28 @@ function buildGoods(items){
     el.appendChild(row);
   });
 }
-function addGoodsItem(){ buildGoods([...getGoods(), {name:'',price:'',icon:'fa-solid fa-gift',iconBg:'#ed1b23',desc:'',badge:'在庫あり',badgeType:'green',image:''}]); }
+function addGoodsItem(){ buildGoods([...getGoods(), {name:'',price:'',icon:'fa-solid fa-gift',iconBg:'#ed1b23',desc:'',badge:'在庫あり',badgeType:'green',image:'',buyUrl:''}]); }
 function getGoods(){
   return [...document.querySelectorAll('#goodsList .sched-item')].map(row=>({
-    name:    row.querySelector('.gd-name')?.value  || '',
-    price:   row.querySelector('.gd-price')?.value || '',
-    icon:    row.querySelector('.gd-icon')?.value  || 'fa-solid fa-gift',
-    iconBg:  '#ed1b23',
-    desc:    row.querySelector('.gd-desc')?.value  || '',
-    badge:   row.querySelector('.gd-badge')?.value || '',
-    badgeType: 'green',
-    image:   row.querySelector('.gd-image')?.value || ''
+    name:     row.querySelector('.gd-name')?.value    || '',
+    price:    row.querySelector('.gd-price')?.value   || '',
+    icon:     row.querySelector('.gd-icon')?.value    || 'fa-solid fa-gift',
+    iconBg:   '#ed1b23',
+    desc:     row.querySelector('.gd-desc')?.value    || '',
+    badge:    row.querySelector('.gd-badge')?.value   || '',
+    badgeType:'green',
+    image:    row.querySelector('.gd-image')?.value   || '',
+    buyUrl:   row.querySelector('.gd-buyurl')?.value.trim() || ''
   }));
 }
 
 // ── Save / Export ─────────────────────────────────────────────
 function collectData(){
   const d = JSON.parse(JSON.stringify(current())); // deep clone as base
-  d.basic = { tourTitle:g('f_tourTitle'), tourSubtitle:g('f_tourSubtitle'), customerName:g('f_customerName'), participantCount:g('f_participantCount'), tourDates:g('f_tourDates'), area:g('f_area'), heroBgImage:_heroBgData };
-  d.meeting = { place:g('f_meetPlace'), placeDetail:g('f_meetPlaceDetail'), date:g('f_meetDate'), time:g('f_meetTime'), endPlace:g('f_endPlace'), endTime:g('f_endTime'), note:g('f_meetNote'), meetMapUrl:g('f_meetMapUrl'), endMapUrl:g('f_endMapUrl'), meetIcon:g('f_meetIcon')||'fa-solid fa-flag-checkered', meetIconColor:g('f_meetIconColor')||'#9e1016', dateIcon:g('f_dateIcon')||'fa-solid fa-clock', dateIconColor:g('f_dateIconColor')||'#9e1016', endIcon:g('f_endIcon')||'fa-solid fa-circle-check', endIconColor:g('f_endIconColor')||'#9e1016', shuttle:{ enabled:document.getElementById('f_shuttleEnabled')?.checked||false, note:g('f_shuttleNote'), deadline:g('f_shuttleDeadline'), contact:g('f_shuttleContact'), pickups:getShuttlePickups() } };
+  d.basic = { tourTitle:g('f_tourTitle'), tourSubtitle:g('f_tourSubtitle'), participantCount:g('f_participantCount'), tourDates:g('f_tourDates'), area:g('f_area'), heroBgImage:_heroBgData };
+  const _cMeetUrl = g('f_meetMapUrl');
+  const _cEndUrl  = document.getElementById('f_sameMeetEnd')?.checked ? _cMeetUrl : g('f_endMapUrl');
+  d.meeting = { place:g('f_meetPlace'), placeDetail:g('f_meetPlaceDetail'), date:g('f_meetDate'), time:g('f_meetTime'), endPlace:g('f_endPlace'), endTime:g('f_endTime'), note:g('f_meetNote'), meetMapUrl:_cMeetUrl, endMapUrl:_cEndUrl, meetIcon:g('f_meetIcon')||'fa-solid fa-flag-checkered', meetIconColor:g('f_meetIconColor')||'#9e1016', dateIcon:g('f_dateIcon')||'fa-solid fa-clock', dateIconColor:g('f_dateIconColor')||'#9e1016', endIcon:g('f_endIcon')||'fa-solid fa-circle-check', endIconColor:g('f_endIconColor')||'#9e1016', shuttle:{ enabled:document.getElementById('f_shuttleEnabled')?.checked||false, note:g('f_shuttleNote'), deadline:g('f_shuttleDeadline'), contact:g('f_shuttleContact'), pickups:getShuttlePickups() } };
   const guidesArr = getGuides();
   d.guides = guidesArr;
   d.guide  = guidesArr[0] || {}; // backward compat
@@ -1656,20 +1778,21 @@ function collectData(){
   d.day2 = { date:g('f_day2Date'), theme:g('f_day2Theme'), mapEmbed:g('f_day2Map'), items:getSchedItems('day2Items') };
   d.day3 = { date:g('f_day3Date'), theme:g('f_day3Theme'), mapEmbed:g('f_day3Map'), items:getSchedItems('day3Items') };
   const hotelsArr = [
-    { night:g('f_hotel1Night'), name:g('f_hotel1Name'), address:g('f_hotel1Address'), stars:parseInt(g('f_hotel1Stars'))||4, phone:g('f_hotel1Phone'), checkin:g('f_hotel1Checkin'), checkout:g('f_hotel1Checkout'), wifi:true, desc:g('f_hotel1Desc'), url:g('f_hotel1Url'), image:_hotel1Img },
-    { night:g('f_hotel2Night'), name:g('f_hotel2Name'), address:g('f_hotel2Address'), stars:parseInt(g('f_hotel2Stars'))||4, phone:g('f_hotel2Phone'), checkin:g('f_hotel2Checkin'), checkout:g('f_hotel2Checkout'), wifi:true, desc:g('f_hotel2Desc'), url:g('f_hotel2Url'), image:_hotel2Img }
+    { night:g('f_hotel1Night'), name:g('f_hotel1Name'), address:g('f_hotel1Address'), phone:g('f_hotel1Phone'), checkin:g('f_hotel1Checkin'), checkout:g('f_hotel1Checkout'), desc:g('f_hotel1Desc'), url:g('f_hotel1Url'), image:_hotel1Img, amenities:getSimpleList('hotel1AmenitiesList') },
+    { night:g('f_hotel2Night'), name:g('f_hotel2Name'), address:g('f_hotel2Address'), phone:g('f_hotel2Phone'), checkin:g('f_hotel2Checkin'), checkout:g('f_hotel2Checkout'), desc:g('f_hotel2Desc'), url:g('f_hotel2Url'), image:_hotel2Img, amenities:getSimpleList('hotel2AmenitiesList') }
   ].filter(h => h.name);
   d.hotels = hotelsArr;
   d.hotel = hotelsArr[0] || {}; // backward compat
   d.hotelNote = g('f_hotelNote');
   d.quickLinks = getQuickLinks();
+  d.faq = getFaqItems();
   d.highlights = getHighlights();
   d.checklist = getChecklistGroups();
   d.tips = getTips();
   d.emergency = { companyPhone:g('f_emgPhone'), companyHours:g('f_emgHours'), companyAddress:g('f_emgAddress'), companyEmail:g('f_emgEmail'), alert:g('f_emgAlert'), steps:getEmgSteps(), others:getEmgOthers() };
   d.goods = getGoods();
   d.company = { name:g('f_coName'), nameEn:g('f_coNameEn'), address:g('f_coAddress'), phone:g('f_coPhone'), fax:g('f_coFax'), hours:g('f_coHours'), email:g('f_coEmail'), registration:g('f_coReg'), association:g('f_coAssoc') };
-  d.survey = { url:g('pt_surveyUrl'), title:g('pt_surveyTitle'), desc:g('pt_surveyDesc') };
+  d.survey = { url:g('pt_surveyUrl'), title:g('pt_surveyTitle'), desc:g('pt_surveyDesc'), mapReviewUrl:g('pt_mapReviewUrl') };
   d.postTour = {
     albumUrl:  g('pt_albumUrl'),
     photos:    getPtPhotos(),
@@ -1701,7 +1824,7 @@ function exportFile(){
 }
 function generateTourDataJs(d){
   return `// ================================================================
-//  Moto Tours Japan ── ツアーデータ設定ファイル  tour-data.js
+//  MOTO TOURS JAPAN ── ツアーデータ設定ファイル  tour-data.js
 //  admin.html から生成  ${new Date().toLocaleString('ja-JP')}
 // ================================================================
 // ※ このファイルはテキストエディタ（メモ帳、VS Code 等）で開いてください。
@@ -2035,6 +2158,453 @@ function copyAllUrls(){
 
 // ── Util ─────────────────────────────────────────────────────
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── 集合・解散 同一場所トグル ─────────────────────────────────
+function toggleSameMeetEnd(isSame) {
+  const endGroup = document.getElementById('endMapUrlGroup');
+  if (endGroup) endGroup.style.display = isSame ? 'none' : '';
+  if (isSame) {
+    const v = document.getElementById('f_meetMapUrl')?.value || '';
+    const el = document.getElementById('f_endMapUrl');
+    if (el) el.value = v;
+  }
+}
+// 集合マップURLが変わったとき、同一場所チェックがONなら解散URLも同期
+function syncSameLocUrl() {
+  if (document.getElementById('f_sameMeetEnd')?.checked) {
+    const v = document.getElementById('f_meetMapUrl')?.value || '';
+    const el = document.getElementById('f_endMapUrl');
+    if (el) el.value = v;
+  }
+}
+
+// ── 宿泊・食事 自動計算 ──────────────────────────────────────
+function autoCalcMeals() {
+  const n = parseInt(document.getElementById('calc_nights')?.value) || 0;
+  const bfEl = document.getElementById('calc_breakfast');
+  const dEl  = document.getElementById('calc_dinner');
+  if (bfEl) bfEl.value = n > 0 ? n : '';
+  if (dEl)  dEl.value  = n > 0 ? n : '';
+}
+function insertCalcItems() {
+  const n = parseInt(document.getElementById('calc_nights')?.value)    || 0;
+  const b = parseInt(document.getElementById('calc_breakfast')?.value) || 0;
+  const l = parseInt(document.getElementById('calc_lunch')?.value)     || 0;
+  const dv= parseInt(document.getElementById('calc_dinner')?.value)    || 0;
+  if (!n) { showToast('宿泊数を入力してください'); return; }
+  const items = [];
+  items.push(n + '泊宿泊費');
+  const meals = [];
+  if (b) meals.push('朝食' + b + '回');
+  if (l) meals.push('昼食' + l + '回');
+  if (dv) meals.push('夕食' + dv + '回');
+  if (meals.length) items.push(meals.join('・'));
+  const container = document.getElementById('includesList');
+  items.forEach(text => {
+    const row = document.createElement('div'); row.className = 'dyn-row';
+    row.innerHTML = `<input type="text" value="${esc(text)}"><button class="btn-remove" onclick="this.parentElement.remove()"><i class="fa-solid fa-trash"></i></button>`;
+    container.appendChild(row);
+  });
+  showToast(items.length + '件を「含まれるもの」に追加しました');
+}
+
+// ── FAQ ──────────────────────────────────────────────────────
+function buildFaqItems(items) {
+  const el = document.getElementById('faqItems');
+  if (!el) return;
+  el.innerHTML = '';
+  (items || []).forEach((item, idx) => el.appendChild(makeFaqRow(item, idx)));
+}
+function makeFaqRow(item, idx) {
+  item = item || {};
+  const row = document.createElement('div'); row.className = 'sched-item';
+  row.innerHTML = `
+    <div class="sched-item-header">
+      <div class="sched-item-title"><i class="fa-solid fa-circle-question" style="color:#ed1b23"></i>&ensp;Q&A ${(idx ?? 0) + 1}</div>
+      <button class="btn-remove" onclick="this.closest('.sched-item').remove();reNumberFaq()"><i class="fa-solid fa-trash"></i></button>
+    </div>
+    <div class="form-group"><label class="form-label">質問（Q）</label><input class="form-input faq-q" value="${esc(item.q || '')}"></div>
+    <div class="form-group"><label class="form-label">回答（A）</label><textarea class="form-textarea faq-a" style="min-height:80px">${esc(item.a || '')}</textarea></div>`;
+  return row;
+}
+function addFaqItem() {
+  const el = document.getElementById('faqItems');
+  if (!el) return;
+  el.appendChild(makeFaqRow({}, el.children.length));
+}
+function reNumberFaq() {
+  document.querySelectorAll('#faqItems .sched-item').forEach((row, i) => {
+    const t = row.querySelector('.sched-item-title');
+    if (t) t.innerHTML = `<i class="fa-solid fa-circle-question" style="color:#ed1b23"></i>&ensp;Q&A ${i + 1}`;
+  });
+}
+function getFaqItems() {
+  return [...document.querySelectorAll('#faqItems .sched-item')].map(row => ({
+    q: row.querySelector('.faq-q')?.value.trim() || '',
+    a: row.querySelector('.faq-a')?.value        || ''
+  })).filter(f => f.q);
+}
+
+// ================================================================
+//  EXCEL インポート機能
+//  「旅のしおり_編集シート.xlsx」をドラッグ＆ドロップまたは
+//  「Excelから読み込む」ボタンで全フォームへ自動入力
+// ================================================================
+
+// ── ドラッグ＆ドロップ ────────────────────────────────────────
+function xlOnDragover(e) {
+  e.preventDefault();
+  // .xlsxファイルのみオーバーレイ表示
+  const hasFile = Array.from(e.dataTransfer.items||[]).some(
+    it => it.kind === 'file' && (it.type.includes('sheet') || it.type.includes('excel') || it.type === 'application/octet-stream' || it.type === '')
+  );
+  if (hasFile || e.dataTransfer.items.length > 0) {
+    document.getElementById('xlsDragOverlay').style.display = 'flex';
+  }
+}
+function xlOnDragleave(e) {
+  if (!document.getElementById('adminScreen').contains(e.relatedTarget)) {
+    document.getElementById('xlsDragOverlay').style.display = 'none';
+  }
+}
+function xlOnDrop(e) {
+  e.preventDefault();
+  document.getElementById('xlsDragOverlay').style.display = 'none';
+  const files = Array.from(e.dataTransfer.files);
+  const f = files.find(x => x.name.endsWith('.xlsx') || x.name.endsWith('.xls'));
+  if (!f) { showToast('Excelファイル（.xlsx）をドロップしてください', 3000); return; }
+  xlProcess(f);
+}
+function xlOnFileChange(input) {
+  if (!input.files || !input.files[0]) return;
+  xlProcess(input.files[0]);
+  input.value = '';
+}
+
+// ── メイン処理 ────────────────────────────────────────────────
+function xlProcess(file) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      if (typeof XLSX === 'undefined') { showToast('SheetJSライブラリが読み込まれていません。ネット接続を確認してください。', 4000); return; }
+      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+      const sheets = {};
+      wb.SheetNames.forEach(name => {
+        sheets[name] = XLSX.utils.sheet_to_json(wb.Sheets[name], { header: 1, defval: '' });
+      });
+
+      let ok = 0;
+      const fns = [xlBasic, xlMeeting, xlGuide, xlIncludes, xlDay1, xlDay2, xlDay3,
+                   xlHighlights, xlHotels, xlChecklist, xlTips, xlEmergency, xlCompany];
+      fns.forEach(fn => { try { if (fn(sheets)) ok++; } catch(er){ console.warn(fn.name, er); } });
+
+      showToast('✅ ' + ok + ' セクションをExcelから読み込みました。内容確認後「保存する」を押してください。', 6000);
+    } catch(err) {
+      console.error(err);
+      showToast('❌ 読み込みエラー: ' + err.message, 5000);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ── ヘルパー関数 ─────────────────────────────────────────────
+// シート名の部分一致で検索（サークル番号・全角スペース無視）
+function xlSheet(sheets, keyword) {
+  const norm = s => s.replace(/[①-⑬]/g,'').replace(/\s/g,'').toLowerCase();
+  const kw = norm(keyword);
+  const key = Object.keys(sheets).find(k => norm(k).includes(kw));
+  return key ? sheets[key] : null;
+}
+
+// ラベル（A列）→値（B列）のマップを生成
+// ■・★・【 で始まる行はセクションヘッダーなので除外（先頭スペースも考慮）
+function xlLV(rows) {
+  const m = {};
+  (rows||[]).forEach(row => {
+    const label = String(row[0]||'').trim();
+    const value = String(row[1]||'').trim();
+    if (!label || !value) return;
+    if (/^[■★【①-⑬]/.test(label)) return; // ヘッダー系行を除外
+    m[label] = value;
+  });
+  return m;
+}
+
+// テーブルのヘッダー行を探して、次の「■」セクションまでのデータ行を返す
+function xlTableRows(rows, headerKeyword) {
+  const idx = (rows||[]).findIndex(r =>
+    r.some(c => String(c||'').trim().includes(headerKeyword))
+  );
+  if (idx === -1) return [];
+  const result = [];
+  for (let i = idx + 1; i < (rows||[]).length; i++) {
+    const first = String(rows[i][0]||'').trim();
+    if (/^[■★【]/.test(first)) break; // 次セクションヘッダーで打ち切り
+    if (rows[i].some(c => String(c||'').trim())) result.push(rows[i]);
+  }
+  return result;
+}
+
+function xlSet(id, val) {
+  if (val === undefined || val === null || String(val).trim() === '') return;
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (el.tagName === 'INPUT' && el.type === 'checkbox') el.checked = (String(val) === 'あり' || String(val) === 'true');
+  else el.value = String(val).trim();
+}
+
+function xlStr(v) { return String(v||'').trim(); }
+
+// ── シート別インポート関数 ────────────────────────────────────
+
+// ① 基本情報
+function xlBasic(sheets) {
+  const rows = xlSheet(sheets, '基本情報');
+  if (!rows) return false;
+  const lv = xlLV(rows);
+  xlSet('f_tourTitle',       lv['ツアー名（大）']     || lv['ツアー名']);
+  xlSet('f_tourSubtitle',    lv['ツアー名（サブ）']   || lv['サブタイトル']);
+  xlSet('f_area',            lv['エリア']);
+  xlSet('f_tourDates',       lv['ツアー期間']);
+  xlSet('f_customerName',    lv['お客様名']);
+  xlSet('f_participantCount',lv['参加人数']);
+  return true;
+}
+
+// ② 集合・解散
+function xlMeeting(sheets) {
+  const rows = xlSheet(sheets, '集合');
+  if (!rows) return false;
+  const lv = xlLV(rows);
+  xlSet('f_meetPlace',       lv['集合場所']);
+  xlSet('f_meetPlaceDetail', lv['集合場所詳細（住所）'] || lv['集合場所詳細']);
+  xlSet('f_meetDate',        lv['集合日']);
+  xlSet('f_meetTime',        lv['集合時間']);
+  xlSet('f_endPlace',        lv['解散場所']);
+  xlSet('f_endTime',         lv['解散日時']);
+  xlSet('f_meetNote',        lv['集合に関する注意事項'] || lv['集合に関する注記']);
+  xlSet('f_meetMapUrl',      lv['集合場所 地図URL']    || lv['集合場所　地図URL']);
+  xlSet('f_endMapUrl',       lv['解散場所 地図URL']    || lv['解散場所　地図URL']);
+  const cbEl = document.getElementById('f_shuttleEnabled');
+  if (cbEl) cbEl.checked = (lv['シャトル送迎'] === 'あり');
+  xlSet('f_shuttleNote', lv['シャトル案内文']);
+  // 乗車地点テーブル
+  const pRows = xlTableRows(rows, '乗車地点名');
+  const pickups = pRows.map(r => ({
+    place: xlStr(r[0]), time: xlStr(r[1]), note: xlStr(r[2]), mapUrl: xlStr(r[3])
+  })).filter(p => p.place);
+  if (pickups.length) buildShuttlePickups(pickups);
+  return true;
+}
+
+// ③ 添乗員情報
+function xlGuide(sheets) {
+  const rows = xlSheet(sheets, '添乗員');
+  if (!rows) return false;
+  const lv = xlLV(rows);
+  // 挨拶文は複数行にまたがる可能性があるため別途抽出
+  let greeting = lv['ご挨拶文（本文）'] || lv['ご挨拶文'] || '';
+  // B列 2行目以降が結合されていない場合、直接行データから拾う
+  if (!greeting) {
+    const greetIdx = (rows||[]).findIndex(r => String(r[0]).includes('ご挨拶文'));
+    if (greetIdx !== -1) greeting = xlStr(rows[greetIdx][1]);
+  }
+  const guide = {
+    name:     lv['氏名']         || '',
+    title:    lv['役職・所属']   || lv['役職'] || '',
+    phone:    lv['電話番号']     || '',
+    email:    lv['メールアドレス'] || '',
+    lineId:   lv['LINE ID']      || '',
+    greeting: greeting,
+  };
+  if (guide.name) buildGuides([guide]);
+  return true;
+}
+
+// ④ 含む・含まない
+function xlIncludes(sheets) {
+  const rows = xlSheet(sheets, '含む');
+  if (!rows) return false;
+  const hIdx = (rows||[]).findIndex(r =>
+    String(r[1]||'').includes('含まれるもの') || String(r[2]||'').includes('含まれないもの')
+  );
+  if (hIdx === -1) return false;
+  const includes = [], excludes = [];
+  for (let i = hIdx + 1; i < rows.length; i++) {
+    const b = xlStr(rows[i][1]); const c = xlStr(rows[i][2]);
+    if (b) includes.push(b);
+    if (c) excludes.push(c);
+  }
+  if (includes.length) buildSimpleList('includesList', includes);
+  if (excludes.length) buildSimpleList('excludesList', excludes);
+  return true;
+}
+
+// ⑤⑥⑦ Day行程（共通）
+function xlDayN(sheets, n) {
+  const rows = xlSheet(sheets, 'Day' + n);
+  if (!rows) return false;
+  const lv = xlLV(rows);
+  xlSet('f_day' + n + 'Date',  lv['日付']);
+  xlSet('f_day' + n + 'Theme', lv['テーマ（サブタイトル）'] || lv['テーマ']);
+  xlSet('f_day' + n + 'Map',   lv['Googleマップ URL'] || lv['Googleマップ　URL'] || lv['Google Maps URL']);
+  const sRows = xlTableRows(rows, 'スポット名');
+  const items = sRows.map(r => ({
+    time:        xlStr(r[0]),
+    title:       xlStr(r[1]),
+    place:       xlStr(r[2]),
+    desc:        xlStr(r[3]),
+    badge:       xlStr(r[4]),
+    badgeType:   xlStr(r[5]),
+    isHighlight: xlStr(r[6]).toLowerCase() === 'yes',
+    icon:        'fa-solid fa-circle',
+  })).filter(it => it.title || it.time);
+  if (items.length) buildSchedItems('day' + n + 'Items', items, 'day' + n);
+  return true;
+}
+function xlDay1(s){ return xlDayN(s,1); }
+function xlDay2(s){ return xlDayN(s,2); }
+function xlDay3(s){ return xlDayN(s,3); }
+
+// ⑧ ハイライト
+function xlHighlights(sheets) {
+  const rows = xlSheet(sheets, 'ハイライト');
+  if (!rows) return false;
+  const dRows = xlTableRows(rows, '見出し');
+  const items = dRows.map(r => ({
+    title: xlStr(r[1]), desc: xlStr(r[2]),
+    icon:  xlStr(r[3]) || 'fa-solid fa-star',
+    color: '#ed1b23', image: '',
+  })).filter(it => it.title);
+  if (items.length) buildHighlights(items);
+  return true;
+}
+
+// ⑨ 宿泊施設
+function xlHotels(sheets) {
+  const rows = xlSheet(sheets, '宿泊');
+  if (!rows) return false;
+  const dRows = xlTableRows(rows, '宿泊夜');
+  dRows.slice(0, 2).forEach((r, i) => {
+    const n = i + 1;
+    xlSet('f_hotel'+n+'Night',    xlStr(r[0]));
+    xlSet('f_hotel'+n+'Name',     xlStr(r[1]));
+    xlSet('f_hotel'+n+'Address',  xlStr(r[2]));
+    xlSet('f_hotel'+n+'Stars',    xlStr(r[3]));
+    xlSet('f_hotel'+n+'Phone',    xlStr(r[4]));
+    xlSet('f_hotel'+n+'Checkin',  xlStr(r[5]));
+    xlSet('f_hotel'+n+'Checkout', xlStr(r[6]));
+    // r[7] = WiFi列をスキップ
+    xlSet('f_hotel'+n+'Desc',     xlStr(r[8]));
+    xlSet('f_hotel'+n+'Url',      xlStr(r[9]));
+  });
+  return true;
+}
+
+// ⑩ 持ち物リスト
+function xlChecklist(sheets) {
+  const rows = xlSheet(sheets, '持ち物');
+  if (!rows) return false;
+  const groups = [];
+  let cur = null;
+  (rows||[]).forEach(row => {
+    // 先頭スペースを除いてから判定
+    const a = xlStr(row[0]);
+    const aTrimmed = a.replace(/^\s+/, '');
+    // ■ セクションヘッダー
+    if (aTrimmed.startsWith('■')) {
+      if (cur) groups.push(cur);
+      const name = aTrimmed.replace('■','').trim().replace(/（[^）]*）$/, '').trim();
+      const isRed = name.includes('必須') || name.includes('赤');
+      cur = { title: name, icon: isRed ? 'fa-solid fa-star' : 'fa-solid fa-thumbs-up', color: isRed ? '#AA0000' : '#1A1A1A', items: [] };
+      return;
+    }
+    // カラムヘッダー行をスキップ（「持ち物名」など）
+    if (a === '持ち物名' || a.includes('補足説明') || a.includes('カテゴリ')) return;
+    // アイテムは列A（スペース除去後）に入っている
+    if (a && cur) cur.items.push(a);
+  });
+  if (cur) groups.push(cur);
+  if (groups.length) buildChecklistGroups(groups);
+  return true;
+}
+
+// ⑪ Travel Tips
+function xlTips(sheets) {
+  const rows = xlSheet(sheets, 'Tips');
+  if (!rows) return false;
+  const dRows = xlTableRows(rows, '見出し（タイトル）');
+  const tips = dRows.map(r => ({
+    title:     xlStr(r[0]),
+    content:   xlStr(r[1]).replace(/\\n/g, '\n'),
+    icon:      xlStr(r[2]) || 'fa-solid fa-lightbulb',
+    iconColor: '#ed1b23',
+  })).filter(t => t.title);
+  if (tips.length) buildTips(tips);
+  return true;
+}
+
+// ⑫ 緊急連絡先
+function xlEmergency(sheets) {
+  const rows = xlSheet(sheets, '緊急連絡先');
+  if (!rows) return false;
+  const lv = xlLV(rows);
+  xlSet('f_emgPhone',   lv['緊急連絡 電話番号'] || lv['電話番号']);
+  xlSet('f_emgHours',   lv['対応時間']);
+  xlSet('f_emgAddress', lv['会社住所'] || lv['住所']);
+  xlSet('f_emgEmail',   lv['メールアドレス']);
+  // アラート文はラベル「アラート文」で取得
+  const alertIdx = (rows||[]).findIndex(r => String(r[0]).includes('アラート文'));
+  if (alertIdx !== -1) xlSet('f_emgAlert', xlStr(rows[alertIdx][1]));
+  // 対応手順ステップ
+  const sRows = xlTableRows(rows, '手順タイトル');
+  const steps = sRows.map(r => ({
+    title:   xlStr(r[0]),
+    desc:    xlStr(r[1]),
+    tag:     xlStr(r[2]),
+    tagType: xlStr(r[2]) ? 'red' : '',
+  })).filter(s => s.title);
+  if (steps.length) buildEmgSteps(steps);
+  // その他の緊急連絡先
+  const oRows = xlTableRows(rows, '機関名');
+  const others = oRows.map(r => ({
+    name: xlStr(r[0]), phone: xlStr(r[1]), note: xlStr(r[2])
+  })).filter(o => o.name);
+  if (others.length) buildEmgOthers(others);
+  return true;
+}
+
+// ⑬ 会社情報・SNS
+function xlCompany(sheets) {
+  const rows = xlSheet(sheets, '会社情報');
+  if (!rows) return false;
+  const lv = xlLV(rows);
+  xlSet('f_coName',    lv['会社名']);
+  xlSet('f_coAddress', lv['会社住所'] || lv['住所']);
+  xlSet('f_coPhone',   lv['電話番号']);
+  xlSet('f_coEmail',   lv['メールアドレス']);
+  xlSet('f_coHours',   lv['営業時間']);
+  // SNSテーブル
+  const snsRows = xlTableRows(rows, 'SNS名');
+  const sns = snsRows.map(r => ({
+    platform: xlStr(r[0]),
+    url:      xlStr(r[1]),
+    handle:   xlStr(r[2]),
+    icon: '', color: '#ed1b23', desc: '',
+  })).filter(s => s.platform);
+  if (sns.length) buildSns(sns);
+  // グッズテーブル
+  const goodsRows = xlTableRows(rows, 'グッズ名');
+  const goods = goodsRows.map(r => ({
+    name:  xlStr(r[0]),
+    desc:  xlStr(r[1]),
+    price: xlStr(r[2]),
+    icon: 'fa-solid fa-gift', iconBg: '#ed1b23', badge: '在庫あり', badgeType: 'green', image: '',
+  })).filter(g => g.name);
+  if (goods.length) buildGoods(goods);
+  return true;
+}
+// ================================================================
 </script>
 </body>
 </html>
