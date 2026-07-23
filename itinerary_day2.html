@@ -53,8 +53,8 @@
   </section>
 
   <div class="page-nav">
-    <a href="itinerary_day1.html" class="btn-nav btn-nav-prev"><i class="fa-solid fa-arrow-left"></i> Day 1 <span data-i18n="pagenav.dayDetail">詳細へ</span></a>
-    <a href="itinerary_day3.html" class="btn-nav btn-nav-next">Day 3 <span data-i18n="pagenav.dayDetail">詳細へ</span> <i class="fa-solid fa-arrow-right"></i></a>
+    <a id="navPrev" href="itinerary_day1.html" class="btn-nav btn-nav-prev"><i class="fa-solid fa-arrow-left"></i> Day 1 <span data-i18n="pagenav.dayDetail">詳細へ</span></a>
+    <a id="navNext" href="itinerary_day3.html" class="btn-nav btn-nav-next">Day 3 <span data-i18n="pagenav.dayDetail">詳細へ</span> <i class="fa-solid fa-arrow-right"></i></a>
   </div>
 </div></main>
 
@@ -74,16 +74,41 @@ document.title = 'Day 2 ' + t('route.detailTitle') + ' | ' + t('title.index');
 const d = getData();
 const day = d.day2;
 const BADGE = {red:'badge-red',blue:'badge-blue',green:'badge-green',gold:'badge-gold'};
+const DAY_NUM = 2;
+// ツアーによって日数が異なるため、実際に存在する day1, day2... の数を数える
+const TOTAL_DAYS = Object.keys(d).filter(k => /^day\d+$/.test(k) && d[k] && (d[k].date || d[k].theme || (d[k].items && d[k].items.length))).length;
+function buildDayStripMeta(dayNum, totalDays){
+  const hotels = d.hotels || (d.hotel ? [d.hotel] : []);
+  const parts = [`<span class="day-strip-meta-item"><i class="fa-solid fa-calendar"></i>${day.date}</span>`];
+  if (dayNum === 1) parts.push(`<span class="day-strip-meta-item"><i class="fa-solid fa-location-dot"></i>${d.meeting.place}</span>`);
+  if (dayNum < totalDays) {
+    const h = hotels[dayNum - 1];
+    if (h) parts.push(`<span class="day-strip-meta-item"><i class="fa-solid fa-hotel"></i>${h.name} ${t('day.night')}</span>`);
+  } else {
+    const prevH = hotels[dayNum - 2];
+    if (prevH) parts.push(`<span class="day-strip-meta-item"><i class="fa-solid fa-hotel"></i>${prevH.name} ${t('day.depart')}</span>`);
+    parts.push(`<span class="day-strip-meta-item"><i class="fa-solid fa-flag-checkered"></i>${d.meeting.endTime} ${t('day.dismiss')}</span>`);
+  }
+  return parts.join('');
+}
 
 document.getElementById('bannerSub').textContent = day.date + '｜' + day.theme;
 document.getElementById('dayStrip').innerHTML = `
   <h2><i class="fa-solid fa-calendar-day"></i> Day 2 — ${day.theme}</h2>
-  <div class="day-strip-meta">
-    <span class="day-strip-meta-item"><i class="fa-solid fa-calendar"></i>${day.date}</span>
-    <span class="day-strip-meta-item"><i class="fa-solid fa-hotel"></i>${(d.hotels && d.hotels[0]) ? d.hotels[0].name : d.hotel ? d.hotel.name : ''} ${t('day.depart')}</span>
-    <span class="day-strip-meta-item"><i class="fa-solid fa-flag-checkered"></i>${d.meeting.endTime} ${t('day.dismiss')}</span>
-  </div>`;
+  <div class="day-strip-meta">${buildDayStripMeta(DAY_NUM, TOTAL_DAYS)}</div>`;
 document.getElementById('dayStrip').style.background = 'linear-gradient(135deg,#c5151b,#9e1016)';
+
+// 前後ページへのリンク（ツアーの実際の日数に応じて自動計算）
+(function(){
+  const prevNum = DAY_NUM - 1;
+  const prevNav = document.getElementById('navPrev');
+  if (prevNum >= 1) { prevNav.href = 'itinerary_day' + prevNum + '.html'; prevNav.innerHTML = '<i class="fa-solid fa-arrow-left"></i> Day ' + prevNum + ' ' + t('pagenav.dayDetail'); }
+  else { prevNav.href = 'route.html'; prevNav.innerHTML = '<i class="fa-solid fa-arrow-left"></i> ' + t('pagenav.toRoute'); }
+  const nextNum = DAY_NUM + 1;
+  const nextNav = document.getElementById('navNext');
+  if (nextNum <= TOTAL_DAYS) { nextNav.href = 'itinerary_day' + nextNum + '.html'; nextNav.innerHTML = 'Day ' + nextNum + ' ' + t('pagenav.dayDetail') + ' <i class="fa-solid fa-arrow-right"></i>'; }
+  else { nextNav.href = 'caution.html'; nextNav.innerHTML = t('pagenav.caution') + ' <i class="fa-solid fa-arrow-right"></i>'; }
+})();
 
 document.getElementById('timeline').innerHTML = (day.items||[]).map(item=>{
   const bdg = item.badge ? `<span class="badge ${BADGE[item.badgeType]||'badge-blue'}" style="margin-left:8px">${item.badge}</span>` : '';

@@ -144,6 +144,14 @@ mountLangSwitcher('langSwitcherDesktop');
 const d = getData();
 document.getElementById('pageTitle').textContent = t('print.pageTitle') + ' | ' + d.basic.tourTitle;
 
+function getAllDays(){
+  return Object.keys(d)
+    .filter(k => /^day\d+$/.test(k))
+    .sort((a,b) => Number(a.slice(3)) - Number(b.slice(3)))
+    .map(k => d[k])
+    .filter(Boolean);
+}
+
 const DAY_COLORS = ['#ed1b23', '#c5151b', '#9e1016'];
 const BADGE_LABEL = { badgeType:1 };
 
@@ -206,7 +214,7 @@ function buildIncludes(){
 }
 
 function buildItinerary(){
-  const days = [d.day1, d.day2, d.day3].filter(Boolean);
+  const days = getAllDays();
   let rows = '';
   days.forEach((day, idx) => {
     rows += `<tr class="day-row"><td colspan="3"><i class="fa-solid fa-calendar-day"></i>&ensp;${esc(day.date)}${day.theme ? '　' + esc(day.theme) : ''}</td></tr>`;

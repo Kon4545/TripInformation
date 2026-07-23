@@ -37,7 +37,7 @@
 
 <div class="page-banner">
   <h1><i class="fa-solid fa-map"></i> <span data-i18n="banner.title.route">全体行程</span></h1>
-  <p data-i18n="banner.subtitle.route">3日間の旅程をひと目で確認</p>
+  <p id="bannerSubtitleRoute" data-i18n="banner.subtitle.route">3日間の旅程をひと目で確認</p>
 </div>
 
 <main><div class="container">
@@ -58,25 +58,10 @@
     <h2 class="section-title"><i class="fa-solid fa-list-ol"></i> <span data-i18n="route.detailTitle">詳細行程</span></h2>
 
     <!-- タブバー -->
-    <div style="display:flex;gap:0;border-bottom:2px solid #E8E2D8;margin-bottom:28px">
-      <button id="dayTab1" onclick="switchDayTab(1)"
-        style="flex:1;padding:13px 8px;border:none;border-bottom:3px solid #ed1b23;margin-bottom:-2px;background:none;cursor:pointer;font-family:inherit;font-size:.92rem;font-weight:700;color:#ed1b23;transition:color .2s,border-color .2s">
-        <i class="fa-solid fa-calendar-day" style="margin-right:5px"></i>Day 1
-      </button>
-      <button id="dayTab2" onclick="switchDayTab(2)"
-        style="flex:1;padding:13px 8px;border:none;border-bottom:3px solid transparent;margin-bottom:-2px;background:none;cursor:pointer;font-family:inherit;font-size:.92rem;font-weight:700;color:#9A9490;transition:color .2s,border-color .2s">
-        <i class="fa-solid fa-calendar-day" style="margin-right:5px"></i>Day 2
-      </button>
-      <button id="dayTab3" onclick="switchDayTab(3)"
-        style="flex:1;padding:13px 8px;border:none;border-bottom:3px solid transparent;margin-bottom:-2px;background:none;cursor:pointer;font-family:inherit;font-size:.92rem;font-weight:700;color:#9A9490;transition:color .2s,border-color .2s">
-        <i class="fa-solid fa-calendar-day" style="margin-right:5px"></i>Day 3
-      </button>
-    </div>
+    <div id="dayTabBar" style="display:flex;gap:0;border-bottom:2px solid #E8E2D8;margin-bottom:28px"></div>
 
     <!-- Day パネル -->
-    <div id="dayPanel1"></div>
-    <div id="dayPanel2" style="display:none"></div>
-    <div id="dayPanel3" style="display:none"></div>
+    <div id="dayPanels"></div>
   </section>
 
   <!-- ツアーハイライト -->
@@ -116,9 +101,18 @@ function badge(text,type){ return text ? `<span class="badge ${BADGE[type]||'bad
 
 const DAY_COLORS = ['#ed1b23', '#c5151b', '#9e1016'];
 
+// ツアーの実際の日数分だけ d.day1, d.day2, ... を集める（ツアーによって日数が異なるため）
+function getDayKeys(){
+  return Object.keys(d)
+    .filter(k => /^day\d+$/.test(k) && d[k] && (d[k].date || d[k].theme || (d[k].items && d[k].items.length)))
+    .sort((a,b) => Number(a.slice(3)) - Number(b.slice(3)));
+}
+const DAY_KEYS = getDayKeys();
+document.getElementById('bannerSubtitleRoute').textContent = t('banner.subtitle.route').replace('{n}', DAY_KEYS.length);
+
 // ── 全体行程表 ────────────────────────────────────────────────────
 (function buildTable(){
-  const days = [d.day1, d.day2, d.day3].filter(Boolean);
+  const days = DAY_KEYS.map(k => d[k]);
   let rows = '';
   days.forEach((day, idx) => {
     const hdr = DAY_COLORS[idx] || '#1A1A1A';
@@ -199,38 +193,31 @@ function buildRouteIllust(items, dayNum) {
 }
 
 // ── 各 Day パネルを構築 ──────────────────────────────────────────
-const DAY_DEFS = [
-  {
-    key: 'day1', num: 1,
-    gradient: 'linear-gradient(135deg,#ed1b23,#9e1016)',
-    icon: 'fa-solid fa-torii-gate',
-    metaFn: () => [
-      `<span class="day-strip-meta-item"><i class="fa-solid fa-calendar"></i>${esc(d.day1.date)}</span>`,
-      `<span class="day-strip-meta-item"><i class="fa-solid fa-location-dot"></i>${esc(d.meeting.place)}</span>`,
-      `<span class="day-strip-meta-item"><i class="fa-solid fa-hotel"></i>${esc((d.hotels&&d.hotels[0])?d.hotels[0].name:d.hotel?d.hotel.name:'')} ${esc(t('day.night'))}</span>`
-    ].join('')
-  },
-  {
-    key: 'day2', num: 2,
-    gradient: 'linear-gradient(135deg,#c5151b,#9e1016)',
-    icon: 'fa-solid fa-utensils',
-    metaFn: () => [
-      `<span class="day-strip-meta-item"><i class="fa-solid fa-calendar"></i>${esc(d.day2.date)}</span>`,
-      `<span class="day-strip-meta-item"><i class="fa-solid fa-hotel"></i>${esc((d.hotels&&d.hotels[0])?d.hotels[0].name:d.hotel?d.hotel.name:'')} ${esc(t('day.depart'))}</span>`,
-      `<span class="day-strip-meta-item"><i class="fa-solid fa-flag-checkered"></i>${esc(d.meeting.endTime)} ${esc(t('day.dismiss'))}</span>`
-    ].join('')
-  },
-  {
-    key: 'day3', num: 3,
-    gradient: 'linear-gradient(135deg,#9e1016,#7a0d12)',
-    icon: 'fa-solid fa-paw',
-    metaFn: () => [
-      `<span class="day-strip-meta-item"><i class="fa-solid fa-calendar"></i>${esc(d.day3.date)}</span>`,
-      `<span class="day-strip-meta-item"><i class="fa-solid fa-hotel"></i>${esc((d.hotels&&d.hotels[1])?d.hotels[1].name:'')} ${esc(t('day.depart'))}</span>`,
-      `<span class="day-strip-meta-item"><i class="fa-solid fa-flag-checkered"></i>${esc(d.meeting.endTime)} ${esc(t('day.dismiss'))}</span>`
-    ].join('')
-  }
+// 日数はツアーごとに異なるため、グラデーション・アイコンは配列を順に巡回して割り当てる
+const DAY_GRADIENTS = [
+  'linear-gradient(135deg,#ed1b23,#9e1016)',
+  'linear-gradient(135deg,#c5151b,#9e1016)',
+  'linear-gradient(135deg,#9e1016,#7a0d12)'
 ];
+const DAY_ICONS = ['fa-solid fa-torii-gate', 'fa-solid fa-utensils', 'fa-solid fa-paw', 'fa-solid fa-cloud-sun', 'fa-solid fa-mountain-sun', 'fa-solid fa-water', 'fa-solid fa-campground'];
+
+// 1日目＝集合場所、最終日＝解散時刻＋前泊ホテルの出発、それ以外＝その晩のホテル
+function buildDayMeta(idx, total){
+  const hotels = d.hotels || (d.hotel ? [d.hotel] : []);
+  const parts = [`<span class="day-strip-meta-item"><i class="fa-solid fa-calendar"></i>${esc(d[DAY_KEYS[idx]].date)}</span>`];
+  if (idx === 0) {
+    parts.push(`<span class="day-strip-meta-item"><i class="fa-solid fa-location-dot"></i>${esc(d.meeting.place)}</span>`);
+  }
+  if (idx < total - 1) {
+    const h = hotels[idx];
+    if (h) parts.push(`<span class="day-strip-meta-item"><i class="fa-solid fa-hotel"></i>${esc(h.name)} ${esc(t('day.night'))}</span>`);
+  } else {
+    const prevH = hotels[idx - 1];
+    if (prevH) parts.push(`<span class="day-strip-meta-item"><i class="fa-solid fa-hotel"></i>${esc(prevH.name)} ${esc(t('day.depart'))}</span>`);
+    parts.push(`<span class="day-strip-meta-item"><i class="fa-solid fa-flag-checkered"></i>${esc(d.meeting.endTime)} ${esc(t('day.dismiss'))}</span>`);
+  }
+  return parts.join('');
+}
 
 // ── 距離・標高プロファイル ─────────────────────────────────────
 function buildElevationSection(items, num){
@@ -314,30 +301,42 @@ function renderElevationCharts(){
   document.head.appendChild(script);
 }
 
-DAY_DEFS.forEach(({key, num, gradient, icon, metaFn}) => {
+// タブバー・Dayパネルを実際の日数分だけ生成
+document.getElementById('dayTabBar').innerHTML = DAY_KEYS.map((key, idx) => {
+  const num = idx + 1;
+  return `<button id="dayTab${num}" onclick="switchDayTab(${num})"
+    style="flex:1;padding:13px 8px;border:none;border-bottom:3px solid ${idx===0?'#ed1b23':'transparent'};margin-bottom:-2px;background:none;cursor:pointer;font-family:inherit;font-size:.92rem;font-weight:700;color:${idx===0?'#ed1b23':'#9A9490'};transition:color .2s,border-color .2s">
+    <i class="fa-solid fa-calendar-day" style="margin-right:5px"></i>Day ${num}
+  </button>`;
+}).join('');
+
+document.getElementById('dayPanels').innerHTML = DAY_KEYS.map((key, idx) => {
+  const num = idx + 1;
   const day = d[key];
-  if (!day) return;
-  const panel = document.getElementById('dayPanel' + num);
-  panel.innerHTML =
-    `<div class="day-strip" style="background:${gradient}">
+  const gradient = DAY_GRADIENTS[idx % DAY_GRADIENTS.length];
+  const icon = DAY_ICONS[idx % DAY_ICONS.length];
+  return `<div id="dayPanel${num}" style="${idx===0?'':'display:none'}">
+    <div class="day-strip" style="background:${gradient}">
       <h2><i class="${icon}"></i> Day ${num} — ${esc(day.theme)}</h2>
-      <div class="day-strip-meta">${metaFn()}</div>
-    </div>` +
-    `<h3 class="section-title" style="font-size:1rem;margin-top:24px;margin-bottom:12px">
+      <div class="day-strip-meta">${buildDayMeta(idx, DAY_KEYS.length)}</div>
+    </div>
+    <h3 class="section-title" style="font-size:1rem;margin-top:24px;margin-bottom:12px">
       <i class="fa-solid fa-list-ol"></i> ${esc(t('route.detailTimeline'))}
     </h3>
-    <div class="timeline">${buildTimeline(day.items)}</div>` +
-    `<h3 class="section-title" style="font-size:1rem;margin-top:28px;margin-bottom:12px">
+    <div class="timeline">${buildTimeline(day.items)}</div>
+    <h3 class="section-title" style="font-size:1rem;margin-top:28px;margin-bottom:12px">
       <i class="fa-solid fa-map-location-dot"></i> Day ${num} ${esc(t('route.detailMap'))}
     </h3>
-    ${buildRouteIllust(day.items, num)}` +
-    buildElevationSection(day.items, num);
-});
+    ${buildRouteIllust(day.items, num)}
+    ${buildElevationSection(day.items, num)}
+  </div>`;
+}).join('');
 renderElevationCharts();
 
 // ── タブ切替 ───────────────────────────────────────────────────
 function switchDayTab(n) {
-  [1,2,3].forEach(i => {
+  DAY_KEYS.forEach((key, idx) => {
+    const i = idx + 1;
     const isActive = (i === n);
     const tab = document.getElementById('dayTab' + i);
     tab.style.color       = isActive ? '#ed1b23' : '#9A9490';
@@ -349,10 +348,10 @@ function switchDayTab(n) {
 
 // ページ読み込み時にハッシュで初期タブを決定
 (function(){
-  const h = location.hash;
-  if      (h === '#day2') switchDayTab(2);
-  else if (h === '#day3') switchDayTab(3);
-  // デフォルトは Day 1（既にアクティブ）
+  const m = /^#day(\d+)$/.exec(location.hash);
+  const n = m ? Number(m[1]) : 1;
+  if (n >= 1 && n <= DAY_KEYS.length) switchDayTab(n);
+  // 該当しない場合はデフォルトの Day 1（既にアクティブ）のまま
 })();
 
 // ── ツアーハイライト ─────────────────────────────────────────────

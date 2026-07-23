@@ -1,6 +1,6 @@
 // MOTO TOURS JAPAN 旅のしおり ── オフライン対応用 Service Worker
 // キャッシュバージョンを上げると、古いキャッシュは activate 時に自動削除される
-const CACHE_NAME = 'mtj-shiori-v3';
+const CACHE_NAME = 'mtj-shiori-v7';
 
 const PRECACHE_URLS = [
   'index.html',
@@ -11,7 +11,10 @@ const PRECACHE_URLS = [
   'itinerary_day1.html',
   'itinerary_day2.html',
   'itinerary_day3.html',
-  'flipbook.html',
+  'itinerary_day4.html',
+  'itinerary_day5.html',
+  'itinerary_day6.html',
+  'itinerary_day7.html',
   'print.html',
   'style.css',
   'i18n.js',

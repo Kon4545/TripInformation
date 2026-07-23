@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Day 1 詳細行程 | 旅のしおり</title>
+<title>Day 6 詳細行程 | 旅のしおり</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -35,8 +35,8 @@
   </nav>
 </header>
 
-<div class="page-banner" id="pageBanner">
-  <h1><i class="fa-solid fa-torii-gate"></i> Day 1 <span data-i18n="route.detailTitle">詳細行程</span></h1>
+<div class="page-banner" style="background:linear-gradient(135deg,#9e1016,#7a0d12)">
+  <h1><i class="fa-solid fa-water"></i> Day 6 <span data-i18n="route.detailTitle">詳細行程</span></h1>
   <p id="bannerSub">—</p>
 </div>
 
@@ -48,13 +48,13 @@
   </section>
 
   <section class="section">
-    <h2 class="section-title"><i class="fa-solid fa-map-location-dot"></i> Day 1 <span data-i18n="route.detailMap">訪問スポット マップ</span></h2>
+    <h2 class="section-title"><i class="fa-solid fa-map-location-dot"></i> Day 6 <span data-i18n="route.detailMap">訪問スポット マップ</span></h2>
     <div id="routeIllust"></div>
   </section>
 
   <div class="page-nav">
-    <a id="navPrev" href="route.html" class="btn-nav btn-nav-prev"><i class="fa-solid fa-arrow-left"></i> <span data-i18n="pagenav.toRoute">全体行程へ</span></a>
-    <a id="navNext" href="itinerary_day2.html" class="btn-nav btn-nav-next">Day 2 <span data-i18n="pagenav.dayDetail">詳細へ</span> <i class="fa-solid fa-arrow-right"></i></a>
+    <a id="navPrev" href="itinerary_day5.html" class="btn-nav btn-nav-prev"><i class="fa-solid fa-arrow-left"></i> Day 5 <span data-i18n="pagenav.dayDetail">詳細へ</span></a>
+    <a id="navNext" href="caution.html" class="btn-nav btn-nav-next"><span data-i18n="pagenav.caution">注意事項へ</span> <i class="fa-solid fa-arrow-right"></i></a>
   </div>
 </div></main>
 
@@ -70,11 +70,13 @@
 applyI18nStaticText();
 mountLangSwitcher('langSwitcherDesktop');
 mountLangSwitcher('langSwitcherMobile');
-document.title = 'Day 1 ' + t('route.detailTitle') + ' | ' + t('title.index');
+document.title = 'Day 6 ' + t('route.detailTitle') + ' | ' + t('title.index');
 const d = getData();
-const day = d.day1;
+const DAY_NUM = 6;
+// このツアーがDay6を使わない場合は全体行程ページへ戻す
+if (!d.day6) { location.replace('route.html'); }
+const day = d.day6 || {theme:'', date:'', items:[]};
 const BADGE = {red:'badge-red',blue:'badge-blue',green:'badge-green',gold:'badge-gold'};
-const DAY_NUM = 1;
 // ツアーによって日数が異なるため、実際に存在する day1, day2... の数を数える
 const TOTAL_DAYS = Object.keys(d).filter(k => /^day\d+$/.test(k) && d[k] && (d[k].date || d[k].theme || (d[k].items && d[k].items.length))).length;
 function buildDayStripMeta(dayNum, totalDays){
@@ -94,9 +96,9 @@ function buildDayStripMeta(dayNum, totalDays){
 
 document.getElementById('bannerSub').textContent = day.date + '｜' + day.theme;
 document.getElementById('dayStrip').innerHTML = `
-  <h2><i class="fa-solid fa-calendar-day"></i> Day 1 — ${day.theme}</h2>
+  <h2><i class="fa-solid fa-calendar-day"></i> Day 6 — ${day.theme}</h2>
   <div class="day-strip-meta">${buildDayStripMeta(DAY_NUM, TOTAL_DAYS)}</div>`;
-document.getElementById('dayStrip').style.background = 'linear-gradient(135deg,#ed1b23,#9e1016)';
+document.getElementById('dayStrip').style.background = 'linear-gradient(135deg,#9e1016,#7a0d12)';
 
 // 前後ページへのリンク（ツアーの実際の日数に応じて自動計算）
 (function(){
@@ -158,7 +160,7 @@ document.getElementById('timeline').innerHTML = (day.items||[]).map(item=>{
           <i class="fa-solid fa-route" style="color:#fff;font-size:1.1rem"></i>
         </div>
         <div>
-          <div style="color:#fff;font-weight:700;font-size:.92rem;letter-spacing:.03em">Day 1 ${t('route.detailMap')}</div>
+          <div style="color:#fff;font-weight:700;font-size:.92rem;letter-spacing:.03em">Day 6 ${t('route.detailMap')}</div>
           <div style="color:rgba(255,255,255,.55);font-size:.73rem;margin-top:1px">${items.length} ${t('route.spots')}</div>
         </div>
         <div style="margin-left:auto;display:flex;align-items:center;gap:6px">

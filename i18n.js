@@ -11,7 +11,6 @@ const UI_DICT = {
     'nav.company.mobile': '会社情報', 'nav.postTour.mobile': 'ツアー後',
 
     'hero.eyebrow': '旅のしおり',
-    'flipbook.cta': 'フリップブックで読む（ページをめくって閲覧）',
     'section.greeting': '担当添乗員からのご挨拶',
     'section.meetingInfo': '集合・解散情報',
     'section.includeExclude': '含まれるもの・含まれないもの',
@@ -113,7 +112,7 @@ const UI_DICT = {
     'title.postTour': 'ツアー後',
 
     'banner.title.route': '全体行程',
-    'banner.subtitle.route': '3日間の旅程をひと目で確認',
+    'banner.subtitle.route': '{n}日間の旅程をひと目で確認',
     'route.tableTitle': '全体行程表',
     'route.detailTitle': '詳細行程',
     'route.detailTimeline': '詳細タイムライン',
@@ -134,10 +133,6 @@ const UI_DICT = {
     'table.time': '時刻',
     'table.content': '内容',
     'table.note': '備考',
-
-    'fb.backToNormal': '通常表示に戻る',
-    'fb.title': '旅のしおり フリップブック',
-    'fb.hint': '← → キーまたはスワイプでページをめくれます',
 
     'countdown.days': '出発まであと <strong>{n}</strong> 日',
     'countdown.week': 'もうすぐです！出発まであと <strong>{n}</strong> 日',
@@ -166,7 +161,6 @@ const UI_DICT = {
     'nav.company.mobile': 'Company Info', 'nav.postTour.mobile': 'After the Tour',
 
     'hero.eyebrow': 'Travel Itinerary',
-    'flipbook.cta': 'Read as a Flipbook (tap to turn pages)',
     'section.greeting': 'Greeting from Your Tour Guide',
     'section.meetingInfo': 'Meeting & Dismissal Information',
     'section.includeExclude': "What's Included / Not Included",
@@ -268,7 +262,7 @@ const UI_DICT = {
     'title.postTour': 'After the Tour',
 
     'banner.title.route': 'Itinerary',
-    'banner.subtitle.route': 'Your 3-day itinerary at a glance',
+    'banner.subtitle.route': 'Your {n}-day itinerary at a glance',
     'route.tableTitle': 'Full Itinerary Table',
     'route.detailTitle': 'Detailed Itinerary',
     'route.detailTimeline': 'Detailed Timeline',
@@ -289,10 +283,6 @@ const UI_DICT = {
     'table.time': 'Time',
     'table.content': 'Details',
     'table.note': 'Notes',
-
-    'fb.backToNormal': 'Back to Normal View',
-    'fb.title': 'Travel Itinerary Flipbook',
-    'fb.hint': 'Use ← → keys or swipe to turn pages',
 
     'countdown.days': '<strong>{n}</strong> days until departure',
     'countdown.week': 'Almost there! <strong>{n}</strong> days to go',
@@ -321,7 +311,6 @@ const UI_DICT = {
     'nav.company.mobile': '公司資訊', 'nav.postTour.mobile': '旅程後續',
 
     'hero.eyebrow': '旅遊手冊',
-    'flipbook.cta': '以翻頁式電子手冊閱讀（點按翻頁）',
     'section.greeting': '隨團領隊的問候',
     'section.meetingInfo': '集合・解散資訊',
     'section.includeExclude': '費用包含與不包含項目',
@@ -423,7 +412,7 @@ const UI_DICT = {
     'title.postTour': '旅程後續',
 
     'banner.title.route': '全程行程',
-    'banner.subtitle.route': '一覽三天的行程安排',
+    'banner.subtitle.route': '一覽{n}天的行程安排',
     'route.tableTitle': '全程行程表',
     'route.detailTitle': '詳細行程',
     'route.detailTimeline': '詳細時間表',
@@ -444,10 +433,6 @@ const UI_DICT = {
     'table.time': '時間',
     'table.content': '內容',
     'table.note': '備註',
-
-    'fb.backToNormal': '返回一般顯示',
-    'fb.title': '旅遊手冊翻頁書',
-    'fb.hint': '可使用 ← → 鍵或滑動手勢翻頁',
 
     'countdown.days': '距離出發還有 <strong>{n}</strong> 天',
     'countdown.week': '就快到了！距離出發還有 <strong>{n}</strong> 天',
