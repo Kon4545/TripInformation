@@ -163,7 +163,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
       <div class="sidebar-section">行程</div>
       <div class="sidebar-item" onclick="showTab('day1')"><i class="fa-solid fa-sun"></i> Day 1 行程</div>
       <div class="sidebar-item" onclick="showTab('day2')"><i class="fa-solid fa-star"></i> Day 2 行程</div>
-      <div class="sidebar-item" onclick="showTab('day3')"><i class="fa-solid fa-moon"></i> Day 3 行程</div>
+      <div id="extraDayNavItems"></div>
+      <div class="sidebar-item" id="addDayNavBtn" onclick="addDayPanel()" style="color:#ed1b23"><i class="fa-solid fa-plus"></i> 行程日を追加</div>
       <div class="sidebar-item" onclick="showTab('hotel')"><i class="fa-solid fa-hotel"></i> 宿泊施設</div>
       <div class="sidebar-item" onclick="showTab('highlights')"><i class="fa-solid fa-sparkles"></i> ハイライト</div>
       <div class="sidebar-section">注意事項</div>
@@ -503,18 +504,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
         <button class="btn-add" onclick="addSchedItem('day2Items','day2')"><i class="fa-solid fa-plus"></i> アイテム追加</button>
       </div>
 
-      <!-- ── Day 3 ── -->
-      <div id="tab-day3" class="tab-panel">
-        <div class="panel-title"><i class="fa-solid fa-moon"></i> Day 3 行程</div>
-        <div class="form-grid" style="margin-bottom:20px">
-          <div class="form-group"><label class="form-label">日付</label><input id="f_day3Date" class="form-input"></div>
-          <div class="form-group"><label class="form-label">テーマ</label><input id="f_day3Theme" class="form-input"></div>
-          <div class="form-group" style="grid-column:1/-1"><label class="form-label">Google Maps 埋め込みURL</label><input id="f_day3Map" class="form-input"></div>
-        </div>
-        <div style="font-size:.82rem;font-weight:700;color:#1A1A1A;margin-bottom:10px;">行程アイテム</div>
-        <div id="day3Items"></div>
-        <button class="btn-add" onclick="addSchedItem('day3Items','day3')"><i class="fa-solid fa-plus"></i> アイテム追加</button>
-      </div>
+      <!-- ── Day 3以降（ツアーの日数に応じて追加・削除） ── -->
+      <div id="extraDayPanels"></div>
 
       <!-- ── 宿泊施設 ── -->
       <div id="tab-hotel" class="tab-panel">
@@ -685,8 +676,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
         <div class="panel-title"><i class="fa-solid fa-link"></i> URLリンク生成</div>
         <div style="background:#EFF3FA;border:1px solid #D0D9EC;border-radius:10px;padding:16px 20px;margin-bottom:24px;font-size:.84rem;color:#1A1A1A;line-height:1.8">
           <i class="fa-solid fa-circle-info" style="color:#ed1b23"></i>&ensp;
-          URLの末尾に <code style="background:#fff;border:1px solid #D0D9EC;border-radius:4px;padding:1px 6px;font-size:.82rem">?name=お客様氏名</code> を付けるだけで、アクセスしたお客様のお名前が表示されます。<br>
-          このツールで複数のお客様分のリンクをまとめて生成できます。
+          URLの末尾に付く <code style="background:#fff;border:1px solid #D0D9EC;border-radius:4px;padding:1px 6px;font-size:.82rem">?name=お客様氏名</code> は、どのお客様宛のURLかを区別するための管理用ラベルです（サイト上には表示されません）。<br>
+          このツールで複数のお客様分のリンクをQRコード付きでまとめて生成できます。お名前欄を空欄のまま生成すると、宛名なしの共通URL・QRコードを1件だけ作成します。
         </div>
         <div class="form-grid" style="margin-bottom:20px">
           <div class="form-group" style="grid-column:1/-1">
@@ -986,12 +977,19 @@ function initForms(){
   set('f_day2Theme', d.day2.theme);
   set('f_day2Map',   d.day2.mapEmbed);
   buildSchedItems('day2Items', d.day2.items, 'day2');
-  // Day3
-  const day3 = d.day3 || {};
-  set('f_day3Date',  day3.date);
-  set('f_day3Theme', day3.theme);
-  set('f_day3Map',   day3.mapEmbed);
-  buildSchedItems('day3Items', day3.items || [], 'day3');
+  // Day3以降（データが存在する分だけ復元。Day3も含めて追加・削除できる）
+  document.getElementById('extraDayNavItems').innerHTML = '';
+  document.getElementById('extraDayPanels').innerHTML = '';
+  document.getElementById('addDayNavBtn').style.display = '';
+  for (let n = MIN_TOUR_DAYS + 1; n <= MAX_TOUR_DAYS; n++) {
+    const dayData = d['day' + n];
+    if (!dayData || !(dayData.date || dayData.theme || (dayData.items && dayData.items.length))) break; // 連番が途切れたらそこで終了
+    addDayPanelDOM(n);
+    set('f_day' + n + 'Date',  dayData.date);
+    set('f_day' + n + 'Theme', dayData.theme);
+    set('f_day' + n + 'Map',   dayData.mapEmbed);
+    buildSchedItems('day' + n + 'Items', dayData.items || [], 'day' + n);
+  }
   // Hotels
   set('f_hotelNote', d.hotelNote || '');
   buildHotels(d.hotels && d.hotels.length ? d.hotels : (d.hotel && d.hotel.name ? [d.hotel] : []));
@@ -1185,6 +1183,82 @@ function getSchedItems(containerId){
       distanceFromPrev: distanceRaw   === '' ? null : Number(distanceRaw)
     };
   });
+}
+
+// ── Day 3以降（ツアーによって日数が異なるための追加・削除できる行程日） ─────
+// Day1・Day2は固定（最短1泊2日ツアーに対応）。Day3〜7は必要な日数分だけ追加・削除できる。
+// itinerary_day3.html〜itinerary_day7.html を予め用意してあるので、
+// ここで追加したDayに対応するページに手動でリンクすれば良い（しおりコンテンツのカード追加、または各ページの前後リンクは自動計算される）。
+const MIN_TOUR_DAYS = 2;
+const MAX_TOUR_DAYS = 7;
+const EXTRA_DAY_ICONS = {3:'fa-solid fa-moon', 4:'fa-solid fa-cloud-sun', 5:'fa-solid fa-mountain-sun', 6:'fa-solid fa-water', 7:'fa-solid fa-campground'};
+
+function extraDayCount(){ return document.querySelectorAll('#extraDayPanels .tab-panel').length; }
+
+// DOM生成のみ（データ投入・タブ切替はしない）。initForms() からの復元にも使う。
+function addDayPanelDOM(n){
+  const key = 'day' + n;
+  const icon = EXTRA_DAY_ICONS[n] || 'fa-solid fa-calendar-day';
+
+  const nav = document.createElement('div');
+  nav.className = 'sidebar-item';
+  nav.dataset.dayKey = key;
+  nav.setAttribute('onclick', "showTab('" + key + "')");
+  nav.innerHTML = `<i class="${icon}"></i> Day ${n} 行程`;
+  document.getElementById('extraDayNavItems').appendChild(nav);
+
+  const panel = document.createElement('div');
+  panel.id = 'tab-' + key;
+  panel.className = 'tab-panel';
+  panel.dataset.dayKey = key;
+  panel.innerHTML = `
+    <div class="panel-title" style="display:flex;align-items:center;justify-content:space-between">
+      <span><i class="${icon}"></i> Day ${n} 行程</span>
+      <button type="button" class="btn-remove" onclick="removeDayPanel(${n})"><i class="fa-solid fa-trash"></i> この日を削除</button>
+    </div>
+    <div class="form-grid" style="margin-bottom:20px">
+      <div class="form-group"><label class="form-label">日付</label><input id="f_${key}Date" class="form-input"></div>
+      <div class="form-group"><label class="form-label">テーマ</label><input id="f_${key}Theme" class="form-input"></div>
+      <div class="form-group" style="grid-column:1/-1"><label class="form-label">Google Maps 埋め込みURL</label><input id="f_${key}Map" class="form-input"></div>
+    </div>
+    <div style="font-size:.82rem;font-weight:700;color:#1A1A1A;margin-bottom:10px;">行程アイテム</div>
+    <div id="${key}Items"></div>
+    <button class="btn-add" onclick="addSchedItem('${key}Items','${key}')"><i class="fa-solid fa-plus"></i> アイテム追加</button>`;
+  document.getElementById('extraDayPanels').appendChild(panel);
+
+  const addBtn = document.getElementById('addDayNavBtn');
+  if (addBtn) addBtn.style.display = (MIN_TOUR_DAYS + 1 + extraDayCount() > MAX_TOUR_DAYS) ? 'none' : '';
+}
+
+// 「行程日を追加」ボタン用：新しい空のDayを追加してそこに切り替える
+function addDayPanel(){
+  const n = MIN_TOUR_DAYS + 1 + extraDayCount();
+  if (n > MAX_TOUR_DAYS) { showToast('行程日は最大' + MAX_TOUR_DAYS + '日間までです'); return; }
+  addDayPanelDOM(n);
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));
+  document.getElementById('tab-day' + n).classList.add('active');
+  document.querySelector('#extraDayNavItems [data-day-key="day' + n + '"]').classList.add('active');
+  showToast('Day ' + n + ' 行程を追加しました。忘れずに「' + 'itinerary_day' + n + '.html' + '」を使ってページを公開してください。');
+}
+
+// 末尾のDayのみ削除可能（Day番号が飛ばないようにするため。Day1・Day2は削除不可）
+function removeDayPanel(n){
+  if (n !== MIN_TOUR_DAYS + 1 + extraDayCount() - 1) return; // 念のため：末尾以外は削除不可
+  if (!confirm('Day ' + n + ' 行程を削除しますか？入力した内容は失われます。')) return;
+  document.getElementById('tab-day' + n)?.remove();
+  document.querySelector('#extraDayNavItems [data-day-key="day' + n + '"]')?.remove();
+  const addBtn = document.getElementById('addDayNavBtn');
+  if (addBtn) addBtn.style.display = '';
+  showTabById('day' + (n - 1 >= MIN_TOUR_DAYS + 1 ? n - 1 : MIN_TOUR_DAYS));
+}
+function showTabById(id){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));
+  document.getElementById('tab-'+id)?.classList.add('active');
+  const navItem = document.querySelector('.sidebar-item[onclick="showTab(\'' + id + '\')"]') ||
+                   document.querySelector('#extraDayNavItems [data-day-key="' + id + '"]');
+  navItem?.classList.add('active');
 }
 
 // ── Highlights ────────────────────────────────────────────────
@@ -1602,12 +1676,14 @@ function buildPtNextTours(items){
           <div class="ptn-img-preview" style="width:100px;height:64px;border-radius:8px;border:1.5px dashed #C0C0C0;background:#F4F2EF;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:.7rem">
             <span><i class="fa-solid fa-image" style="font-size:1.1rem;display:block;text-align:center"></i>未設定</span>
           </div>
-          <div>
+          <div style="flex:1;min-width:200px">
             <input type="file" class="ptn-img-file" accept="image/*" style="display:none">
             <div style="display:flex;gap:8px;margin-bottom:4px">
               <button type="button" class="ptn-img-upload-btn" style="padding:6px 12px;background:#ed1b23;color:#fff;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit"><i class="fa-solid fa-upload"></i> 画像を選択</button>
               <button type="button" class="ptn-img-clear-btn" style="padding:6px 10px;background:#fff;color:#9B1B1B;border:1.5px solid #9B1B1B;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;display:none"><i class="fa-solid fa-xmark"></i> 削除</button>
             </div>
+            <label class="form-label" style="font-size:.72rem">またはファイルパスを直接入力（images フォルダに写真をアップロードした場合）</label>
+            <input type="text" class="form-input ptn-img-path" placeholder="例：images/next-tour-1.jpg">
           </div>
         </div>
       </div>`;
@@ -1617,21 +1693,24 @@ function buildPtNextTours(items){
     const fileInput= row.querySelector('.ptn-img-file');
     const uploadBtn= row.querySelector('.ptn-img-upload-btn');
     const clearBtn = row.querySelector('.ptn-img-clear-btn');
+    const pathInput= row.querySelector('.ptn-img-path');
 
     function setPtnImg(src){
       hidden.value=src;
       if(src){ preview.innerHTML=`<img src="${src}" style="width:100%;height:100%;object-fit:cover;display:block">`; clearBtn.style.display=''; }
       else   { preview.innerHTML='<span><i class="fa-solid fa-image" style="font-size:1.1rem;display:block;text-align:center"></i>未設定</span>'; clearBtn.style.display='none'; }
     }
+    pathInput.value = (item.image||'').indexOf('data:')===0 ? '' : (item.image||'');
     if(item.image) setPtnImg(item.image);
     uploadBtn.addEventListener('click',()=>fileInput.click());
     fileInput.addEventListener('change',function(){
       if(!this.files||!this.files[0]) return;
       const reader=new FileReader();
-      reader.onload=e=>{ setPtnImg(e.target.result); showToast('画像を読み込みました'); };
+      reader.onload=e=>{ pathInput.value=''; setPtnImg(e.target.result); showToast('画像を読み込みました'); };
       reader.readAsDataURL(this.files[0]);
     });
-    clearBtn.addEventListener('click',()=>{ setPtnImg(''); fileInput.value=''; });
+    clearBtn.addEventListener('click',()=>{ pathInput.value=''; setPtnImg(''); fileInput.value=''; });
+    pathInput.addEventListener('input', ()=>setPtnImg(pathInput.value.trim()));
 
     el.appendChild(row);
   });
@@ -1894,13 +1973,15 @@ function buildGoods(items){
           <div class="gd-img-preview" style="width:130px;height:90px;border-radius:8px;border:1.5px dashed #C0C0C0;background:#F4F2EF;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:.7rem;text-align:center;line-height:1.5">
             <span><i class="fa-solid fa-image" style="font-size:1.3rem;display:block;margin-bottom:3px"></i>未設定</span>
           </div>
-          <div>
+          <div style="flex:1;min-width:200px">
             <input type="file" class="gd-img-file" accept="image/*" style="display:none">
             <div style="display:flex;gap:8px;margin-bottom:6px">
               <button type="button" class="gd-img-upload-btn" style="padding:7px 14px;background:#ed1b23;color:#fff;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit"><i class="fa-solid fa-upload"></i> 画像を選択</button>
               <button type="button" class="gd-img-clear-btn" style="padding:7px 12px;background:#fff;color:#9B1B1B;border:1.5px solid #9B1B1B;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;display:none"><i class="fa-solid fa-xmark"></i> 削除</button>
             </div>
-            <div style="font-size:.72rem;color:#8A8478">設定するとカード上部に商品写真が表示されます</div>
+            <div style="font-size:.72rem;color:#8A8478;margin-bottom:6px">設定するとカード上部に商品写真が表示されます</div>
+            <label class="form-label" style="font-size:.72rem">またはファイルパスを直接入力（images フォルダに写真をアップロードした場合）</label>
+            <input type="text" class="form-input gd-img-path" placeholder="例：images/goods-1.jpg">
           </div>
         </div>
       </div>`;
@@ -1910,6 +1991,7 @@ function buildGoods(items){
     const clearBtn   = row.querySelector('.gd-img-clear-btn');
     const fileInput  = row.querySelector('.gd-img-file');
     const uploadBtn  = row.querySelector('.gd-img-upload-btn');
+    const pathInput  = row.querySelector('.gd-img-path');
     function setGdImg(data){
       hiddenImg.value = data;
       if(data){
@@ -1920,6 +2002,7 @@ function buildGoods(items){
         clearBtn.style.display = 'none';
       }
     }
+    pathInput.value = (item.image||'').indexOf('data:')===0 ? '' : (item.image||'');
     if(item.image) setGdImg(item.image);
     uploadBtn.addEventListener('click', ()=>fileInput.click());
     fileInput.addEventListener('change', function(){
@@ -1927,10 +2010,11 @@ function buildGoods(items){
       const file=this.files[0];
       if(!file.type.startsWith('image/')){ showToast('画像ファイルを選択してください'); return; }
       const reader=new FileReader();
-      reader.onload=e=>{ setGdImg(e.target.result); showToast('画像を読み込みました。「保存」を押して反映してください。'); };
+      reader.onload=e=>{ pathInput.value=''; setGdImg(e.target.result); showToast('画像を読み込みました。「保存」を押して反映してください。'); };
       reader.readAsDataURL(file);
     });
-    clearBtn.addEventListener('click', ()=>{ setGdImg(''); fileInput.value=''; });
+    clearBtn.addEventListener('click', ()=>{ pathInput.value=''; setGdImg(''); fileInput.value=''; });
+    pathInput.addEventListener('input', ()=>setGdImg(pathInput.value.trim()));
     el.appendChild(row);
   });
 }
@@ -1964,7 +2048,11 @@ function collectData(){
   d.excludes = getSimpleList('excludesList');
   d.day1 = { date:g('f_day1Date'), theme:g('f_day1Theme'), mapEmbed:g('f_day1Map'), items:getSchedItems('day1Items') };
   d.day2 = { date:g('f_day2Date'), theme:g('f_day2Theme'), mapEmbed:g('f_day2Map'), items:getSchedItems('day2Items') };
-  d.day3 = { date:g('f_day3Date'), theme:g('f_day3Theme'), mapEmbed:g('f_day3Map'), items:getSchedItems('day3Items') };
+  for (let n = MIN_TOUR_DAYS + 1; n <= MAX_TOUR_DAYS; n++) {
+    const key = 'day' + n;
+    if (!document.getElementById('tab-' + key)) { delete d[key]; continue; }
+    d[key] = { date:g('f_'+key+'Date'), theme:g('f_'+key+'Theme'), mapEmbed:g('f_'+key+'Map'), items:getSchedItems(key+'Items') };
+  }
   const hotelsArr = getHotels();
   d.hotels = hotelsArr;
   d.hotel = hotelsArr[0] || {}; // backward compat
@@ -2646,6 +2734,16 @@ function showToast(msg){
 }
 
 // ── URL Link Generator ───────────────────────────────────────
+// 氏名リストが空の場合は「共通URL（宛名なし）」1件だけを返す（専用の別UIを作らずに済ませるため）
+function buildUrlEntries(base, names){
+  const sep = base.includes('?') ? '&' : '?';
+  if (!names.length) return [{ label: '共通URL（宛名なし）', url: base, fileName: '共通URL' }];
+  return names.map(name => ({
+    label: esc(name) + ' 様',
+    url: base + sep + 'name=' + encodeURIComponent(name),
+    fileName: name
+  }));
+}
 function generateUrls(){
   const base  = document.getElementById('urlgen_base').value.trim();
   const names = document.getElementById('urlgen_names').value
@@ -2655,26 +2753,29 @@ function generateUrls(){
     out.innerHTML='<div style="color:#9B1B1B;font-size:.85rem"><i class="fa-solid fa-circle-exclamation"></i>&ensp;ベースURLを入力してください。</div>';
     return;
   }
-  if(!names.length){
-    out.innerHTML='<div style="color:#9B1B1B;font-size:.85rem"><i class="fa-solid fa-circle-exclamation"></i>&ensp;お客様氏名を1行以上入力してください。</div>';
-    return;
-  }
-  const sep = base.includes('?') ? '&' : '?';
-  const rows = names.map((name,i)=>{
-    const url = base + sep + 'name=' + encodeURIComponent(name);
-    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border:1px solid #E8E2D8;border-radius:8px;margin-bottom:8px">
+  const entries = buildUrlEntries(base, names);
+  const rows = entries.map((e,i)=>{
+    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border:1px solid #E8E2D8;border-radius:8px;margin-bottom:8px;flex-wrap:wrap">
       <span style="min-width:22px;height:22px;border-radius:50%;background:#ed1b23;color:#fff;font-size:.72rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center">${i+1}</span>
-      <span style="font-size:.82rem;font-weight:700;color:#1A1A1A;min-width:120px;white-space:nowrap">${esc(name)} 様</span>
-      <input type="text" value="${esc(url)}" readonly style="flex:1;padding:6px 10px;border:1.5px solid #E8E2D8;border-radius:6px;font-size:.78rem;color:#5A5650;background:#F8F7F5;outline:none">
-      <button onclick="copyUrl(this,'${esc(url)}')" style="padding:6px 12px;background:#ed1b23;color:#fff;border:none;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit">
+      <span style="font-size:.82rem;font-weight:700;color:#1A1A1A;min-width:120px;white-space:nowrap">${e.label}</span>
+      <input type="text" value="${esc(e.url)}" readonly style="flex:1;min-width:160px;padding:6px 10px;border:1.5px solid #E8E2D8;border-radius:6px;font-size:.78rem;color:#5A5650;background:#F8F7F5;outline:none">
+      <button onclick="copyUrl(this,'${esc(e.url)}')" style="padding:6px 12px;background:#ed1b23;color:#fff;border:none;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit">
         <i class="fa-solid fa-copy"></i> コピー
       </button>
+      <div class="qr-slot" data-qr-url="${esc(e.url)}" style="width:60px;height:60px;border:1px solid #E8E2D8;border-radius:6px;background:#F8F7F5;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <i class="fa-solid fa-qrcode" style="color:#C9C2B5"></i>
+      </div>
+      <a class="qr-dl" href="#" style="pointer-events:none;opacity:.4;font-size:.72rem;color:#8A8478;text-decoration:none;white-space:nowrap" data-filename="${esc(e.fileName)}">
+        <i class="fa-solid fa-download"></i> QR保存
+      </a>
     </div>`;
   }).join('');
-  out.innerHTML=`<div style="font-size:.8rem;font-weight:700;color:#5A5650;margin-bottom:10px">${names.length}件のURLを生成しました</div>${rows}
+  out.innerHTML=`<div style="font-size:.8rem;font-weight:700;color:#5A5650;margin-bottom:10px">${entries.length}件のURL・QRコードを生成しました</div>${rows}
+  <div style="font-size:.72rem;color:#8A8478;margin-bottom:10px">※ QRコードが表示されない場合は、右クリック（長押し）で画像として保存することもできます。</div>
   <button onclick="copyAllUrls()" style="margin-top:8px;padding:8px 16px;background:#1A1A1A;color:#fff;border:none;border-radius:7px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit">
     <i class="fa-solid fa-copy"></i> 全URLをまとめてコピー
   </button>`;
+  renderQrThumbnails();
 }
 function copyUrl(btn, url){
   navigator.clipboard.writeText(url).then(()=>{
@@ -2687,9 +2788,56 @@ function copyAllUrls(){
   const base  = document.getElementById('urlgen_base').value.trim();
   const names = document.getElementById('urlgen_names').value
                   .split('\n').map(s=>s.trim()).filter(s=>s);
-  const sep   = base.includes('?') ? '&' : '?';
-  const all   = names.map(n => n + '　' + base + sep + 'name=' + encodeURIComponent(n)).join('\n');
+  const entries = buildUrlEntries(base, names);
+  const all = entries.map(e => e.fileName + '　' + e.url).join('\n');
   navigator.clipboard.writeText(all).then(()=>showToast('全URLをコピーしました'));
+}
+
+// ── QRコード生成（qrcode-generator をCDNから遅延読み込み。個人名を含むURLを外部に送らないためクライアント側で生成） ──
+let _qrLibPromise = null;
+function ensureQrLibLoaded(){
+  if (window.qrcode) return Promise.resolve();
+  if (_qrLibPromise) return _qrLibPromise;
+  _qrLibPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.js';
+    script.onload = () => resolve();
+    script.onerror = () => { _qrLibPromise = null; reject(new Error('qrcode-generator load failed')); };
+    document.head.appendChild(script);
+  });
+  return _qrLibPromise;
+}
+function makeQrDataUrl(text){
+  const qr = qrcode(0, 'M');
+  qr.addData(text);
+  qr.make();
+  return qr.createDataURL(8, 4);
+}
+async function renderQrThumbnails(){
+  const slots = document.querySelectorAll('.qr-slot');
+  if (!slots.length) return;
+  try {
+    await ensureQrLibLoaded();
+  } catch (e) {
+    slots.forEach(slot => { slot.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#9B1B1B"></i>'; });
+    showToast('QRコードの読み込みに失敗しました。インターネット接続をご確認ください。');
+    return;
+  }
+  slots.forEach(slot => {
+    try {
+      const dataUrl = makeQrDataUrl(slot.dataset.qrUrl);
+      slot.innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:contain">`;
+      const dl = slot.nextElementSibling;
+      if (dl && dl.classList.contains('qr-dl')) {
+        dl.href = dataUrl;
+        dl.download = 'QR_' + (dl.dataset.filename || '共通URL') + '.gif';
+        dl.style.pointerEvents = '';
+        dl.style.opacity = '';
+      }
+    } catch (e) {
+      slot.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#9B1B1B"></i>';
+    }
+  });
 }
 
 // ── Util ─────────────────────────────────────────────────────
