@@ -472,6 +472,21 @@
   </div>
 </section>
 
+<!-- ════════════════════════════════════════════════
+     ▼ よくある質問
+═════════════════════════════════════════════════ -->
+<section class="faq-section" id="faqSection" style="background:var(--cream);padding:64px 0;display:none">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-divider"></div>
+      <p class="section-eyebrow">FAQ</p>
+      <h2 class="section-title" data-i18n="faq.title">よくある質問</h2>
+      <p class="section-subtitle" data-i18n="faq.subtitle">気になることがあれば事前にご確認ください</p>
+    </div>
+    <div id="faqList"></div>
+  </div>
+</section>
+
 <!-- ▼ Page Navigation -->
 <nav class="page-nav">
   <div class="container page-nav-inner">
@@ -812,12 +827,35 @@ function renderEmergencySteps() {
 }
 
 /* ─────────────────────────────────────────────
+   よくある質問 描画
+───────────────────────────────────────────── */
+function renderFaq() {
+  var d = getData();
+  var faqs = d.faq || [];
+  if (!faqs.length) return;
+  document.getElementById('faqSection').style.display = '';
+  document.getElementById('faqList').innerHTML = faqs.map(function(item) {
+    return '<div style="background:#fff;border:1px solid #E8E2D8;border-radius:12px;padding:18px 20px;margin-bottom:12px">' +
+      '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">' +
+        '<i class="fa-solid fa-circle-question" style="color:#9e1016;font-size:1.1rem;flex-shrink:0;margin-top:2px"></i>' +
+        '<span style="font-weight:700;color:var(--navy);font-size:.96rem;line-height:1.6">' + esc(item.q) + '</span>' +
+      '</div>' +
+      '<div style="display:flex;align-items:flex-start;gap:10px;padding-left:2px">' +
+        '<i class="fa-solid fa-comment-dots" style="color:var(--text-mid);font-size:1rem;flex-shrink:0;margin-top:3px;margin-left:2px"></i>' +
+        '<span style="color:var(--text-mid);font-size:.92rem;line-height:1.7;white-space:pre-line">' + esc(item.a) + '</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+/* ─────────────────────────────────────────────
    初期化
 ───────────────────────────────────────────── */
 renderCommon();
 renderChecklist();
 renderTips();
 renderEmergencySteps();
+renderFaq();
 </script>
 </body>
 </html>

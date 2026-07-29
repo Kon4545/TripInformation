@@ -115,7 +115,7 @@ document.getElementById('bannerSubtitleRoute').textContent = t('banner.subtitle.
   const days = DAY_KEYS.map(k => d[k]);
   let rows = '';
   days.forEach((day, idx) => {
-    const hdr = DAY_COLORS[idx] || '#1A1A1A';
+    const hdr = DAY_COLORS[idx % DAY_COLORS.length];
     rows += `<tr class="day-header"><td colspan="3" style="background:${hdr}"><i class="fa-solid fa-calendar-day"></i>&ensp;${esc(day.date)}</td></tr>`;
     (day.items||[]).forEach(item=>{
       const descHtml = item.desc ? `<br><span style="font-size:.82rem;color:var(--text-mid)">${esc(item.desc)}</span>` : '';

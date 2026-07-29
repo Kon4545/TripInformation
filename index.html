@@ -98,10 +98,10 @@
     <div class="grid grid-3" id="quickLinksGrid"></div>
   </section>
 
-  <!-- FAQ -->
-  <section class="section" id="faqSection" style="display:none">
-    <h2 class="section-title"><i class="fa-solid fa-circle-question"></i> <span data-i18n="faq.title">よくある質問</span></h2>
-    <div id="faqList"></div>
+  <!-- 車両情報 -->
+  <section class="section" id="vehiclesSection" style="display:none">
+    <h2 class="section-title"><i class="fa-solid fa-motorcycle"></i> <span data-i18n="vehicles.title">車両情報</span></h2>
+    <div id="vehicleCards"></div>
   </section>
 
 </div>
@@ -387,21 +387,36 @@ document.getElementById('quickLinksGrid').innerHTML = (d.quickLinks || []).map(q
     <div class="quick-link-body"><h3>${q.title}</h3><p>${q.desc}</p></div>
   </a>`).join('');
 
-// FAQ
-const faqs = d.faq || [];
-if (faqs.length) {
-  document.getElementById('faqSection').style.display = '';
-  document.getElementById('faqList').innerHTML = faqs.map(item => `
-    <div style="background:#fff;border:1px solid #E8E2D8;border-radius:12px;padding:18px 20px;margin-bottom:12px">
-      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:10px">
-        <i class="fa-solid fa-circle-question" style="color:#9e1016;font-size:1.1rem;flex-shrink:0;margin-top:2px"></i>
-        <span style="font-weight:700;color:#1A1A2E;font-size:.96rem;line-height:1.6">${esc(item.q)}</span>
+// 車両情報
+const vehicles = d.vehicles || [];
+if (vehicles.length) {
+  document.getElementById('vehiclesSection').style.display = '';
+  document.getElementById('vehicleCards').innerHTML = vehicles.map((v,i) => {
+    const imgHtml = v.image
+      ? `<div class="hotel-card-img" style="padding:0;overflow:hidden"><img src="${esc(v.image)}" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none'"></div>`
+      : `<div class="hotel-card-img"><i class="fa-solid fa-motorcycle"></i></div>`;
+    const metaRows = [
+      ['fa-industry',        t('vehicle.maker'),        v.maker],
+      ['fa-calendar',        t('vehicle.year'),          v.year],
+      ['fa-gauge-high',      t('vehicle.displacement'),  v.displacement],
+      ['fa-weight-hanging',  t('vehicle.weight'),        v.weight],
+      ['fa-ruler-vertical',  t('vehicle.seatHeight'),    v.seatHeight],
+      ['fa-gas-pump',        t('vehicle.tankCapacity'),  v.tankCapacity],
+      ['fa-droplet',         t('vehicle.fuel'),          v.fuel],
+      ['fa-id-card',         t('vehicle.class'),         v.class]
+    ].filter(r => r[2]);
+    const metaHtml = metaRows.map(r =>
+      `<div class="hotel-meta-item"><i class="fa-solid ${r[0]}"></i>${esc(r[1])}${esc(r[2])}</div>`
+    ).join('');
+    return `<div class="hotel-card" style="${i > 0 ? 'margin-top:20px' : ''}">
+      ${imgHtml}
+      <div class="hotel-card-body">
+        <h3>${esc(v.name)}</h3>
+        <div class="hotel-meta">${metaHtml}</div>
+        ${v.equipment ? `<p class="desc"><strong>${esc(t('vehicle.equipment'))}</strong>${esc(v.equipment)}</p>` : ''}
       </div>
-      <div style="display:flex;align-items:flex-start;gap:10px;padding-left:2px">
-        <i class="fa-solid fa-comment-dots" style="color:#5A5650;font-size:1rem;flex-shrink:0;margin-top:3px;margin-left:2px"></i>
-        <span style="color:#5A5650;font-size:.92rem;line-height:1.7;white-space:pre-line">${esc(item.a)}</span>
-      </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 // Footer

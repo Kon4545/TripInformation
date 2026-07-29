@@ -152,9 +152,6 @@ function getAllDays(){
     .filter(Boolean);
 }
 
-const DAY_COLORS = ['#ed1b23', '#c5151b', '#9e1016'];
-const BADGE_LABEL = { badgeType:1 };
-
 function buildCover(){
   return `
   <div class="print-cover">
@@ -256,6 +253,32 @@ function buildHotels(){
   </div>`;
 }
 
+function buildVehicles(){
+  const vehicles = d.vehicles || [];
+  if (!vehicles.length) return '';
+  const html = vehicles.map(v => `
+    <div class="print-hotel">
+      ${v.image ? `<img src="${esc(v.image)}" alt="" style="max-width:160px;max-height:110px;object-fit:cover;border-radius:8px;float:right;margin:0 0 8px 12px" onerror="this.remove()">` : ''}
+      <h3>${esc(v.name)}</h3>
+      <div class="meta" style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;line-height:1.6">
+        ${v.maker        ? `<div><i class="fa-solid fa-industry"></i>&ensp;${esc(t('vehicle.maker'))}${esc(v.maker)}</div>` : ''}
+        ${v.year         ? `<div><i class="fa-solid fa-calendar"></i>&ensp;${esc(t('vehicle.year'))}${esc(v.year)}</div>` : ''}
+        ${v.displacement ? `<div><i class="fa-solid fa-gauge-high"></i>&ensp;${esc(t('vehicle.displacement'))}${esc(v.displacement)}</div>` : ''}
+        ${v.weight       ? `<div><i class="fa-solid fa-weight-hanging"></i>&ensp;${esc(t('vehicle.weight'))}${esc(v.weight)}</div>` : ''}
+        ${v.seatHeight   ? `<div><i class="fa-solid fa-ruler-vertical"></i>&ensp;${esc(t('vehicle.seatHeight'))}${esc(v.seatHeight)}</div>` : ''}
+        ${v.tankCapacity ? `<div><i class="fa-solid fa-gas-pump"></i>&ensp;${esc(t('vehicle.tankCapacity'))}${esc(v.tankCapacity)}</div>` : ''}
+        ${v.fuel         ? `<div><i class="fa-solid fa-droplet"></i>&ensp;${esc(t('vehicle.fuel'))}${esc(v.fuel)}</div>` : ''}
+        ${v.class        ? `<div><i class="fa-solid fa-id-card"></i>&ensp;${esc(t('vehicle.class'))}${esc(v.class)}</div>` : ''}
+      </div>
+      ${v.equipment ? `<div style="font-size:.8rem;color:var(--text-mid);margin-top:8px;clear:both">${esc(t('vehicle.equipment'))}${esc(v.equipment)}</div>` : ''}
+    </div>`).join('');
+  return `
+  <div class="print-section">
+    <h2><i class="fa-solid fa-motorcycle"></i>${esc(t('vehicles.title'))}</h2>
+    ${html}
+  </div>`;
+}
+
 function buildChecklist(){
   if (!d.checklist || !d.checklist.length) return '';
   const groups = d.checklist.map(cat => `
@@ -341,6 +364,7 @@ document.getElementById('printPage').innerHTML =
   buildIncludes() +
   buildItinerary() +
   buildHotels() +
+  buildVehicles() +
   buildChecklist() +
   buildTips() +
   buildEmergency() +

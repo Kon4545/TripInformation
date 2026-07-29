@@ -166,6 +166,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
       <div id="extraDayNavItems"></div>
       <div class="sidebar-item" id="addDayNavBtn" onclick="addDayPanel()" style="color:#ed1b23"><i class="fa-solid fa-plus"></i> 行程日を追加</div>
       <div class="sidebar-item" onclick="showTab('hotel')"><i class="fa-solid fa-hotel"></i> 宿泊施設</div>
+      <div class="sidebar-item" onclick="showTab('vehicle')"><i class="fa-solid fa-motorcycle"></i> 車両情報</div>
       <div class="sidebar-item" onclick="showTab('highlights')"><i class="fa-solid fa-sparkles"></i> ハイライト</div>
       <div class="sidebar-section">注意事項</div>
       <div class="sidebar-item" onclick="showTab('checklist')"><i class="fa-solid fa-suitcase-rolling"></i> 持ち物リスト</div>
@@ -178,6 +179,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
       <div class="sidebar-item" onclick="showTab('posttour')"><i class="fa-solid fa-camera-retro"></i> ツアー後コンテンツ</div>
       <div class="sidebar-section">ツール</div>
       <div class="sidebar-item" onclick="showTab('urlgen')"><i class="fa-solid fa-link"></i> URLリンク生成</div>
+      <div class="sidebar-item" onclick="showTab('vehiclecatalog')"><i class="fa-solid fa-motorcycle"></i> 車両カタログ管理</div>
     </div>
 
     <!-- Main -->
@@ -520,6 +522,19 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
         <button class="btn-add" onclick="addHotelItem()"><i class="fa-solid fa-plus"></i> 宿泊施設を追加</button>
       </div>
 
+      <!-- ── 車両情報 ── -->
+      <div id="tab-vehicle" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-motorcycle"></i> 車両情報</div>
+        <div style="background:#EFF3FA;border:1px solid #D0D9EC;border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:.82rem;color:#1A1A1A;line-height:1.7">
+          <i class="fa-solid fa-circle-info" style="color:#ed1b23"></i>&ensp;
+          車両IDを入力して「検索」を押すと、取り込み済みの車両カタログから諸元を自動入力します。
+          カタログ未取り込みの場合は、先に「ツール＞車両カタログ管理」から取り込んでください。<br>
+          検索は<strong>日本語タブ</strong>で行ってください（メーカー名などの項目は翻訳されない共通項目のため）。
+        </div>
+        <div id="vehiclesList"></div>
+        <button class="btn-add" onclick="addVehicleItem()"><i class="fa-solid fa-plus"></i> 車両を追加</button>
+      </div>
+
       <!-- ── ハイライト ── -->
       <div id="tab-highlights" class="tab-panel">
         <div class="panel-title"><i class="fa-solid fa-sparkles"></i> ツアーハイライト</div>
@@ -691,6 +706,24 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
         </div>
         <button class="btn btn-gold" onclick="generateUrls()" style="margin-bottom:24px"><i class="fa-solid fa-wand-magic-sparkles"></i> URLを生成する</button>
         <div id="urlgen_output"></div>
+      </div>
+
+      <!-- ── 車両カタログ管理 ── -->
+      <div id="tab-vehiclecatalog" class="tab-panel">
+        <div class="panel-title"><i class="fa-solid fa-motorcycle"></i> 車両カタログ管理</div>
+        <div style="background:#EFF3FA;border:1px solid #D0D9EC;border-radius:10px;padding:16px 20px;margin-bottom:24px;font-size:.84rem;color:#1A1A1A;line-height:1.8">
+          <i class="fa-solid fa-circle-info" style="color:#ed1b23"></i>&ensp;
+          レンタル提携会社の車両一覧Excel（「バイク一覧 _重複削除」シートを含むファイル）を取り込むと、
+          各ツアーの「車両情報」タブで車両IDを入力するだけで諸元を自動入力できます。<br>
+          この取り込みは<strong>全ツアー共通</strong>です。レンタル会社の車両ラインナップが更新されたとき
+          （数か月に一度程度）だけ、新しいExcelファイルで再度取り込んでください。
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
+          <label class="form-label"><i class="fa-solid fa-file-excel" style="color:#ed1b23"></i>&ensp;車両一覧Excelファイル（.xlsx）</label>
+          <input type="file" id="vehicleCatalogFile" accept=".xlsx,.xls" class="form-input">
+        </div>
+        <button class="btn btn-gold" onclick="handleVehicleCatalogFile(document.getElementById('vehicleCatalogFile'))" style="margin-bottom:20px"><i class="fa-solid fa-file-import"></i> 取り込む</button>
+        <div id="vehicleCatalogStatus" style="font-size:.84rem;color:#5A5650;line-height:1.8"></div>
       </div>
 
     </div><!-- /admin-main -->
@@ -993,6 +1026,9 @@ function initForms(){
   // Hotels
   set('f_hotelNote', d.hotelNote || '');
   buildHotels(d.hotels && d.hotels.length ? d.hotels : (d.hotel && d.hotel.name ? [d.hotel] : []));
+  // Vehicles
+  buildVehicles(d.vehicles || []);
+  renderVehicleCatalogStatus();
   // Quick Links
   buildQuickLinks(d.quickLinks || []);
   // FAQ
@@ -2057,6 +2093,7 @@ function collectData(){
   d.hotels = hotelsArr;
   d.hotel = hotelsArr[0] || {}; // backward compat
   d.hotelNote = g('f_hotelNote');
+  d.vehicles = getVehicles();
   d.quickLinks = getQuickLinks();
   d.faq = getFaqItems();
   d.highlights = getHighlights();
@@ -2087,7 +2124,9 @@ const ADMIN_SHARED_FIELD_NAMES = {
   platform:1, handle:1, buyUrl:1, lineId:1, enabled:1, isHighlight:1,
   embedCode:1, src:1, nameEn:1, albumUrl:1, mapReviewUrl:1,
   meetDateISO:1, tourEndDateISO:1, meetLat:1, meetLng:1,
-  elevation:1, distanceFromPrev:1, label:1
+  elevation:1, distanceFromPrev:1, label:1,
+  meetIcon:1, meetIconColor:1, dateIcon:1, dateIconColor:1, endIcon:1, endIconColor:1,
+  vehicleId:1, maker:1, year:1, displacement:1, weight:1, seatHeight:1, tankCapacity:1, fuel:1, class:1
 };
 // saveData() が ja タブで保存したときだけ、変更された項目をここに集めて
 // 後から自動翻訳の対象にする（null の間は何も集めない＝書き出し時などは影響なし）。
@@ -2550,6 +2589,129 @@ function getHotels(){
   })).filter(h => h.name);
 }
 
+// ── 車両情報（車両IDでカタログ検索し、諸元を自動入力） ──────────────
+function buildVehicles(items){
+  const el = document.getElementById('vehiclesList'); el.innerHTML = '';
+  (items||[]).forEach((item,i) => el.appendChild(makeVehicleRow(item,i)));
+}
+function addVehicleItem(){
+  const items = getVehicles();
+  items.push({});
+  buildVehicles(items);
+}
+function vehicleStatusHtml(item){
+  if (item && (item.maker || item.name)) {
+    return '取り込み済みの車両データです。別の車両IDで再検索すると内容が上書きされます。';
+  }
+  return getVehicleCatalogCached()
+    ? '車両IDを入力し「検索」を押してください。'
+    : '<i class="fa-solid fa-circle-exclamation" style="color:#9B1B1B"></i> 車両カタログが未取り込みです。「ツール＞車両カタログ管理」から先に取り込んでください。';
+}
+function renderVehicleSpecHtml(v){
+  if (!v || (!v.maker && !v.name)) return '';
+  const rows = [
+    ['メーカー', v.maker], ['年式', v.year], ['排気量', v.displacement], ['車両重量', v.weight],
+    ['シート高', v.seatHeight], ['タンク容量', v.tankCapacity], ['燃料', v.fuel], ['クラス', v.class]
+  ].filter(r => r[1]);
+  const kv = rows.map(r => `<div><span style="color:#8A8478;font-size:.72rem">${esc(r[0])}</span><br><strong>${esc(r[1])}</strong></div>`).join('');
+  return `
+  <div style="background:#FFF5F5;border:1px solid #E8E2D8;border-radius:8px;padding:14px 16px;display:flex;gap:16px;flex-wrap:wrap">
+    ${v.image ? `<img src="${esc(v.image)}" style="width:140px;height:100px;object-fit:cover;border-radius:6px;flex-shrink:0" onerror="this.style.display='none'">` : ''}
+    <div style="flex:1;min-width:220px">
+      <div style="font-weight:700;margin-bottom:8px">${esc(v.name||'')}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;font-size:.82rem">${kv}</div>
+      ${v.equipment ? `<div style="margin-top:10px;font-size:.78rem;color:#5A5650"><strong>標準装備：</strong>${esc(v.equipment)}</div>` : ''}
+    </div>
+  </div>`;
+}
+function makeVehicleRow(item={}, idx){
+  const div = document.createElement('div'); div.className = 'sched-item';
+  div.innerHTML = `
+    <div class="sched-item-header">
+      <div class="sched-item-title"><i class="fa-solid fa-motorcycle" style="color:#ed1b23"></i>&ensp;車両 ${idx+1}</div>
+      <button class="btn-remove" onclick="this.closest('.sched-item').remove()"><i class="fa-solid fa-trash"></i></button>
+    </div>
+    <div class="form-grid" style="margin-bottom:10px">
+      <div class="form-group">
+        <label class="form-label">車両ID（レンタル会社の車両一覧より）</label>
+        <div style="display:flex;gap:8px">
+          <input type="number" class="form-input vh-id" value="${esc(item.vehicleId||'')}" placeholder="例：8804">
+          <button type="button" class="btn-add" style="white-space:nowrap;margin:0" onclick="lookupVehicle(this)"><i class="fa-solid fa-magnifying-glass"></i> 検索</button>
+        </div>
+      </div>
+    </div>
+    <div class="vh-status" style="font-size:.78rem;margin-bottom:12px;color:#8A8478">${vehicleStatusHtml(item)}</div>
+    <div class="vh-spec-display" style="display:${(item.maker||item.name)?'block':'none'};margin-bottom:12px">${renderVehicleSpecHtml(item)}</div>
+    <input type="hidden" class="vh-name"         value="${esc(item.name||'')}">
+    <input type="hidden" class="vh-maker"        value="${esc(item.maker||'')}">
+    <input type="hidden" class="vh-year"         value="${esc(item.year||'')}">
+    <input type="hidden" class="vh-displacement" value="${esc(item.displacement||'')}">
+    <input type="hidden" class="vh-weight"       value="${esc(item.weight||'')}">
+    <input type="hidden" class="vh-seatHeight"   value="${esc(item.seatHeight||'')}">
+    <input type="hidden" class="vh-tankCapacity" value="${esc(item.tankCapacity||'')}">
+    <input type="hidden" class="vh-fuel"         value="${esc(item.fuel||'')}">
+    <input type="hidden" class="vh-class"        value="${esc(item.class||'')}">
+    <input type="hidden" class="vh-equipment"    value="${esc(item.equipment||'')}">
+    <input type="hidden" class="vh-image"        value="${esc(item.image||'')}">`;
+  return div;
+}
+function lookupVehicle(btn){
+  const row = btn.closest('.sched-item');
+  const statusEl = row.querySelector('.vh-status');
+  const specEl = row.querySelector('.vh-spec-display');
+  if (ADMIN_LANG !== 'ja') {
+    showToast('車両検索は日本語タブで行ってください（メーカー名などは翻訳されない共通項目のため）');
+    return;
+  }
+  const idVal = row.querySelector('.vh-id').value.trim();
+  if (!idVal) { statusEl.innerHTML = '車両IDを入力してください'; return; }
+  const catalog = getVehicleCatalogCached();
+  if (!catalog) {
+    statusEl.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="color:#9B1B1B"></i> 車両カタログが未取り込みです。「ツール＞車両カタログ管理」から先に取り込んでください。';
+    return;
+  }
+  const found = catalog.find(r => String(r['車両ID']).trim() === idVal);
+  if (!found) {
+    statusEl.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="color:#9B1B1B"></i> 車両ID「' + esc(idVal) + '」は見つかりませんでした。';
+    specEl.style.display = 'none'; specEl.innerHTML = '';
+    return;
+  }
+  const v = {
+    name:         String(found['車両名']||'').trim(),
+    maker:        String(found['メーカー']||'').trim(),
+    year:         String(found['年式']||'').trim(),
+    displacement: String(found['排気量']||'').trim(),
+    weight:       String(found['車両重量']||'').trim(),
+    seatHeight:   String(found['シート高']||'').trim(),
+    tankCapacity: String(found['タンク容量']||'').trim(),
+    fuel:         String(found['燃料']||'').trim(),
+    class:        String(found['クラス']||'').trim(),
+    equipment:    String(found['標準装備(無料)']||'').trim(),
+    image:        String(found['画像URL']||'').trim()
+  };
+  ['name','maker','year','displacement','weight','seatHeight','tankCapacity','fuel','class','equipment','image']
+    .forEach(k => { row.querySelector('.vh-'+k).value = v[k]; });
+  specEl.style.display = 'block';
+  specEl.innerHTML = renderVehicleSpecHtml(v);
+  statusEl.innerHTML = '<i class="fa-solid fa-circle-check" style="color:#2D6A4F"></i> 取り込みました。「保存」を押して反映してください。';
+}
+function getVehicles(){
+  return [...document.querySelectorAll('#vehiclesList .sched-item')].map(row => ({
+    vehicleId:    row.querySelector('.vh-id')?.value           || '',
+    name:         row.querySelector('.vh-name')?.value          || '',
+    maker:        row.querySelector('.vh-maker')?.value         || '',
+    year:         row.querySelector('.vh-year')?.value          || '',
+    displacement: row.querySelector('.vh-displacement')?.value  || '',
+    weight:       row.querySelector('.vh-weight')?.value        || '',
+    seatHeight:   row.querySelector('.vh-seatHeight')?.value    || '',
+    tankCapacity: row.querySelector('.vh-tankCapacity')?.value  || '',
+    fuel:         row.querySelector('.vh-fuel')?.value          || '',
+    class:        row.querySelector('.vh-class')?.value         || '',
+    equipment:    row.querySelector('.vh-equipment')?.value     || '',
+    image:        row.querySelector('.vh-image')?.value         || ''
+  })).filter(v => v.vehicleId || v.name);
+}
+
 // ── Google Maps URL Converter ────────────────────────────────
 function convertGoogleMapsUrl(raw) {
   const url = raw.trim();
@@ -2759,7 +2921,7 @@ function generateUrls(){
       <span style="min-width:22px;height:22px;border-radius:50%;background:#ed1b23;color:#fff;font-size:.72rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center">${i+1}</span>
       <span style="font-size:.82rem;font-weight:700;color:#1A1A1A;min-width:120px;white-space:nowrap">${e.label}</span>
       <input type="text" value="${esc(e.url)}" readonly style="flex:1;min-width:160px;padding:6px 10px;border:1.5px solid #E8E2D8;border-radius:6px;font-size:.78rem;color:#5A5650;background:#F8F7F5;outline:none">
-      <button onclick="copyUrl(this,'${esc(e.url)}')" style="padding:6px 12px;background:#ed1b23;color:#fff;border:none;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit">
+      <button onclick="copyUrl(this,'${esc(e.url).replace(/'/g,"\\'")}')" style="padding:6px 12px;background:#ed1b23;color:#fff;border:none;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit">
         <i class="fa-solid fa-copy"></i> コピー
       </button>
       <div class="qr-slot" data-qr-url="${esc(e.url)}" style="width:60px;height:60px;border:1px solid #E8E2D8;border-radius:6px;background:#F8F7F5;display:flex;align-items:center;justify-content:center;flex-shrink:0">
@@ -2838,6 +3000,138 @@ async function renderQrThumbnails(){
       slot.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#9B1B1B"></i>';
     }
   });
+}
+
+// ── 車両カタログ（Excelインポート。SheetJS xlsx をCDNから遅延読み込み） ──
+// admin.html全ツアー共通のキャッシュ。TOUR_DATA_RAW_OVERRIDE とは別キーなので
+// 「リセット」ボタン（clearOverride）でも消えない。
+const VEHICLE_CATALOG_SHEET_NAME = 'バイク一覧 _重複削除';
+const VEHICLE_CATALOG_KEY = 'VEHICLE_CATALOG_JSON';
+const VEHICLE_CATALOG_AT_KEY = 'VEHICLE_CATALOG_IMPORTED_AT';
+const VEHICLE_CATALOG_EXPECTED_COLS = ['車両名','車両ID','メーカー','タイプ','年式','排気量','車両重量','シート高','乗車定員','タンク容量','燃料','最高出力','クラス','標準装備(無料)','店舗名','画像URL'];
+
+let _xlsxLibPromise = null;
+function ensureXlsxLibLoaded(){
+  if (window.XLSX) return Promise.resolve();
+  if (_xlsxLibPromise) return _xlsxLibPromise;
+  _xlsxLibPromise = new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    script.onload = () => resolve();
+    script.onerror = () => { _xlsxLibPromise = null; reject(new Error('xlsx load failed')); };
+    document.head.appendChild(script);
+  });
+  return _xlsxLibPromise;
+}
+
+// キャッシュ済みパース結果（undefined=未ロード、null=未取り込み、Array=取り込み済み）
+let _vehicleCatalogCache;
+function getVehicleCatalogCached(){
+  if (_vehicleCatalogCache !== undefined) return _vehicleCatalogCache;
+  try {
+    const raw = localStorage.getItem(VEHICLE_CATALOG_KEY);
+    _vehicleCatalogCache = raw ? JSON.parse(raw) : null;
+  } catch (e) { _vehicleCatalogCache = null; }
+  return _vehicleCatalogCache;
+}
+
+async function handleVehicleCatalogFile(fileInput){
+  const file = fileInput.files && fileInput.files[0];
+  if (!file) { showToast('Excelファイルを選択してください'); return; }
+  if (!/\.xlsx?$/i.test(file.name)) {
+    alert('.xlsx または .xls 形式のファイルを選択してください。');
+    return;
+  }
+  try {
+    await ensureXlsxLibLoaded();
+  } catch (e) {
+    showToast('Excel読み込み機能の準備に失敗しました。インターネット接続をご確認ください。');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onerror = () => showToast('ファイルの読み込みに失敗しました。');
+  reader.onload = (e) => {
+    let wb;
+    try {
+      wb = XLSX.read(new Uint8Array(e.target.result), {type:'array'});
+    } catch (err) {
+      alert('Excelファイルとして読み込めませんでした。ファイル形式をご確認ください。');
+      return;
+    }
+    let sheetName = wb.SheetNames.find(n => n === VEHICLE_CATALOG_SHEET_NAME);
+    if (!sheetName) {
+      // シート名が変更された場合のフォールバック：「画像URL」列を含む最初のシートを採用
+      sheetName = wb.SheetNames.find(n => {
+        const head = XLSX.utils.sheet_to_json(wb.Sheets[n], {header:1})[0] || [];
+        return head.includes('画像URL');
+      });
+    }
+    if (!sheetName) {
+      alert('「' + VEHICLE_CATALOG_SHEET_NAME + '」という名前のシートが見つかりませんでした。\n' +
+        'シート名が変更されている場合は、「画像URL」列を含むシートが必要です。\n' +
+        '（このExcelのシート一覧: ' + wb.SheetNames.join(' / ') + '）');
+      return;
+    }
+    let rows;
+    try {
+      rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName]); // ヘッダー行をキーとして自動変換
+    } catch (err) {
+      alert('シート「' + sheetName + '」の読み取りに失敗しました。');
+      return;
+    }
+    rows = rows.filter(r => r['車両ID']); // 空行除外
+    if (!rows.length) {
+      alert('シート「' + sheetName + '」に有効な車両データが見つかりませんでした。');
+      return;
+    }
+    const foundCols = Object.keys(rows[0]);
+    const missing = VEHICLE_CATALOG_EXPECTED_COLS.filter(c => !foundCols.includes(c));
+    if (missing.length) {
+      console.warn('車両カタログ: 想定外の列構成です。見つからなかった列:', missing, '実際の列:', foundCols);
+    }
+    if (!writeVehicleCatalog(rows)) return; // quota失敗時はここで終了（アラート済み）
+    fileInput.value = '';
+    showToast('車両カタログを取り込みました（' + rows.length + '件）。');
+    if (missing.length) {
+      alert('取り込みは完了しましたが、想定していない列名がありました：\n' + missing.join('、') +
+        '\nこれらの項目は車両情報タブで空欄になる場合があります。Excelの列見出しをご確認ください。');
+    }
+    renderVehicleCatalogStatus();
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function writeVehicleCatalog(rows){
+  try {
+    localStorage.setItem(VEHICLE_CATALOG_KEY, JSON.stringify(rows));
+    localStorage.setItem(VEHICLE_CATALOG_AT_KEY, new Date().toISOString());
+    _vehicleCatalogCache = rows; // 再パース不要にするため即時反映
+    return true;
+  } catch (e) {
+    if (e && e.name === 'QuotaExceededError') {
+      alert('取り込みに失敗しました：ブラウザの保存容量が不足しています。\n\n' +
+        'ブラウザの一時保存（localStorage）の上限を超えました。\n' +
+        '以下のいずれかをお試しください。\n' +
+        '・このページ以外のタブ／サイトの保存データ（閲覧履歴・サイトデータ）をブラウザの設定からクリアする\n' +
+        '・編集中のツアー内容は「tour-data.js を書き出す」で先に書き出しておく');
+      return false;
+    }
+    throw e;
+  }
+}
+
+function renderVehicleCatalogStatus(){
+  const el = document.getElementById('vehicleCatalogStatus');
+  if (!el) return;
+  const rows = getVehicleCatalogCached();
+  if (!rows || !rows.length) {
+    el.innerHTML = '<i class="fa-solid fa-circle-exclamation" style="color:#9B1B1B"></i> まだ車両カタログが取り込まれていません。';
+    return;
+  }
+  const at = localStorage.getItem(VEHICLE_CATALOG_AT_KEY);
+  const dateStr = at ? new Date(at).toLocaleString('ja-JP') : '不明';
+  el.innerHTML = '<i class="fa-solid fa-circle-check" style="color:#2D6A4F"></i> 取り込み済み：' +
+    rows.length + '件（最終取り込み：' + esc(dateStr) + '）';
 }
 
 // ── Util ─────────────────────────────────────────────────────
