@@ -1,6 +1,6 @@
 // ================================================================
 //  MOTO TOURS JAPAN ── ツアーデータ設定ファイル  tour-data.js
-//  admin.html から生成  2026/7/22 11:51:24
+//  admin.html から生成  2026/7/29 15:19:08
 //  多言語対応: ja / en / zh（繁體中文）
 // ================================================================
 // ※ このファイルはテキストエディタ（メモ帳、VS Code 等）で開いてください。
@@ -2019,6 +2019,38 @@ const TOUR_DATA = {
     {
       "icon": "fa-brands fa-tiktok",
       "label": "TikTok"
+    }
+  ],
+  "vehicles": [
+    {
+      "vehicleId": "7182",
+      "name": {
+        "ja": "ホンダ レブル250",
+        "en": "honda lebre 250",
+        "zh": "本田lebre 250",
+        "_auto": {
+          "en": "honda lebre 250",
+          "zh": "本田lebre 250"
+        }
+      },
+      "maker": "ホンダ",
+      "year": "2025",
+      "displacement": "249.0 cc",
+      "weight": "174 kg",
+      "seatHeight": "690 mm",
+      "tankCapacity": "12 L",
+      "fuel": "レギュラー",
+      "class": "P-3 クラス",
+      "equipment": {
+        "ja": "ETC車載器",
+        "en": "Etc in-vehicle device",
+        "zh": "ETC車載裝置",
+        "_auto": {
+          "en": "Etc in-vehicle device",
+          "zh": "ETC車載裝置"
+        }
+      },
+      "image": "https://cdn.rental819.com/static/public/master_bike_color/old/1094-2025-13.jpg?updated_on=20250314181248"
     }
   ]
 };
