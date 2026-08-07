@@ -38,7 +38,7 @@
 /* ── Reset ───────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: 16px; }
-body { font-family: var(--font-sans); background: var(--cream); color: var(--text); line-height: 1.75; }
+body { font-family: var(--font-sans); background: var(--cream); color: var(--text); line-height: 1.75; padding-top: 63px; }
 a { color: var(--navy); text-decoration: none; transition: color var(--t); }
 a:hover { color: var(--gold); }
 img { max-width: 100%; height: auto; display: block; }
@@ -71,8 +71,10 @@ ul { list-style: none; }
 /* ── Header / Nav ────────────────────────────────────────── */
 .site-header {
   background: var(--navy-dark);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
   border-bottom: 1px solid rgba(255,255,255,.18);
 }
@@ -319,6 +321,80 @@ ul { list-style: none; }
   .countdown-badge.tier-today { animation: none; }
 }
 .hero-chip i { color: var(--white); }
+
+/* ── 搭乗券風デジタルチケット ─────────────────────────────── */
+.ticket-card {
+  display: flex;
+  margin: 18px 0 28px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md, 0 8px 28px rgba(0,0,0,.14));
+}
+.ticket-main {
+  flex: 1;
+  min-width: 0;
+  background: linear-gradient(160deg, var(--navy-dark) 0%, var(--navy-mid) 50%, var(--navy) 100%);
+  color: var(--white);
+  padding: 26px 28px;
+}
+.ticket-eyebrow {
+  font-family: var(--font-serif);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: var(--gold-light);
+  margin-bottom: 10px;
+}
+.ticket-eyebrow i { margin-right: 6px; }
+.ticket-title {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+.ticket-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.ticket-field-label {
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  color: rgba(255,255,255,.6);
+  margin-bottom: 4px;
+}
+.ticket-field-value {
+  font-size: .92rem;
+  font-weight: 500;
+}
+.ticket-stub {
+  flex: 0 0 190px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+  padding: 26px 20px;
+  background: var(--cream);
+  border-left: 2px dashed rgba(158,16,22,.3);
+  position: relative;
+}
+.ticket-stub-icon {
+  font-size: 1.5rem;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+.ticket-stub .ticket-field-label { color: var(--text-mid, #8A8478); }
+.ticket-stub-name {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--navy);
+  word-break: break-word;
+}
 
 /* ── Page Banner ────────────────────────────────────────── */
 .page-banner {
@@ -675,6 +751,20 @@ ul { list-style: none; }
 .hotel-official-btn { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; padding: 9px 20px; background: var(--navy-dark); color: #fff; font-size: .82rem; font-weight: 700; border-radius: 99px; text-decoration: none; box-shadow: 0 3px 10px rgba(237,27,35,.3); transition: background var(--t), transform var(--t), box-shadow var(--t); }
 .hotel-official-btn:hover { background: var(--navy-mid); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(237,27,35,.35); }
 
+/* ── Print Save Button（トップページ「しおりをPDFで保存する」）───── */
+.print-save-btn {
+  flex: 1; min-width: 220px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: #fff; color: var(--navy-dark);
+  border: 1.5px solid var(--navy-dark);
+  text-decoration: none;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-weight: 700; font-size: .92rem;
+  transition: background var(--t), color var(--t), transform var(--t), box-shadow var(--t);
+}
+.print-save-btn:hover { background: var(--navy-dark); color: #fff; transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
 /* ── Day Strip ───────────────────────────────────────────── */
 .day-strip { border-radius: var(--r-lg); padding: 22px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 36px; }
 .day-strip h2 { font-family: var(--font-serif); font-size: 1.3rem; font-weight: 700; color: var(--white); }
@@ -910,6 +1000,8 @@ ul { list-style: none; }
   .page-banner h1 { font-size: 1.5rem; }
   .hero-chips { flex-direction: column; align-items: center; }
   .greeting-box { padding: 22px 20px; }
+  .ticket-card { flex-direction: column; }
+  .ticket-stub { flex: none; border-left: none; border-top: 2px dashed rgba(158,16,22,.3); }
 }
 @media (max-width: 480px) {
   .grid-4 { grid-template-columns: 1fr; }

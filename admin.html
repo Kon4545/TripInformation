@@ -200,7 +200,8 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
           <div class="form-group" style="grid-column:1/-1"><label class="form-label">ツアータイトル</label><input id="f_tourTitle" class="form-input"></div>
           <div class="form-group" style="grid-column:1/-1"><label class="form-label">サブタイトル</label><input id="f_tourSubtitle" class="form-input"></div>
           <div class="form-group"><label class="form-label">参加人数</label><input id="f_participantCount" class="form-input"></div>
-          <div class="form-group"><label class="form-label">旅行日程</label><input id="f_tourDates" class="form-input"></div>
+          <div class="form-group"><label class="form-label">旅行日程・開始日</label><input type="date" id="f_tourDateStart" class="form-input"></div>
+          <div class="form-group"><label class="form-label">旅行日程・終了日</label><input type="date" id="f_tourDateEnd" class="form-input"></div>
           <div class="form-group"><label class="form-label">エリア</label><input id="f_area" class="form-input"></div>
         </div>
         <div style="font-size:.82rem;font-weight:700;color:#1A1A1A;margin:20px 0 12px;padding:8px 14px;background:#EFF3FA;border-radius:8px;border-left:4px solid #ed1b23">
@@ -245,7 +246,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
         <div class="form-grid">
           <div class="form-group"><label class="form-label">集合場所</label><input id="f_meetPlace" class="form-input"></div>
           <div class="form-group"><label class="form-label">集合場所（詳細）</label><input id="f_meetPlaceDetail" class="form-input"></div>
-          <div class="form-group"><label class="form-label">集合日付</label><input id="f_meetDate" class="form-input"></div>
+          <div class="form-group"><label class="form-label">集合日付</label><input type="date" id="f_meetDate" class="form-input"></div>
           <div class="form-group"><label class="form-label">集合時間</label><input id="f_meetTime" class="form-input"></div>
           <div class="form-group"><label class="form-label">解散場所</label><input id="f_endPlace" class="form-input"></div>
           <div class="form-group"><label class="form-label">解散予定時刻</label><input id="f_endTime" class="form-input"></div>
@@ -484,7 +485,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
       <div id="tab-day1" class="tab-panel">
         <div class="panel-title"><i class="fa-solid fa-sun"></i> Day 1 行程</div>
         <div class="form-grid" style="margin-bottom:20px">
-          <div class="form-group"><label class="form-label">日付</label><input id="f_day1Date" class="form-input"></div>
+          <div class="form-group"><label class="form-label">日付</label><input type="date" id="f_day1Date" class="form-input"></div>
           <div class="form-group"><label class="form-label">テーマ</label><input id="f_day1Theme" class="form-input"></div>
           <div class="form-group" style="grid-column:1/-1"><label class="form-label">Google Maps 埋め込みURL</label><input id="f_day1Map" class="form-input"></div>
         </div>
@@ -497,7 +498,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:#9e1016;color:#1A1A2E;min-
       <div id="tab-day2" class="tab-panel">
         <div class="panel-title"><i class="fa-solid fa-star"></i> Day 2 行程</div>
         <div class="form-grid" style="margin-bottom:20px">
-          <div class="form-group"><label class="form-label">日付</label><input id="f_day2Date" class="form-input"></div>
+          <div class="form-group"><label class="form-label">日付</label><input type="date" id="f_day2Date" class="form-input"></div>
           <div class="form-group"><label class="form-label">テーマ</label><input id="f_day2Theme" class="form-input"></div>
           <div class="form-group" style="grid-column:1/-1"><label class="form-label">Google Maps 埋め込みURL</label><input id="f_day2Map" class="form-input"></div>
         </div>
@@ -925,6 +926,68 @@ function showTab(id){
 let ADMIN_LANG = 'ja';
 function current(){ return resolveLang(getRawData(), ADMIN_LANG); }
 
+// ── 日付ピッカー用ヘルパー：ISO日付 ⇔ ja/en/zh表示文言の相互変換 ──────
+// 「集合日付」「Day日付」「旅行日程」はカレンダーから選んだ日付をもとに
+// ja/en/zh の表示文言をここで自動生成する（曜日の入力ミスや、タブごとの手入力による多言語間のズレを防ぐため）。
+const DATE_WEEKDAY_JA = ['日','月','火','水','木','金','土'];
+const DATE_WEEKDAY_EN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DATE_WEEKDAY_ZH = ['日','一','二','三','四','五','六'];
+const DATE_MONTH_EN   = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function isoToLocalDate(iso){
+  if (!iso) return null;
+  const dt = new Date(iso + 'T00:00:00');
+  return isNaN(dt.getTime()) ? null : dt;
+}
+// ISO日付（YYYY-MM-DD）→ {ja,en,zh} の表示文言
+function formatDateAllLangs(iso){
+  const dt = isoToLocalDate(iso);
+  if (!dt) return {ja:'', en:'', zh:''};
+  const y = dt.getFullYear(), m = dt.getMonth() + 1, day = dt.getDate(), wd = dt.getDay();
+  return {
+    ja: `${y}年${m}月${day}日（${DATE_WEEKDAY_JA[wd]}）`,
+    en: `${DATE_MONTH_EN[m-1]} ${day}, ${y} (${DATE_WEEKDAY_EN[wd]})`,
+    zh: `${y}年${m}月${day}日（${DATE_WEEKDAY_ZH[wd]}）`
+  };
+}
+// 開始・終了ISO日付 →「旅行日程」の範囲表示文言（同年なら終了側の年表記は省略）
+function formatDateRangeAllLangs(startIso, endIso){
+  const s = isoToLocalDate(startIso);
+  if (!s) return {ja:'', en:'', zh:''};
+  const sFmt = formatDateAllLangs(startIso);
+  const e = isoToLocalDate(endIso);
+  if (!e || startIso === endIso) return sFmt;
+  const eFmt = formatDateAllLangs(endIso);
+  const sameYear = s.getFullYear() === e.getFullYear();
+  return {
+    ja: sameYear ? `${sFmt.ja}〜${eFmt.ja.replace(/^\d{4}年/, '')}` : `${sFmt.ja}〜${eFmt.ja}`,
+    en: `${sFmt.en} - ${eFmt.en}`,
+    zh: sameYear ? `${sFmt.zh}〜${eFmt.zh.replace(/^\d{4}年/, '')}` : `${sFmt.zh}〜${eFmt.zh}`
+  };
+}
+// 既存の日本語表記（例：「2026年4月10日（金）」）からISO日付を抽出（日付ピッカーの初期表示用。常にjaを基準にするため編集言語タブに関係なく正しく復元できる）
+function extractISOFromJaDate(str){
+  if (!str) return '';
+  const m = String(str).match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+  if (!m) return '';
+  return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`;
+}
+// 「旅行日程」の範囲表記（例：「2026年8月21日（金）〜8月23日（日）」）から開始・終了のISO日付を抽出
+function extractISORangeFromJaDates(str){
+  const out = {start:'', end:''};
+  if (!str) return out;
+  const re = /(?:(\d{4})年)?(\d{1,2})月(\d{1,2})日/g;
+  let m, lastYear = null, found = [];
+  while ((m = re.exec(String(str)))) {
+    const y = m[1] || lastYear;
+    if (!y) continue;
+    lastYear = y;
+    found.push(`${y}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`);
+  }
+  out.start = found[0] || '';
+  out.end   = found[1] || found[0] || '';
+  return out;
+}
+
 function switchAdminLang(lang){
   if (lang === ADMIN_LANG) return;
   ADMIN_LANG = lang;
@@ -940,14 +1003,18 @@ function switchAdminLang(lang){
 // ── Init forms ───────────────────────────────────────────────
 function initForms(){
   const d = current();
+  // 日付ピッカー系の項目は、編集言語タブに関わらず常に日本語表記（raw.ja）を基準にISO日付へ変換して復元する
+  const raw = getRawData();
   // アイコン一覧（全員共有・tour-data.js に保存）
-  const rawIconList = getRawData().adminIconList;
+  const rawIconList = raw.adminIconList;
   ADMIN_ICON_LIST = (Array.isArray(rawIconList) && rawIconList.length) ? rawIconList.slice() : DEFAULT_ICON_LIST.slice();
   // Basic
   set('f_tourTitle',      d.basic.tourTitle);
   set('f_tourSubtitle',   d.basic.tourSubtitle);
   set('f_participantCount',d.basic.participantCount);
-  set('f_tourDates',      d.basic.tourDates);
+  const _tourRange = extractISORangeFromJaDates(raw.basic && raw.basic.tourDates && raw.basic.tourDates.ja);
+  set('f_tourDateStart', _tourRange.start);
+  set('f_tourDateEnd',   _tourRange.end);
   set('f_area',           d.basic.area);
   set('f_heroVideoUrl',   d.basic.heroVideoUrl);
   // Hero background image
@@ -957,7 +1024,7 @@ function initForms(){
   // Meeting
   set('f_meetPlace',      d.meeting.place);
   set('f_meetPlaceDetail',d.meeting.placeDetail);
-  set('f_meetDate',       d.meeting.date);
+  set('f_meetDate',       extractISOFromJaDate(raw.meeting && raw.meeting.date && raw.meeting.date.ja));
   set('f_meetTime',       d.meeting.time);
   set('f_endPlace',       d.meeting.endPlace);
   set('f_endTime',        d.meeting.endTime);
@@ -1001,12 +1068,12 @@ function initForms(){
   buildSimpleList('includesList', d.includes);
   buildSimpleList('excludesList', d.excludes);
   // Day1
-  set('f_day1Date',  d.day1.date);
+  set('f_day1Date',  extractISOFromJaDate(raw.day1 && raw.day1.date && raw.day1.date.ja));
   set('f_day1Theme', d.day1.theme);
   set('f_day1Map',   d.day1.mapEmbed);
   buildSchedItems('day1Items', d.day1.items, 'day1');
   // Day2
-  set('f_day2Date',  d.day2.date);
+  set('f_day2Date',  extractISOFromJaDate(raw.day2 && raw.day2.date && raw.day2.date.ja));
   set('f_day2Theme', d.day2.theme);
   set('f_day2Map',   d.day2.mapEmbed);
   buildSchedItems('day2Items', d.day2.items, 'day2');
@@ -1016,9 +1083,10 @@ function initForms(){
   document.getElementById('addDayNavBtn').style.display = '';
   for (let n = MIN_TOUR_DAYS + 1; n <= MAX_TOUR_DAYS; n++) {
     const dayData = d['day' + n];
+    const rawDayData = raw['day' + n];
     if (!dayData || !(dayData.date || dayData.theme || (dayData.items && dayData.items.length))) break; // 連番が途切れたらそこで終了
     addDayPanelDOM(n);
-    set('f_day' + n + 'Date',  dayData.date);
+    set('f_day' + n + 'Date',  extractISOFromJaDate(rawDayData && rawDayData.date && rawDayData.date.ja));
     set('f_day' + n + 'Theme', dayData.theme);
     set('f_day' + n + 'Map',   dayData.mapEmbed);
     buildSchedItems('day' + n + 'Items', dayData.items || [], 'day' + n);
@@ -1253,7 +1321,7 @@ function addDayPanelDOM(n){
       <button type="button" class="btn-remove" onclick="removeDayPanel(${n})"><i class="fa-solid fa-trash"></i> この日を削除</button>
     </div>
     <div class="form-grid" style="margin-bottom:20px">
-      <div class="form-group"><label class="form-label">日付</label><input id="f_${key}Date" class="form-input"></div>
+      <div class="form-group"><label class="form-label">日付</label><input type="date" id="f_${key}Date" class="form-input"></div>
       <div class="form-group"><label class="form-label">テーマ</label><input id="f_${key}Theme" class="form-input"></div>
       <div class="form-group" style="grid-column:1/-1"><label class="form-label">Google Maps 埋め込みURL</label><input id="f_${key}Map" class="form-input"></div>
     </div>
@@ -2073,21 +2141,30 @@ function getGoods(){
 function collectData(){
   const d = JSON.parse(JSON.stringify(current())); // deep clone as base
   d.adminIconList = ADMIN_ICON_LIST.slice();
-  d.basic = { tourTitle:g('f_tourTitle'), tourSubtitle:g('f_tourSubtitle'), participantCount:g('f_participantCount'), tourDates:g('f_tourDates'), area:g('f_area'), heroBgImage:_heroBgData, heroVideoUrl:g('f_heroVideoUrl') };
+  // 日付ピッカー系の項目：ISO値からja/en/zhを自動生成する。ピッカーが空欄（未変更）の場合は既存値をそのまま維持する
+  const _tourDateStart = g('f_tourDateStart'), _tourDateEnd = g('f_tourDateEnd');
+  const _tourDatesOut = _tourDateStart ? formatDateRangeAllLangs(_tourDateStart, _tourDateEnd || _tourDateStart) : d.basic.tourDates;
+  d.basic = { tourTitle:g('f_tourTitle'), tourSubtitle:g('f_tourSubtitle'), participantCount:g('f_participantCount'), tourDates:_tourDatesOut, area:g('f_area'), heroBgImage:_heroBgData, heroVideoUrl:g('f_heroVideoUrl') };
   const _cMeetUrl = g('f_meetMapUrl');
   const _cEndUrl  = document.getElementById('f_sameMeetEnd')?.checked ? _cMeetUrl : g('f_endMapUrl');
-  d.meeting = { place:g('f_meetPlace'), placeDetail:g('f_meetPlaceDetail'), date:g('f_meetDate'), time:g('f_meetTime'), endPlace:g('f_endPlace'), endTime:g('f_endTime'), note:g('f_meetNote'), meetMapUrl:_cMeetUrl, endMapUrl:_cEndUrl, meetIcon:g('f_meetIcon')||'fa-solid fa-flag-checkered', meetIconColor:g('f_meetIconColor')||'#9e1016', dateIcon:g('f_dateIcon')||'fa-solid fa-clock', dateIconColor:g('f_dateIconColor')||'#9e1016', endIcon:g('f_endIcon')||'fa-solid fa-circle-check', endIconColor:g('f_endIconColor')||'#9e1016', meetDateISO:g('f_meetDateISO'), tourEndDateISO:g('f_tourEndDateISO'), meetLat:g('f_meetLat'), meetLng:g('f_meetLng'), shuttle:{ enabled:document.getElementById('f_shuttleEnabled')?.checked||false, note:g('f_shuttleNote'), deadline:g('f_shuttleDeadline'), contact:g('f_shuttleContact'), pickups:getShuttlePickups() } };
+  const _meetDateIso = g('f_meetDate');
+  const _meetDateOut = _meetDateIso ? formatDateAllLangs(_meetDateIso) : d.meeting.date;
+  d.meeting = { place:g('f_meetPlace'), placeDetail:g('f_meetPlaceDetail'), date:_meetDateOut, time:g('f_meetTime'), endPlace:g('f_endPlace'), endTime:g('f_endTime'), note:g('f_meetNote'), meetMapUrl:_cMeetUrl, endMapUrl:_cEndUrl, meetIcon:g('f_meetIcon')||'fa-solid fa-flag-checkered', meetIconColor:g('f_meetIconColor')||'#9e1016', dateIcon:g('f_dateIcon')||'fa-solid fa-clock', dateIconColor:g('f_dateIconColor')||'#9e1016', endIcon:g('f_endIcon')||'fa-solid fa-circle-check', endIconColor:g('f_endIconColor')||'#9e1016', meetDateISO:g('f_meetDateISO'), tourEndDateISO:g('f_tourEndDateISO'), meetLat:g('f_meetLat'), meetLng:g('f_meetLng'), shuttle:{ enabled:document.getElementById('f_shuttleEnabled')?.checked||false, note:g('f_shuttleNote'), deadline:g('f_shuttleDeadline'), contact:g('f_shuttleContact'), pickups:getShuttlePickups() } };
   const guidesArr = getGuides();
   d.guides = guidesArr;
   d.guide  = guidesArr[0] || {}; // backward compat
   d.includes = getSimpleList('includesList');
   d.excludes = getSimpleList('excludesList');
-  d.day1 = { date:g('f_day1Date'), theme:g('f_day1Theme'), mapEmbed:g('f_day1Map'), items:getSchedItems('day1Items') };
-  d.day2 = { date:g('f_day2Date'), theme:g('f_day2Theme'), mapEmbed:g('f_day2Map'), items:getSchedItems('day2Items') };
+  const _day1DateIso = g('f_day1Date');
+  d.day1 = { date:_day1DateIso ? formatDateAllLangs(_day1DateIso) : d.day1.date, theme:g('f_day1Theme'), mapEmbed:g('f_day1Map'), items:getSchedItems('day1Items') };
+  const _day2DateIso = g('f_day2Date');
+  d.day2 = { date:_day2DateIso ? formatDateAllLangs(_day2DateIso) : d.day2.date, theme:g('f_day2Theme'), mapEmbed:g('f_day2Map'), items:getSchedItems('day2Items') };
   for (let n = MIN_TOUR_DAYS + 1; n <= MAX_TOUR_DAYS; n++) {
     const key = 'day' + n;
     if (!document.getElementById('tab-' + key)) { delete d[key]; continue; }
-    d[key] = { date:g('f_'+key+'Date'), theme:g('f_'+key+'Theme'), mapEmbed:g('f_'+key+'Map'), items:getSchedItems(key+'Items') };
+    const _dayNDateIso = g('f_'+key+'Date');
+    const _dayNDateFallback = d[key] ? d[key].date : '';
+    d[key] = { date:_dayNDateIso ? formatDateAllLangs(_dayNDateIso) : _dayNDateFallback, theme:g('f_'+key+'Theme'), mapEmbed:g('f_'+key+'Map'), items:getSchedItems(key+'Items') };
   }
   const hotelsArr = getHotels();
   d.hotels = hotelsArr;

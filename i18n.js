@@ -151,6 +151,14 @@ const UI_DICT = {
     'countdown.today': '本日、出発です！',
     'countdown.ongoing': 'ツアー開催中です',
     'countdown.done': 'ツアーは終了しました',
+
+    'ticket.boardingPass': 'BOARDING PASS',
+    'ticket.passenger': 'PASSENGER',
+    'ticket.guestFallback': 'ご参加者様',
+    'ticket.date': 'DATE',
+    'ticket.place': 'MEETING POINT',
+    'ticket.area': 'DESTINATION',
+
     'weather.title': '天気予報',
     'weather.loading': '天気予報を取得中…',
     'weather.error': '天気予報を取得できませんでした',
@@ -312,6 +320,14 @@ const UI_DICT = {
     'countdown.today': 'Departing today!',
     'countdown.ongoing': 'Tour in progress',
     'countdown.done': 'This tour has ended',
+
+    'ticket.boardingPass': 'BOARDING PASS',
+    'ticket.passenger': 'PASSENGER',
+    'ticket.guestFallback': 'Valued Guest',
+    'ticket.date': 'DATE',
+    'ticket.place': 'MEETING POINT',
+    'ticket.area': 'DESTINATION',
+
     'weather.title': 'Weather Forecast',
     'weather.loading': 'Loading forecast…',
     'weather.error': 'Could not load the weather forecast',
@@ -473,6 +489,14 @@ const UI_DICT = {
     'countdown.today': '今天就是出發日！',
     'countdown.ongoing': '行程進行中',
     'countdown.done': '本次行程已結束',
+
+    'ticket.boardingPass': 'BOARDING PASS',
+    'ticket.passenger': 'PASSENGER',
+    'ticket.guestFallback': '貴賓',
+    'ticket.date': 'DATE',
+    'ticket.place': 'MEETING POINT',
+    'ticket.area': 'DESTINATION',
+
     'weather.title': '天氣預報',
     'weather.loading': '天氣預報載入中…',
     'weather.error': '無法取得天氣預報',

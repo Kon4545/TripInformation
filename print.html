@@ -11,6 +11,10 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#9e1016">
 <style>
+/* このページは共通ヘッダー（.site-header）を使わないため、
+   共通スタイルのbody上部余白（固定ヘッダー用）を打ち消す */
+body { padding-top: 0; }
+
 /* ── 画面表示用ツールバー（印刷時は非表示） ─────────────────── */
 .print-toolbar {
   position: sticky; top: 0; z-index: 100;

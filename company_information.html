@@ -325,6 +325,30 @@
 .survey-btn:hover { background: transparent; color: #fff; border-color: #fff; transform: translateY(-2px); }
 .survey-note { font-size: .76rem; color: rgba(255,255,255,.45); line-height: 1.6; }
 
+/* ── After Tour Button ───────────────────────────── */
+.after-tour-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  background: #fff;
+  color: var(--navy);
+  font-size: .85rem;
+  font-weight: 700;
+  border-radius: 99px;
+  text-decoration: none;
+  border: 1.5px solid #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  transition: background .2s, color .2s, transform .2s, box-shadow .2s;
+}
+.after-tour-btn:hover {
+  background: transparent;
+  color: #fff;
+  border-color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0,0,0,.25);
+}
+
 /* ── Goods CTA ──────────────────────────────────── */
 .goods-cta-btn {
   display: inline-flex;
@@ -499,7 +523,7 @@
         <span style="font-size:.7rem;font-weight:700;letter-spacing:.12em;color:var(--gold-light);text-transform:uppercase"><i class="fa-solid fa-camera-retro" style="margin-right:6px"></i>AFTER THE TOUR</span>
         <p style="font-family:var(--font-serif);font-size:1.1rem;font-weight:700;color:var(--gold-light)" data-i18n="company.afterTour.title">ツアー後のコンテンツ</p>
         <p style="font-size:.85rem;color:rgba(255,255,255,.7);line-height:1.7" data-i18n="company.afterTour.desc" data-i18n-html>ツアー写真・動画・アンケート・次のツアーのご案内は<br>「ツアー後」タブからご覧いただけます。</p>
-        <a href="post_tour.html" style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;background:#fff;color:var(--navy);font-size:.85rem;font-weight:700;border-radius:99px;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.2)">
+        <a href="post_tour.html" class="after-tour-btn">
           <i class="fa-solid fa-arrow-right"></i> <span data-i18n="company.afterTour.btn">ツアー後ページへ</span>
         </a>
       </div>

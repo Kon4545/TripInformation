@@ -52,8 +52,10 @@
 <main>
 <div class="container">
 
+  <div id="digitalTicket"></div>
+
   <div style="display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 28px">
-    <a href="print.html" style="flex:1;min-width:220px;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:var(--navy-dark);border:1.5px solid var(--navy-dark);text-decoration:none;padding:14px 20px;border-radius:12px;font-weight:700;font-size:.92rem">
+    <a href="print.html" class="print-save-btn">
       <i class="fa-solid fa-file-pdf"></i> <span data-i18n="print.cta">しおりをPDFで保存する</span>
     </a>
   </div>
@@ -197,6 +199,38 @@ document.getElementById('heroChips').innerHTML = [
     </div>`;
 })();
 
+// 搭乗券風デジタルチケット（admin.htmlのURLリンク生成ツールが付与する ?name= を読み取って表示）
+(function(){
+  const guestName = new URLSearchParams(location.search).get('name');
+  const dateTimeSub = [d.meeting.date, d.meeting.time].filter(Boolean).join(' ');
+  document.getElementById('digitalTicket').innerHTML = `
+    <div class="ticket-card">
+      <div class="ticket-main">
+        <div class="ticket-eyebrow"><i class="fa-solid fa-paper-plane"></i> ${esc(t('ticket.boardingPass'))}</div>
+        <div class="ticket-title">${esc(d.basic.tourTitle)}</div>
+        <div class="ticket-fields">
+          <div class="ticket-field">
+            <div class="ticket-field-label">${esc(t('ticket.date'))}</div>
+            <div class="ticket-field-value">${esc(dateTimeSub)}</div>
+          </div>
+          <div class="ticket-field">
+            <div class="ticket-field-label">${esc(t('ticket.place'))}</div>
+            <div class="ticket-field-value">${esc(d.meeting.place)}</div>
+          </div>
+          <div class="ticket-field">
+            <div class="ticket-field-label">${esc(t('ticket.area'))}</div>
+            <div class="ticket-field-value">${esc(d.basic.area)}</div>
+          </div>
+        </div>
+      </div>
+      <div class="ticket-stub">
+        <i class="fa-solid fa-motorcycle ticket-stub-icon"></i>
+        <div class="ticket-field-label">${esc(t('ticket.passenger'))}</div>
+        <div class="ticket-stub-name">${esc(guestName || t('ticket.guestFallback'))}</div>
+      </div>
+    </div>`;
+})();
+
 // 天気予報（管理画面で緯度・経度・集合日を設定している場合のみ表示。Open-Meteo：APIキー不要・CORS対応の無料API）
 (function(){
   const lat = parseFloat(d.meeting && d.meeting.meetLat);
@@ -211,8 +245,8 @@ document.getElementById('heroChips').innerHTML = [
   let endDate = new Date(endIso + 'T00:00:00');
   if (isNaN(endDate.getTime()) || endDate < meetDate) endDate = meetDate;
 
-  // Open-Meteo の無料予報は最大16日先まで。範囲外なら「もうすぐ表示」の案内だけ出す
-  const maxForecastDate = new Date(today.getTime() + 16 * 86400000);
+  // Open-Meteo の無料予報は「今日を含め」最大16日分＝今日から15日先まで。範囲外なら「もうすぐ表示」の案内だけ出す
+  const maxForecastDate = new Date(today.getTime() + 15 * 86400000);
   if (meetDate > maxForecastDate) {
     document.getElementById('weatherBlock').innerHTML = `
       <div class="weather-block" style="background:#EFF3FA;border:1px solid #C7D3E8;border-radius:12px;padding:16px 20px;margin-bottom:20px;font-size:.85rem;color:#5A5650;display:flex;align-items:center;gap:10px">
@@ -223,8 +257,10 @@ document.getElementById('heroChips').innerHTML = [
   if (endDate < today) return; // ツアーは既に終了している
 
   const startFetch = meetDate < today ? today : meetDate;
+  // 解散日が予報可能範囲を超える場合は、取得できる日数分だけにクランプする（全滅で失敗表示にしない）
+  const endFetch = endDate > maxForecastDate ? maxForecastDate : endDate;
   const startStr = startFetch.toISOString().slice(0,10);
-  const endStr   = endDate.toISOString().slice(0,10);
+  const endStr   = endFetch.toISOString().slice(0,10);
 
   document.getElementById('weatherBlock').innerHTML = `
     <div class="weather-block" id="weatherBlockInner" style="background:#EFF3FA;border:1px solid #C7D3E8;border-radius:12px;padding:18px 20px;margin-bottom:20px">
