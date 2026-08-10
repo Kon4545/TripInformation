@@ -1398,6 +1398,25 @@ function buildHighlights(items){
             </div>
           </div>
         </div>
+      </div>
+      <input type="hidden" class="hl-image" value="">
+      <div style="padding-top:10px;border-top:1px solid #F0EDE8">
+        <div style="font-size:.78rem;font-weight:700;color:#5A5650;margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase">写真（任意）</div>
+        <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
+          <div class="hl-img-preview" style="width:130px;height:90px;border-radius:8px;border:1.5px dashed #C0C0C0;background:#F4F2EF;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:.7rem;text-align:center;line-height:1.5">
+            <span><i class="fa-solid fa-image" style="font-size:1.3rem;display:block;margin-bottom:3px"></i>未設定</span>
+          </div>
+          <div style="flex:1;min-width:200px">
+            <input type="file" class="hl-img-file" accept="image/*" style="display:none">
+            <div style="display:flex;gap:8px;margin-bottom:6px">
+              <button type="button" class="hl-img-upload-btn" style="padding:7px 14px;background:#ed1b23;color:#fff;border:none;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit"><i class="fa-solid fa-upload"></i> 画像を選択</button>
+              <button type="button" class="hl-img-clear-btn" style="padding:7px 12px;background:#fff;color:#9B1B1B;border:1.5px solid #9B1B1B;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;display:none"><i class="fa-solid fa-xmark"></i> 削除</button>
+            </div>
+            <div style="font-size:.72rem;color:#8A8478;margin-bottom:6px">設定するとアイコンの代わりに写真がカード上部に表示されます</div>
+            <label class="form-label" style="font-size:.72rem">またはファイルパスを直接入力（images フォルダに写真をアップロードした場合）</label>
+            <input type="text" class="form-input hl-img-path" placeholder="例：images/highlight-1.jpg">
+          </div>
+        </div>
       </div>`;
     // イラストプレビューをリアルタイム更新
     const preview = row.querySelector('.hl-illust-preview');
@@ -1415,17 +1434,47 @@ function buildHighlights(items){
       row.querySelector('.hl-color').value = this.value;
       preview.style.background = `linear-gradient(145deg,${this.value},${this.value}bb)`;
     });
+    // 写真アップローダーの配線
+    const hlHiddenImg  = row.querySelector('.hl-image');
+    const hlImgPreview = row.querySelector('.hl-img-preview');
+    const hlClearBtn   = row.querySelector('.hl-img-clear-btn');
+    const hlFileInput  = row.querySelector('.hl-img-file');
+    const hlUploadBtn  = row.querySelector('.hl-img-upload-btn');
+    const hlPathInput  = row.querySelector('.hl-img-path');
+    function setHlImg(data){
+      hlHiddenImg.value = data;
+      if(data){
+        hlImgPreview.innerHTML = `<img src="${data}" style="width:100%;height:100%;object-fit:cover;display:block">`;
+        hlClearBtn.style.display = '';
+      } else {
+        hlImgPreview.innerHTML = '<span><i class="fa-solid fa-image" style="font-size:1.3rem;display:block;margin-bottom:3px"></i>未設定</span>';
+        hlClearBtn.style.display = 'none';
+      }
+    }
+    hlPathInput.value = (item.image||'').indexOf('data:')===0 ? '' : (item.image||'');
+    if(item.image) setHlImg(item.image);
+    hlUploadBtn.addEventListener('click', ()=>hlFileInput.click());
+    hlFileInput.addEventListener('change', function(){
+      if(!this.files||!this.files[0]) return;
+      const file=this.files[0];
+      if(!file.type.startsWith('image/')){ showToast('画像ファイルを選択してください'); return; }
+      const reader=new FileReader();
+      reader.onload=e=>{ hlPathInput.value=''; setHlImg(e.target.result); showToast('画像を読み込みました。「保存」を押して反映してください。'); };
+      reader.readAsDataURL(file);
+    });
+    hlClearBtn.addEventListener('click', ()=>{ hlPathInput.value=''; setHlImg(''); hlFileInput.value=''; });
+    hlPathInput.addEventListener('input', ()=>setHlImg(hlPathInput.value.trim()));
     el.appendChild(row);
   });
 }
-function addHighlightItem(){ buildHighlights([...getHighlights(), {title:'',desc:'',icon:'fa-solid fa-star',color:'#9e1016'}]); }
+function addHighlightItem(){ buildHighlights([...getHighlights(), {title:'',desc:'',icon:'fa-solid fa-star',color:'#9e1016',image:''}]); }
 function getHighlights(){
   return [...document.querySelectorAll('#highlightsList .sched-item')].map(row=>({
     title: row.querySelector('.hl-title')?.value||'',
     desc:  row.querySelector('.hl-desc')?.value||'',
     icon:  row.querySelector('.hl-icon')?.value||'fa-solid fa-star',
     color: row.querySelector('.hl-color')?.value||'#9e1016',
-    image: ''
+    image: row.querySelector('.hl-image')?.value||''
   }));
 }
 function updateHlPreview(input){

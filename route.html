@@ -9,6 +9,33 @@
 <link rel="stylesheet" href="style.css">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#9e1016">
+<style>
+/* ── Page Nav ─────────────────────────────────────── */
+.page-nav { background: var(--navy-dark); padding: 40px 0; }
+.page-nav-inner { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.page-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 12px;
+  padding: 16px 24px;
+  text-decoration: none;
+  color: var(--gold-light);
+  transition: all .22s;
+  flex: 1; min-width: 220px;
+}
+.page-nav-btn:hover { background: rgba(255,255,255,.15); border-color: rgba(255,255,255,.4); color: #fff; }
+.page-nav-btn.next { justify-content: flex-end; text-align: right; }
+.nav-label { font-size: .7rem; color: rgba(255,255,255,.75); display: block; margin-bottom: 2px; letter-spacing: .08em; font-weight: 700; }
+.nav-title { font-family: var(--font-serif); font-size: .95rem; font-weight: 700; }
+@media (max-width: 768px) {
+  .page-nav-inner { flex-direction: column; }
+  .page-nav-btn { min-width: unset; }
+  .page-nav-btn.next { justify-content: flex-start; text-align: left; }
+}
+</style>
 </head>
 <body>
 <header class="site-header">
@@ -81,6 +108,26 @@
   </section>
 
 </div></main>
+
+<!-- ▼ Page Navigation -->
+<nav class="page-nav">
+  <div class="container page-nav-inner">
+    <a href="index.html" class="page-nav-btn prev">
+      <i class="fa-solid fa-chevron-left"></i>
+      <div>
+        <span class="nav-label" data-i18n="pagenav.prev">PREV</span>
+        <span class="nav-title" data-i18n="pagenav.home">ホーム</span>
+      </div>
+    </a>
+    <a href="caution.html" class="page-nav-btn next">
+      <div>
+        <span class="nav-label" data-i18n="pagenav.next">NEXT</span>
+        <span class="nav-title" data-i18n="pagenav.caution">持ち物・注意事項</span>
+      </div>
+      <i class="fa-solid fa-chevron-right"></i>
+    </a>
+  </div>
+</nav>
 
 <footer class="site-footer">
   <p><i class="fa-solid fa-paper-plane"></i>&ensp;<span id="footerCompany">MOTO TOURS JAPAN株式会社</span></p>
@@ -357,14 +404,17 @@ function switchDayTab(n) {
 // ── ツアーハイライト ─────────────────────────────────────────────
 document.getElementById('highlightsGrid').innerHTML = (d.highlights||[]).map(h => {
   const color = h.color || '#9e1016';
-  return `
-<div class="hl-card">
-  <div class="hl-card-img" style="background:linear-gradient(145deg,${esc(color)},${esc(color)}bb);position:relative;overflow:hidden">
-    <div style="position:absolute;top:-24px;right:-24px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.08)"></div>
+  const decorHtml = h.image
+    ? `<img src="${esc(h.image)}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onerror="this.remove()">`
+    : `<div style="position:absolute;top:-24px;right:-24px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.08)"></div>
     <div style="position:absolute;bottom:-18px;left:-18px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.06)"></div>
     <div style="position:relative;z-index:1;width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.18)">
       <i class="${esc(h.icon)}" style="font-size:1.8rem;color:#fff"></i>
-    </div>
+    </div>`;
+  return `
+<div class="hl-card">
+  <div class="hl-card-img" style="background:linear-gradient(145deg,${esc(color)},${esc(color)}bb);position:relative;overflow:hidden">
+    ${decorHtml}
   </div>
   <div class="hl-card-body"><h3>${esc(h.title)}</h3><p>${esc(h.desc)}</p></div>
 </div>`;

@@ -11,6 +11,33 @@
 <link rel="stylesheet" href="style.css">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#9e1016">
+<style>
+/* ── Page Nav ─────────────────────────────────────── */
+.page-nav { background: var(--navy-dark); padding: 40px 0; }
+.page-nav-inner { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.page-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 12px;
+  padding: 16px 24px;
+  text-decoration: none;
+  color: var(--gold-light);
+  transition: all .22s;
+  flex: 1; min-width: 220px;
+}
+.page-nav-btn:hover { background: rgba(255,255,255,.15); border-color: rgba(255,255,255,.4); color: #fff; }
+.page-nav-btn.next { justify-content: flex-end; text-align: right; }
+.nav-label { font-size: .7rem; color: rgba(255,255,255,.75); display: block; margin-bottom: 2px; letter-spacing: .08em; font-weight: 700; }
+.nav-title { font-family: var(--font-serif); font-size: .95rem; font-weight: 700; }
+@media (max-width: 768px) {
+  .page-nav-inner { flex-direction: column; }
+  .page-nav-btn { min-width: unset; }
+  .page-nav-btn.next { justify-content: flex-start; text-align: left; }
+}
+</style>
 </head>
 <body>
 
@@ -108,6 +135,19 @@
 
 </div>
 </main>
+
+<!-- ▼ Page Navigation -->
+<nav class="page-nav">
+  <div class="container page-nav-inner" style="justify-content:flex-end">
+    <a href="route.html" class="page-nav-btn next">
+      <div>
+        <span class="nav-label" data-i18n="pagenav.next">NEXT</span>
+        <span class="nav-title" data-i18n="pagenav.route">全体行程</span>
+      </div>
+      <i class="fa-solid fa-chevron-right"></i>
+    </a>
+  </div>
+</nav>
 
 <footer class="site-footer">
   <p><i class="fa-solid fa-paper-plane"></i>&ensp;<span id="footerCompany">MOTO TOURS JAPAN株式会社</span></p>
@@ -429,8 +469,8 @@ if (vehicles.length) {
   document.getElementById('vehiclesSection').style.display = '';
   document.getElementById('vehicleCards').innerHTML = vehicles.map((v,i) => {
     const imgHtml = v.image
-      ? `<div class="hotel-card-img" style="padding:0;overflow:hidden"><img src="${esc(v.image)}" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display='none'"></div>`
-      : `<div class="hotel-card-img"><i class="fa-solid fa-motorcycle"></i></div>`;
+      ? `<div class="hotel-card-img vehicle-card-img" style="padding:0;overflow:hidden"><img src="${esc(v.image)}" style="width:100%;height:100%;object-fit:contain;display:block" onerror="this.style.display='none'"></div>`
+      : `<div class="hotel-card-img vehicle-card-img"><i class="fa-solid fa-motorcycle"></i></div>`;
     const metaRows = [
       ['fa-industry',        t('vehicle.maker'),        v.maker],
       ['fa-calendar',        t('vehicle.year'),          v.year],
