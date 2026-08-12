@@ -1,6 +1,6 @@
 // ================================================================
 //  MOTO TOURS JAPAN ── ツアーデータ設定ファイル  tour-data.js
-//  admin.html から生成  2026/8/12 17:18:14
+//  admin.html から生成  2026/8/12 18:04:38
 //  多言語対応: ja / en / zh（繁體中文）
 // ================================================================
 // ※ このファイルはテキストエディタ（メモ帳、VS Code 等）で開いてください。
@@ -43,7 +43,7 @@ const TOUR_DATA = {
       "zh": "伊豆・箱根"
     },
     "heroBgImage": "images/hero-bg.jpg",
-    "heroVideoUrl": ""
+    "heroVideoUrl": "images/hero-video.mp4"
   },
   "meeting": {
     "place": {
