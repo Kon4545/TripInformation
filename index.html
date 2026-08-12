@@ -80,6 +80,7 @@
 <div class="container">
 
   <div id="digitalTicket"></div>
+  <div id="ticketModal" class="ticket-modal" onclick="if(event.target===this) closeTicketModal()"></div>
 
   <div style="display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 28px">
     <a href="print.html" class="print-save-btn">
@@ -243,25 +244,26 @@ document.getElementById('heroChips').innerHTML = [
 (function(){
   const guestName = new URLSearchParams(location.search).get('name');
   const dateTimeSub = [d.meeting.date, d.meeting.time].filter(Boolean).join(' ');
+  const ticketFieldsHtml = `
+    <div class="ticket-field">
+      <div class="ticket-field-label">${esc(t('ticket.date'))}</div>
+      <div class="ticket-field-value">${esc(dateTimeSub)}</div>
+    </div>
+    <div class="ticket-field">
+      <div class="ticket-field-label">${esc(t('ticket.place'))}</div>
+      <div class="ticket-field-value">${esc(d.meeting.place)}</div>
+    </div>
+    <div class="ticket-field">
+      <div class="ticket-field-label">${esc(t('ticket.area'))}</div>
+      <div class="ticket-field-value">${esc(d.basic.area)}</div>
+    </div>`;
   document.getElementById('digitalTicket').innerHTML = `
-    <div class="ticket-card">
+    <div class="ticket-card" onclick="openTicketModal()" role="button" tabindex="0" onkeydown="if(event.key==='Enter')openTicketModal()">
+      <i class="fa-solid fa-up-right-and-down-left-from-center ticket-expand-hint"></i>
       <div class="ticket-main">
         <div class="ticket-eyebrow"><i class="fa-solid fa-paper-plane"></i> ${esc(t('ticket.boardingPass'))}</div>
         <div class="ticket-title">${esc(d.basic.tourTitle)}</div>
-        <div class="ticket-fields">
-          <div class="ticket-field">
-            <div class="ticket-field-label">${esc(t('ticket.date'))}</div>
-            <div class="ticket-field-value">${esc(dateTimeSub)}</div>
-          </div>
-          <div class="ticket-field">
-            <div class="ticket-field-label">${esc(t('ticket.place'))}</div>
-            <div class="ticket-field-value">${esc(d.meeting.place)}</div>
-          </div>
-          <div class="ticket-field">
-            <div class="ticket-field-label">${esc(t('ticket.area'))}</div>
-            <div class="ticket-field-value">${esc(d.basic.area)}</div>
-          </div>
-        </div>
+        <div class="ticket-fields">${ticketFieldsHtml}</div>
       </div>
       <div class="ticket-stub">
         <i class="fa-solid fa-motorcycle ticket-stub-icon"></i>
@@ -269,7 +271,32 @@ document.getElementById('heroChips').innerHTML = [
         <div class="ticket-stub-name">${esc(guestName || t('ticket.guestFallback'))}</div>
       </div>
     </div>`;
+  document.getElementById('ticketModal').innerHTML = `
+    <div class="ticket-modal-inner">
+      <button type="button" class="ticket-modal-close" onclick="closeTicketModal()" aria-label="閉じる"><i class="fa-solid fa-xmark"></i></button>
+      <div class="ticket-card ticket-card-lg">
+        <div class="ticket-main">
+          <div class="ticket-eyebrow"><i class="fa-solid fa-paper-plane"></i> ${esc(t('ticket.boardingPass'))}</div>
+          <div class="ticket-title">${esc(d.basic.tourTitle)}</div>
+          <div class="ticket-fields">${ticketFieldsHtml}</div>
+        </div>
+        <div class="ticket-stub">
+          <i class="fa-solid fa-motorcycle ticket-stub-icon"></i>
+          <div class="ticket-field-label">${esc(t('ticket.passenger'))}</div>
+          <div class="ticket-stub-name">${esc(guestName || t('ticket.guestFallback'))}</div>
+        </div>
+      </div>
+    </div>`;
 })();
+function openTicketModal(){
+  document.getElementById('ticketModal').classList.add('open');
+  document.body.classList.add('ticket-modal-lock');
+}
+function closeTicketModal(){
+  document.getElementById('ticketModal').classList.remove('open');
+  document.body.classList.remove('ticket-modal-lock');
+}
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeTicketModal(); });
 
 // 天気予報（管理画面で緯度・経度・集合日を設定している場合のみ表示。Open-Meteo：APIキー不要・CORS対応の無料API）
 (function(){
