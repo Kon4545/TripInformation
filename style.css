@@ -1000,6 +1000,11 @@ ul { list-style: none; }
   .quick-link-body { padding: 12px 16px; }
   .quick-link-body h3 { font-size: .85rem; margin-bottom: 3px; }
   .quick-link-body p { font-size: .75rem; }
+  /* ツアーハイライト：しおりのコンテンツと同様、モバイルでは帯を小さくする */
+  .hl-card-img { height: 64px; font-size: 1.6rem; }
+  .hl-card-body { padding: 12px 16px; }
+  .hl-card-body h3 { font-size: .85rem; margin-bottom: 3px; }
+  .hl-card-body p { font-size: .75rem; }
   .hotel-meta { grid-template-columns: 1fr; }
   .map-wrap iframe { height: 280px; }
   .day-strip { flex-direction: column; align-items: flex-start; }

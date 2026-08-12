@@ -117,7 +117,7 @@ const UI_DICT = {
     'banner.subtitle.route': '{n}日間の旅程をひと目で確認',
     'route.tableTitle': '全体行程表',
     'route.detailTitle': '詳細行程',
-    'route.detailTimeline': '詳細タイムライン',
+    'route.detailTimeline': '行程詳細',
     'route.detailMap': '訪問スポット マップ',
     'route.spots': 'スポット',
     'route.elevationTitle': '距離・標高プロファイル',
