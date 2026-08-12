@@ -329,6 +329,18 @@ ul { list-style: none; }
   border-radius: 16px;
   overflow: hidden;
   box-shadow: var(--shadow-md, 0 8px 28px rgba(0,0,0,.14));
+  position: relative;
+  cursor: pointer;
+  transition: transform .15s;
+}
+.ticket-card:active { transform: scale(.98); }
+.ticket-expand-hint {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  z-index: 2;
+  color: rgba(255,255,255,.55);
+  font-size: .8rem;
 }
 .ticket-main {
   flex: 1;
@@ -395,6 +407,57 @@ ul { list-style: none; }
   color: var(--navy);
   word-break: break-word;
 }
+
+/* ── デジタルチケット：全画面表示（iPhoneのウォレット風にタップで拡大） ── */
+body.ticket-modal-lock { overflow: hidden; }
+.ticket-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(10,10,20,.82);
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.ticket-modal.open { display: flex; animation: ticketModalFadeIn .2s ease; }
+@keyframes ticketModalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+.ticket-modal-inner {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  animation: ticketModalPop .25s cubic-bezier(.2,.9,.3,1.2);
+}
+@keyframes ticketModalPop { from { transform: scale(.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.ticket-modal-close {
+  position: absolute;
+  top: -46px;
+  right: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+.ticket-modal-close:hover { background: rgba(255,255,255,.28); }
+.ticket-modal .ticket-card-lg {
+  flex-direction: column;
+  margin: 0;
+  cursor: default;
+}
+.ticket-modal .ticket-card-lg:active { transform: none; }
+.ticket-card-lg .ticket-main { padding: 34px 30px; }
+.ticket-card-lg .ticket-eyebrow { font-size: .85rem; }
+.ticket-card-lg .ticket-title { font-size: 1.7rem; margin-bottom: 28px; }
+.ticket-card-lg .ticket-fields { gap: 24px; }
+.ticket-card-lg .ticket-field-label { font-size: .74rem; }
+.ticket-card-lg .ticket-field-value { font-size: 1.05rem; }
+.ticket-card-lg .ticket-stub { flex: none; border-left: none; border-top: 2px dashed rgba(158,16,22,.3); padding: 30px 20px; }
+.ticket-card-lg .ticket-stub-icon { font-size: 2rem; }
+.ticket-card-lg .ticket-stub-name { font-size: 1.35rem; }
 
 /* ── Page Banner ────────────────────────────────────────── */
 .page-banner {
