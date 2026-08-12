@@ -1,6 +1,6 @@
 // ================================================================
 //  MOTO TOURS JAPAN ── ツアーデータ設定ファイル  tour-data.js
-//  admin.html から生成  2026/8/12 18:04:38
+//  admin.html から生成  2026/8/12 19:08:11
 //  多言語対応: ja / en / zh（繁體中文）
 // ================================================================
 // ※ このファイルはテキストエディタ（メモ帳、VS Code 等）で開いてください。
@@ -835,7 +835,7 @@ const TOUR_DATA = {
       },
       "icon": "fa-solid fa-motorcycle",
       "color": "#ed1b23",
-      "image": ""
+      "image": "images/highlight_1.webp"
     },
     {
       "title": {
@@ -850,52 +850,30 @@ const TOUR_DATA = {
       },
       "icon": "fa-solid fa-house",
       "color": "#ed1b23",
-      "image": ""
-    },
-    {
-      "title": {
-        "ja": "道の駅 天城越え",
-        "en": "Michi-no-Eki Amagi-goe",
-        "zh": "天城越休息站"
-      },
-      "desc": {
-        "ja": "伊豆の特産品であるわさびを使ったわさび漬け体験ができ、旅の思い出としても人気",
-        "en": "Try pickling wasabi, an Izu specialty, in an activity that makes for a popular travel memory.",
-        "zh": "體驗使用伊豆特產山葵製作山葵漬，是深受喜愛的旅行紀念活動。"
-      },
-      "icon": "fa-solid fa-cart-shopping",
-      "color": "#ed1b23",
-      "image": ""
+      "image": "images/highlight_2.webp"
     },
     {
       "title": {
         "ja": "三島スカイウォーク",
-        "en": "Mishima Skywalk",
-        "zh": "三島Skywalk天空步道"
+        "en": "Michi-no-Eki Amagi-goe",
+        "zh": "天城越休息站",
+        "_auto": {
+          "en": "Michi-no-Eki Amagi-goe",
+          "zh": "天城越休息站"
+        }
       },
       "desc": {
         "ja": "開放感あふれる吊橋の上から、箱根・伊豆エリアの美しい自然を一望できる魅力的な場所",
-        "en": "An appealing spot offering panoramic views of Hakone and Izu's beautiful nature from atop an open suspension bridge.",
-        "zh": "從開闊的吊橋上，可一望箱根、伊豆地區美麗自然景緻的魅力景點。"
+        "en": "Try pickling wasabi, an Izu specialty, in an activity that makes for a popular travel memory.",
+        "zh": "體驗使用伊豆特產山葵製作山葵漬，是深受喜愛的旅行紀念活動。",
+        "_auto": {
+          "en": "Try pickling wasabi, an Izu specialty, in an activity that makes for a popular travel memory.",
+          "zh": "體驗使用伊豆特產山葵製作山葵漬，是深受喜愛的旅行紀念活動。"
+        }
       },
       "icon": "fa-solid fa-bridge",
       "color": "#ed1b23",
-      "image": ""
-    },
-    {
-      "title": {
-        "ja": "うなぎ・とろろ川善",
-        "en": "Unagi & Tororo Kawazen",
-        "zh": "鰻魚・山藥泥 川善"
-      },
-      "desc": {
-        "ja": "丁寧に仕上げたうなぎととろろ料理を通して、和の味わいを堪能できる人気のお店",
-        "en": "A popular restaurant where you can savor authentic Japanese flavors through carefully prepared eel and grated yam dishes.",
-        "zh": "可透過精心調理的鰻魚與山藥泥料理，品嚐和風美味的人氣餐廳。"
-      },
-      "icon": "fa-solid fa-utensils",
-      "color": "#ed1b23",
-      "image": ""
+      "image": "images/highlight_3.webp"
     }
   ],
   "hotels": [
