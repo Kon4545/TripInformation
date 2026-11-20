@@ -484,6 +484,7 @@
       <p class="section-eyebrow">ORIGINAL GOODS</p>
       <h2 class="section-title" data-i18n="goods.title">オリジナルグッズ</h2>
       <p class="section-subtitle" data-i18n="goods.subtitle">旅の記念にMOTO TOURS JAPANオリジナルグッズはいかがでしょうか</p>
+      <p class="section-subtitle" id="goodsNoteText" style="display:none"></p>
     </div>
     <div class="goods-grid" id="goodsGrid"></div>
   </div>
@@ -519,7 +520,7 @@
       <div class="company-table-wrap">
         <table class="company-table" id="companyTable"></table>
       </div>
-      <div style="background:var(--navy);border-radius:18px;padding:28px 24px;display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+      <div id="afterTourCard" style="background:var(--navy);border-radius:18px;padding:28px 24px;display:flex;flex-direction:column;gap:14px;align-items:flex-start">
         <span style="font-size:.7rem;font-weight:700;letter-spacing:.12em;color:var(--gold-light);text-transform:uppercase"><i class="fa-solid fa-camera-retro" style="margin-right:6px"></i>AFTER THE TOUR</span>
         <p style="font-family:var(--font-serif);font-size:1.1rem;font-weight:700;color:var(--gold-light)" data-i18n="company.afterTour.title">ツアー後のコンテンツ</p>
         <p style="font-size:.85rem;color:rgba(255,255,255,.7);line-height:1.7" data-i18n="company.afterTour.desc" data-i18n-html>ツアー写真・動画・アンケート・次のツアーのご案内は<br>「ツアー後」タブからご覧いただけます。</p>
@@ -567,6 +568,7 @@
 ═════════════════════════════════════════════════ -->
 <script src="pwa.js"></script>
 <script src="i18n.js"></script>
+<script src="anim.js" defer></script>
 <script src="tour-data.js"></script>
 <script>
 applyI18nStaticText();
@@ -597,6 +599,8 @@ function badgeHtml(text, type) {
 ───────────────────────────────────────────── */
 function renderGoods() {
   var d = getData();
+  var noteEl = document.getElementById('goodsNoteText');
+  if (d.goodsNote && noteEl) { noteEl.textContent = d.goodsNote; noteEl.style.display = ''; }
   if (!d.goods || !d.goods.length) return;
 
   var html = '';
@@ -663,7 +667,10 @@ function renderSns() {
 function renderEmergency() {
   var d  = getData();
   var em = d.emergency;
-  var g  = d.guide;
+  // ホームタブの挨拶欄と同じデータ（複数担当者対応）を参照する。
+  // 以前はd.guide（1人目のみ）しか見ておらず、2人目以降の添乗員を追加しても
+  // ここに反映されなかったため、d.guidesの全員をカード表示するようにしている。
+  var guides = (d.guides && d.guides.length) ? d.guides : (d.guide ? [d.guide] : []);
 
   // 会社カード
   var mainHtml =
@@ -676,15 +683,17 @@ function renderEmergency() {
       '<div class="emg-info-row"><i class="fa-solid fa-envelope"></i>' + esc(em.companyEmail) + '</div>' +
     '</div>';
 
-  // 添乗員カード
-  mainHtml +=
-    '<div class="emg-card guide">' +
-      '<span class="emg-card-label"><i class="fa-solid fa-user-tie" style="margin-right:6px"></i>' + esc(t('emg.label.guide')) + '</span>' +
-      '<span class="emg-card-name">' + esc(g.name) + '</span>' +
-      '<span class="emg-phone">' + esc(g.phone) + '</span>' +
-      '<div class="emg-info-row"><i class="fa-solid fa-envelope"></i>' + esc(g.email) + '</div>' +
-      '<div class="emg-info-row"><i class="fa-brands fa-line"></i>' + esc(t('emg.label.lineId')) + esc(g.lineId) + '</div>' +
-    '</div>';
+  // 添乗員カード（人数分）
+  guides.forEach(function(g) {
+    mainHtml +=
+      '<div class="emg-card guide">' +
+        '<span class="emg-card-label"><i class="fa-solid fa-user-tie" style="margin-right:6px"></i>' + esc(t('emg.label.guide')) + '</span>' +
+        '<span class="emg-card-name">' + esc(g.name) + '</span>' +
+        '<span class="emg-phone">' + esc(g.phone) + '</span>' +
+        '<div class="emg-info-row"><i class="fa-solid fa-envelope"></i>' + esc(g.email) + '</div>' +
+        '<div class="emg-info-row"><i class="fa-brands fa-line"></i>' + esc(t('emg.label.lineId')) + esc(g.lineId) + '</div>' +
+      '</div>';
+  });
 
   document.getElementById('emgMainGrid').innerHTML = mainHtml;
 
@@ -737,6 +746,15 @@ function renderCommon() {
   document.getElementById('fCompanyNameEn').textContent = d.company.nameEn;
   document.getElementById('fYear').textContent          = new Date().getFullYear();
   document.title = t('title.company') + ' | ' + d.basic.tourTitle;
+  // 「ツアー後」ページ：admin.htmlで公開がオンになるまでヘッダーメニュー・案内カードを隠す
+  if (!d.postTour || !d.postTour.enabled) {
+    var ptLinks = document.querySelectorAll('a[href="post_tour.html"]');
+    for (var i = 0; i < ptLinks.length; i++) {
+      if (ptLinks[i].closest('.nav-menu') || ptLinks[i].closest('.mobile-nav')) ptLinks[i].style.display = 'none';
+    }
+    var afterTourCard = document.getElementById('afterTourCard');
+    if (afterTourCard) afterTourCard.style.display = 'none';
+  }
 }
 
 /* ─────────────────────────────────────────────

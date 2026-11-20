@@ -157,6 +157,7 @@
 
 <script src="pwa.js"></script>
 <script src="i18n.js"></script>
+<script src="anim.js" defer></script>
 <script src="tour-data.js"></script>
 <script>
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -164,6 +165,12 @@ applyI18nStaticText();
 mountLangSwitcher('langSwitcherDesktop');
 mountLangSwitcher('langSwitcherMobile');
 const d = getData();
+// 「ツアー後」ページ：admin.htmlで公開がオンになるまでヘッダーメニューから隠す
+if (!d.postTour || !d.postTour.enabled) {
+  document.querySelectorAll('a[href="post_tour.html"]').forEach(function(a){
+    if (a.closest('.nav-menu') || a.closest('.mobile-nav')) a.style.display = 'none';
+  });
+}
 // Page title
 document.getElementById('pageTitle').textContent = t('title.index') + ' | ' + d.basic.tourTitle;
 document.getElementById('hCompanyName').textContent = d.company.name.toUpperCase() || 'MOTO TOURS JAPAN株式会社';
@@ -240,10 +247,28 @@ document.getElementById('heroChips').innerHTML = [
     </div>`;
 })();
 
+// 持ち物チェックリストの達成状況（caution.htmlと同じlocalStorageキー・ci-ii形式で判定）
+function getChecklistCompletion(){
+  try {
+    const all = JSON.parse(tourStorageGet('MTJ_CHECKLIST_STATE_v1') || '{}');
+    const key = (d.basic && d.basic.tourDates) || 'default';
+    const state = all[key] || {};
+    let total = 0, checked = 0;
+    (d.checklist || []).forEach((cat, ci) => {
+      (cat.items || []).forEach((_, ii) => {
+        total++;
+        if (state[ci + '-' + ii]) checked++;
+      });
+    });
+    return total > 0 && checked === total;
+  } catch (e) { return false; }
+}
+
 // 搭乗券風デジタルチケット（admin.htmlのURLリンク生成ツールが付与する ?name= を読み取って表示）
 (function(){
   const guestName = new URLSearchParams(location.search).get('name');
   const dateTimeSub = [d.meeting.date, d.meeting.time].filter(Boolean).join(' ');
+  const stampHtml = getChecklistCompletion() ? `<div class="ticket-stamp">${esc(t('ticket.readyStamp'))}</div>` : '';
   const ticketFieldsHtml = `
     <div class="ticket-field">
       <div class="ticket-field-label">${esc(t('ticket.date'))}</div>
@@ -266,6 +291,7 @@ document.getElementById('heroChips').innerHTML = [
         <div class="ticket-fields">${ticketFieldsHtml}</div>
       </div>
       <div class="ticket-stub">
+        ${stampHtml}
         <i class="fa-solid fa-motorcycle ticket-stub-icon"></i>
         <div class="ticket-field-label">${esc(t('ticket.passenger'))}</div>
         <div class="ticket-stub-name">${esc(guestName || t('ticket.guestFallback'))}</div>
@@ -281,6 +307,7 @@ document.getElementById('heroChips').innerHTML = [
           <div class="ticket-fields">${ticketFieldsHtml}</div>
         </div>
         <div class="ticket-stub">
+          ${stampHtml}
           <i class="fa-solid fa-motorcycle ticket-stub-icon"></i>
           <div class="ticket-field-label">${esc(t('ticket.passenger'))}</div>
           <div class="ticket-stub-name">${esc(guestName || t('ticket.guestFallback'))}</div>

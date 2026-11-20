@@ -95,6 +95,9 @@ const UI_DICT = {
     'photos.subtitle': 'スタッフが撮影したツアーの思い出をお楽しみください',
     'photos.albumBtn': '写真アルバムを見る',
     'photos.albumNote': 'Googleドライブ / Googleフォトのアルバムが別タブで開きます',
+    'photos.albumExpiryLabel': 'このリンクの有効期限',
+    'photos.albumExpirySuffix': 'まで',
+    'photos.albumExpired': 'このリンクの有効期限は終了しました。',
     'videos.title': 'ツアー動画',
     'videos.subtitle': 'ツアーをまとめた動画です。ぜひご覧ください',
     'videos.unlistedNotice': 'この動画はツアー参加者のみに共有されている<strong style="color:var(--gold)">限定公開</strong>動画です。URLの第三者への共有はご遠慮ください。',
@@ -118,12 +121,10 @@ const UI_DICT = {
     'route.tableTitle': '全体行程表',
     'route.detailTitle': '詳細行程',
     'route.detailTimeline': '行程詳細',
+    'route.streetViewPreview': 'プレビューを見る',
+    'route.streetViewClose': 'プレビューを閉じる',
     'route.detailMap': '訪問スポット マップ',
     'route.spots': 'スポット',
-    'route.elevationTitle': '距離・標高プロファイル',
-    'route.totalDistance': '総走行距離',
-    'route.totalAscent': '獲得標高',
-    'route.maxElevation': '最高地点',
     'highlights.title': 'ツアーハイライト',
     'hotels.title': '宿泊施設情報',
     'hotel.checkin': 'チェックイン：',
@@ -156,6 +157,7 @@ const UI_DICT = {
     'ticket.boardingPass': 'BOARDING PASS',
     'ticket.passenger': 'RIDER',
     'ticket.guestFallback': 'ご参加者様',
+    'ticket.readyStamp': '準備完了',
     'ticket.date': 'DATE',
     'ticket.place': 'MEETING POINT',
     'ticket.area': 'DESTINATION',
@@ -265,6 +267,9 @@ const UI_DICT = {
     'photos.subtitle': 'Enjoy photos taken by our staff during the tour',
     'photos.albumBtn': 'View Photo Album',
     'photos.albumNote': 'Opens the Google Drive / Google Photos album in a new tab',
+    'photos.albumExpiryLabel': 'This link is valid until',
+    'photos.albumExpirySuffix': '',
+    'photos.albumExpired': 'This link has expired.',
     'videos.title': 'Tour Video',
     'videos.subtitle': 'A video recap of your tour — we hope you enjoy it',
     'videos.unlistedNotice': 'This video is shared with tour participants only as an <strong style="color:var(--gold)">unlisted</strong> video. Please do not share the URL with third parties.',
@@ -288,12 +293,10 @@ const UI_DICT = {
     'route.tableTitle': 'Full Itinerary Table',
     'route.detailTitle': 'Detailed Itinerary',
     'route.detailTimeline': 'Detailed Timeline',
+    'route.streetViewPreview': 'Preview',
+    'route.streetViewClose': 'Close Preview',
     'route.detailMap': 'Visited Spots Map',
     'route.spots': 'spots',
-    'route.elevationTitle': 'Distance & elevation profile',
-    'route.totalDistance': 'Total distance',
-    'route.totalAscent': 'Total ascent',
-    'route.maxElevation': 'Highest point',
     'highlights.title': 'Tour Highlights',
     'hotels.title': 'Accommodation Information',
     'hotel.checkin': 'Check-in: ',
@@ -326,6 +329,7 @@ const UI_DICT = {
     'ticket.boardingPass': 'BOARDING PASS',
     'ticket.passenger': 'RIDER',
     'ticket.guestFallback': 'Valued Guest',
+    'ticket.readyStamp': 'READY',
     'ticket.date': 'DATE',
     'ticket.place': 'MEETING POINT',
     'ticket.area': 'DESTINATION',
@@ -435,6 +439,9 @@ const UI_DICT = {
     'photos.subtitle': '請欣賞工作人員拍攝的旅程回憶',
     'photos.albumBtn': '查看相片相簿',
     'photos.albumNote': '將在新分頁開啟Google雲端硬碟／Google相簿的相簿',
+    'photos.albumExpiryLabel': '此連結有效期限',
+    'photos.albumExpirySuffix': '止',
+    'photos.albumExpired': '此連結已過有效期限。',
     'videos.title': '旅程影片',
     'videos.subtitle': '彙整旅程精華的影片，敬請欣賞',
     'videos.unlistedNotice': '本影片僅與本次旅程的參加貴賓分享，為<strong style="color:var(--gold)">不公開連結</strong>影片。請勿將網址提供給第三方。',
@@ -458,12 +465,10 @@ const UI_DICT = {
     'route.tableTitle': '全程行程表',
     'route.detailTitle': '詳細行程',
     'route.detailTimeline': '詳細時間表',
+    'route.streetViewPreview': '查看預覽',
+    'route.streetViewClose': '關閉預覽',
     'route.detailMap': '景點地圖',
     'route.spots': '個景點',
-    'route.elevationTitle': '距離與海拔剖面',
-    'route.totalDistance': '總騎乘距離',
-    'route.totalAscent': '總爬升',
-    'route.maxElevation': '最高點',
     'highlights.title': '行程精彩亮點',
     'hotels.title': '住宿資訊',
     'hotel.checkin': '入住時間：',
@@ -496,6 +501,7 @@ const UI_DICT = {
     'ticket.boardingPass': 'BOARDING PASS',
     'ticket.passenger': 'RIDER',
     'ticket.guestFallback': '貴賓',
+    'ticket.readyStamp': '準備完成',
     'ticket.date': 'DATE',
     'ticket.place': 'MEETING POINT',
     'ticket.area': 'DESTINATION',
@@ -517,14 +523,17 @@ const UI_DICT = {
 
 function getCurrentLang(){
   try {
-    const l = localStorage.getItem('TOUR_LANG');
+    const l = (typeof tourStorageGet === 'function') ? tourStorageGet('TOUR_LANG') : localStorage.getItem('TOUR_LANG');
     if (l === 'en' || l === 'zh') return l;
   } catch(e){}
   return 'ja';
 }
 
 function setLang(lang){
-  try { localStorage.setItem('TOUR_LANG', lang); } catch(e){}
+  try {
+    if (typeof tourStorageSet === 'function') tourStorageSet('TOUR_LANG', lang);
+    else localStorage.setItem('TOUR_LANG', lang);
+  } catch(e){}
   location.reload();
 }
 

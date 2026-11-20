@@ -1,6 +1,6 @@
 // ================================================================
 //  MOTO TOURS JAPAN ── ツアーデータ設定ファイル  tour-data.js
-//  admin.html から生成  2026/8/12 19:08:11
+//  admin.html から生成  2026/10/16 18:27:47
 //  多言語対応: ja / en / zh（繁體中文）
 // ================================================================
 // ※ このファイルはテキストエディタ（メモ帳、VS Code 等）で開いてください。
@@ -18,14 +18,22 @@ const TOUR_DATA = {
   },
   "basic": {
     "tourTitle": {
-      "ja": "HondaGO TOUR in 伊豆箱根",
-      "en": "HondaGO TOUR in Izu & Hakone",
-      "zh": "HondaGO TOUR 伊豆箱根之旅"
+      "ja": "HondaGO TOUR in 鹿児島",
+      "en": "HondaGO tour in Kagoshima",
+      "zh": "鹿兒島HondaGO之旅",
+      "_auto": {
+        "en": "HondaGO tour in Kagoshima",
+        "zh": "鹿兒島HondaGO之旅"
+      }
     },
     "tourSubtitle": {
-      "ja": "富士を望み、名道を駆ける3日間",
-      "en": "3 Days Riding Toward Mt. Fuji on Legendary Roads",
-      "zh": "遠眺富士山，馳騁名道的三天之旅"
+      "ja": "火山と海を駆けぬける、鹿児島ロードトリップ",
+      "en": "Kagoshima Road Trip Through Volcanoes and the Sea",
+      "zh": "鹿兒島火山和大海公路之旅",
+      "_auto": {
+        "en": "Kagoshima Road Trip Through Volcanoes and the Sea",
+        "zh": "鹿兒島火山和大海公路之旅"
+      }
     },
     "participantCount": {
       "ja": "1名様",
@@ -33,97 +41,137 @@ const TOUR_DATA = {
       "zh": "1人"
     },
     "tourDates": {
-      "ja": "2026年8月21日（金）〜8月23日（日）",
-      "en": "Aug 21, 2026 (Fri) - Aug 23, 2026 (Sun)",
-      "zh": "2026年8月21日（五）〜8月23日（日）"
+      "ja": "2026年10月12日（月）〜10月14日（水）",
+      "en": "Oct 12, 2026 (Mon) - Oct 14, 2026 (Wed)",
+      "zh": "2026年10月12日（一）〜10月14日（三）"
     },
     "area": {
-      "ja": "伊豆・箱根",
+      "ja": "鹿児島",
       "en": "Izu / Hakone",
-      "zh": "伊豆・箱根"
+      "zh": "伊豆・箱根",
+      "_auto": {
+        "en": "Izu / Hakone",
+        "zh": "伊豆・箱根"
+      }
     },
     "heroBgImage": "images/hero-bg.jpg",
-    "heroVideoUrl": "images/hero-video.mp4"
+    "heroVideoUrl": ""
   },
   "meeting": {
     "place": {
-      "ja": "バイカーズパラダイス南箱根　",
+      "ja": "鹿児島サンロイヤルホテル",
       "en": "Bikers Paradise Minami-Hakone",
-      "zh": "Bikers Paradise 南箱根"
+      "zh": "Bikers Paradise 南箱根",
+      "_auto": {
+        "en": "Bikers Paradise Minami-Hakone",
+        "zh": "Bikers Paradise 南箱根"
+      }
     },
     "placeDetail": {
-      "ja": "静岡県田方郡函南町桑原1348-2",
+      "ja": "〒890-0062 鹿児島県鹿児島市与次郎１丁目８−１０",
       "en": "1348-2 Kuwahara, Kannami-cho, Tagata-gun, Shizuoka",
-      "zh": "靜岡縣田方郡函南町桑原1348-2"
+      "zh": "靜岡縣田方郡函南町桑原1348-2",
+      "_auto": {
+        "en": "1348-2 Kuwahara, Kannami-cho, Tagata-gun, Shizuoka",
+        "zh": "靜岡縣田方郡函南町桑原1348-2"
+      }
     },
     "date": {
-      "ja": "2026年4月10日（金）",
-      "en": "Apr 10, 2026 (Fri)",
-      "zh": "2026年4月10日（五）"
+      "ja": "2026年10月12日（月）",
+      "en": "Oct 12, 2026 (Mon)",
+      "zh": "2026年10月12日（一）"
     },
     "time": {
-      "ja": "午前 10:00",
-      "en": "10:00 AM",
-      "zh": "上午10:00"
+      "ja": "午前 9:30",
+      "en": "9:30 AM",
+      "zh": "上午9:30"
     },
     "endPlace": {
-      "ja": "バイカーズパラダイス南箱根",
+      "ja": "ホテルウェルビューかごしま",
       "en": "Bikers Paradise Minami-Hakone",
-      "zh": "Bikers Paradise 南箱根"
+      "zh": "Bikers Paradise 南箱根",
+      "_auto": {
+        "en": "Bikers Paradise Minami-Hakone",
+        "zh": "Bikers Paradise 南箱根"
+      }
     },
     "endTime": {
-      "ja": "2026年4月12日（日）17:00 頃",
-      "en": "Apr 12, 2026 (Sun), around 5:00 PM",
-      "zh": "2026年4月12日（日）17:00左右"
+      "ja": "2026年10月14日（水）17:30 頃",
+      "en": "Oct 14, 2026 (Wed), around 5:30 PM",
+      "zh": "2026年10月14日（三）17:30左右"
     },
     "note": {
-      "ja": "集合時間の10分前にはお集まりください。また解散時はバイカーズパラダイス南箱根から小田原駅までの送迎がございます。",
+      "ja": "集合時間の10分前にはお集まりください。また集合・解散時は鹿児島中央駅から集合・解散場所までの送迎がございます。",
       "en": "Please gather 10 minutes before the meeting time. A shuttle will also be available from Bikers Paradise Minami-Hakone to Odawara Station at dismissal.",
-      "zh": "請於集合時間前10分鐘到達。解散時將提供從Bikers Paradise南箱根至小田原車站的接送服務。"
+      "zh": "請於集合時間前10分鐘到達。解散時將提供從Bikers Paradise南箱根至小田原車站的接送服務。",
+      "_auto": {
+        "en": "Please gather 10 minutes before the meeting time. A shuttle will also be available from Bikers Paradise Minami-Hakone to Odawara Station at dismissal.",
+        "zh": "請於集合時間前10分鐘到達。解散時將提供從Bikers Paradise南箱根至小田原車站的接送服務。"
+      }
     },
-    "meetMapUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d35841.717879155214!2d139.00895362361442!3d35.18603184258326!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60199793fb43016d%3A0x5b548f4253465f58!2z44OQ44Kk44Kr44O844K644OR44Op44OA44Kk44K55Y2X566x5qC5!5e0!3m2!1sja!2sjp!4v1773828075436!5m2!1sja!2sjp width=600 height=450 style=border:0; allowfullscreen=loading=lazy referrerpolicy=no-referrer-when-downgrade></iframe>",
-    "endMapUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d35841.717879155214!2d139.00895362361442!3d35.18603184258326!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x60199793fb43016d%3A0x5b548f4253465f58!2z44OQ44Kk44Kr44O844K644OR44Op44OA44Kk44K55Y2X566x5qC5!5e0!3m2!1sja!2sjp!4v1773828075436!5m2!1sja!2sjp width=600 height=450 style=border:0; allowfullscreen=loading=lazy referrerpolicy=no-referrer-when-downgrade></iframe>",
+    "meetMapUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d8322.180268988799!2d130.5562420681447!3d31.56715250928157!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353e60c806f31aa9%3A0xb55af4eb99df2e19!2z6bm_5YWQ5bO244K144Oz44Ot44Kk44Ok44Or44Ob44OG44Or!5e0!3m2!1sja!2sjp!4v1788770987046!5m2!1sja!2sjp",
+    "endMapUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d8322.180268988799!2d130.5562420681447!3d31.56715250928157!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353e60cf82fbab21%3A0x2b16f58a98a9b179!2z44Ob44OG44Or44Km44Kn44Or44OT44Ol44O844GL44GU44GX44G-!5e0!3m2!1sja!2sjp!4v1788771001917!5m2!1sja!2sjp",
     "meetIcon": "fa-solid fa-flag-checkered",
     "meetIconColor": "#ed1b23",
     "dateIcon": "fa-solid fa-clock",
     "dateIconColor": "#ed1b23",
     "endIcon": "fa-solid fa-circle-check",
     "endIconColor": "#ed1b23",
-    "meetDateISO": "2026-08-21",
-    "tourEndDateISO": "2026-08-23",
-    "meetLat": "35.16682362019365",
-    "meetLng": "139.02984613757678",
+    "meetDateISO": "2026-10-12",
+    "tourEndDateISO": "2026-10-14",
+    "meetLat": "31.568249474012365",
+    "meetLng": "130.56450799036637",
     "shuttle": {
       "enabled": true,
       "note": {
-        "ja": "集合場所まで送迎をご希望の方は、午前9:00までに小田原駅西口ロータリーまでお集まりください。",
+        "ja": "集合場所まで送迎をご希望の方は、午前9:00までに鹿児島中央駅東口駅前広場までお集まりください。",
         "en": "Guests requesting a shuttle to the meeting point should gather at the Odawara Station West Exit Roundabout by 9:00 AM.",
-        "zh": "需要接送至集合地點的貴賓，請於上午9:00前抵達小田原車站西口圓環。"
+        "zh": "需要接送至集合地點的貴賓，請於上午9:00前抵達小田原車站西口圓環。",
+        "_auto": {
+          "en": "Guests requesting a shuttle to the meeting point should gather at the Odawara Station West Exit Roundabout by 9:00 AM.",
+          "zh": "需要接送至集合地點的貴賓，請於上午9:00前抵達小田原車站西口圓環。"
+        }
       },
       "deadline": {
-        "ja": "",
-        "en": "",
-        "zh": ""
+        "ja": "出発3日前まで",
+        "en": "At least 3 days before departure",
+        "zh": "出發前至少3天",
+        "_auto": {
+          "en": "At least 3 days before departure",
+          "zh": "出發前至少3天"
+        }
       },
       "contact": {
-        "ja": "",
-        "en": "",
-        "zh": ""
+        "ja": "送迎をご希望の方はメールにてご連絡くださいませ。",
+        "en": "If you would like a transfer, please contact us by email.",
+        "zh": "如果您想轉移，請通過電子郵件與我們聯繫。",
+        "_auto": {
+          "en": "If you would like a transfer, please contact us by email.",
+          "zh": "如果您想轉移，請通過電子郵件與我們聯繫。"
+        }
       },
       "pickups": [
         {
           "place": {
-            "ja": "小田原駅西口ロータリー",
+            "ja": "鹿児島中央駅東口駅前広場",
             "en": "Odawara Station West Exit Roundabout",
-            "zh": "小田原車站西口圓環"
+            "zh": "小田原車站西口圓環",
+            "_auto": {
+              "en": "Odawara Station West Exit Roundabout",
+              "zh": "小田原車站西口圓環"
+            }
           },
-          "time": "9:00",
+          "time": "09:00",
           "note": {
-            "ja": "北条早雲公銅像付近",
+            "ja": "改札口を出て「東口（桜島口）」の表示に従って進みます。観覧車がある商業施設「アミュプラザ鹿児島」側の出口を出ると、目の前が広場です。 付近にて目印を持ったスタッフがお出迎えいたします。",
             "en": "Near the Hojo Soun Statue",
-            "zh": "北條早雲公銅像附近"
+            "zh": "北條早雲公銅像附近",
+            "_auto": {
+              "en": "Near the Hojo Soun Statue",
+              "zh": "北條早雲公銅像附近"
+            }
           },
-          "mapUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d407.24533839659944!2d139.15443721193216!3d35.25718354758572!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6019a506bc39b219%3A0xbefcd83af3ccd974!2z5bCP55Sw5Y6f6aeF6KW_5Y-j5Zuj5L2T44OQ44K55LmX6ZmN5aC077yI54Sh5paZ44O75LqI57SE5LiN6KaB77yJ!5e0!3m2!1sja!2sjp!4v1773824080196!5m2!1sja!2sjp width=600 height=450style=border:0; allowfullscreen= loading=lazy referrerpolicy=no-referrer-when-downgrade></iframe>"
+          "mapUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4669.9324506777075!2d130.5469276538502!3d31.581774304484565!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353e674f802e0ee3%3A0xcfae6560e3af46c7!2z6bm_5YWQ5bO25Lit5aSu6aeF5p2x5Y-j6aeF5YmN5bqD5aC0IOmAgei_jueUqOmnkOi7iuWgtA!5e0!3m2!1sja!2sjp!4v1788777834257!5m2!1sja!2sjp"
         }
       ]
     }
@@ -135,13 +183,17 @@ const TOUR_DATA = {
       "en": "Tour Guide / MOTO TOURS JAPAN Attendant Staff",
       "zh": "隨團領隊 / MOTO TOURS JAPAN 隨團人員"
     },
-    "phone": "050-1742-3855",
-    "email": "inquiry@mototoursjapan.com",
-    "lineId": "@638nrfza",
+    "phone": "090-9825-3632",
+    "email": "",
+    "lineId": "",
     "greeting": {
-      "ja": "お客様へ\n\nこのたびは「HondaGO TOUR in 伊豆箱根」にお申し込み誠にありがとうございます。\n\n今回の旅では、世界中のライダーに人気の日本のシンボル「富士山」を望む絶景ルートを走り、箱根・伊豆の山道を巡ります。\n\n五感を思い切り開放し旅の仲間たちと共に走る事の楽しさ、人の温かさ、自然の恵みを存分に味わっていただければ幸いです。\n安全第一にバイク旅をお楽しみください。\n　\nMOTO TOURS JAPAN\nスタッフ一同",
-      "en": "Dear Guest,\n\nThank you very much for booking the \"HondaGO TOUR in Izu & Hakone.\"\n\nOn this trip, you will ride scenic routes with views of Mt. Fuji, a symbol of Japan beloved by riders worldwide, through the mountain roads of Hakone and Izu.\n\nWe hope you will fully open your senses and savor the joy of riding with fellow travelers, the warmth of the people you meet, and the gifts of nature along the way.\nPlease enjoy your motorcycle journey with safety as the top priority.\n\nMOTO TOURS JAPAN\nThe Staff Team",
-      "zh": "親愛的貴賓：\n\n誠摯感謝您報名參加「HondaGO TOUR 伊豆箱根之旅」。\n\n本次旅程將沿著可遠眺世界各地騎士喜愛的日本象徵「富士山」的絕美路線，穿梭於箱根、伊豆的山道之間。\n\n衷心期盼您能敞開五感，盡情享受與旅伴同行的樂趣、人情的溫暖，以及大自然的恩賜。\n請以安全為第一優先，享受這趟摩托車之旅。\n\nMOTO TOURS JAPAN\n全體工作人員敬上"
+      "ja": "お客様へ\n\nこの度は、「HondaGO TOUR in 鹿児島」にご参加いただき誠にありがとうございます。\n\nHondaGOツアーは、女性の公道デビューを応援するコンセプトでスタートし、これまで大変ご好評を頂いてまいりました。\n\n\n九州最南端の「鹿児島県」にてHondaGO TOUR を開催いたします。\n\n桜島の力強い自然のエネルギーや薩摩半島独自の文化が根付く地を舞台に、五感を思い切り開放しこの地で出会う旅の仲間たちと共に、走る事の楽しさを存分に味わっていただければ幸いです。\n安全第一に、バイク旅をお楽しみください。\n　\nMOTO TOURS JAPAN　スタッフ一同",
+      "en": "Dear Customer,\n\nThank you for participating in the HondaGO tour in Kagoshima.\n\nThe HondaGO tour started with the concept of supporting women's public debut, and it has been very well received so far.We will hold a HondaGO tour in Kagoshima Prefecture, the southernmost part of Kyushu.\n\nIt would be great if you could experience the joy of running with the traveling companions you meet here, boldly opening up your five senses on the stage where the powerful natural energy of Sakurajima and the unique culture of the Satsuma Peninsula take root.Safety first, enjoy your motorcycle trip.\n　\nAll Moto tours Japan staff",
+      "zh": "尊敬的客戶：\n\n感謝您參加鹿兒島的HondaGO之旅。\n\nHondaGO巡迴賽始於支持女性公開亮相的概念，到目前為止一直非常受歡迎。我們將在九州最南端的鹿兒島縣舉辦HondaGO之旅。\n\n如果您能與在這裡遇到的旅伴一起體驗跑步的樂趣，在櫻島強大的自然能量和薩摩半島獨特的文化扎根的舞臺上大膽地打開您的五感，那將非常棒。安全第一，祝您機車之旅愉快。\n　\n所有Moto Tours日本員工",
+      "_auto": {
+        "en": "Dear Customer,\n\nThank you for participating in the HondaGO tour in Kagoshima.\n\nThe HondaGO tour started with the concept of supporting women's public debut, and it has been very well received so far.We will hold a HondaGO tour in Kagoshima Prefecture, the southernmost part of Kyushu.\n\nIt would be great if you could experience the joy of running with the traveling companions you meet here, boldly opening up your five senses on the stage where the powerful natural energy of Sakurajima and the unique culture of the Satsuma Peninsula take root.Safety first, enjoy your motorcycle trip.\n　\nAll Moto tours Japan staff",
+        "zh": "尊敬的客戶：\n\n感謝您參加鹿兒島的HondaGO之旅。\n\nHondaGO巡迴賽始於支持女性公開亮相的概念，到目前為止一直非常受歡迎。我們將在九州最南端的鹿兒島縣舉辦HondaGO之旅。\n\n如果您能與在這裡遇到的旅伴一起體驗跑步的樂趣，在櫻島強大的自然能量和薩摩半島獨特的文化扎根的舞臺上大膽地打開您的五感，那將非常棒。安全第一，祝您機車之旅愉快。\n　\n所有Moto Tours日本員工"
+      }
     }
   },
   "guides": [
@@ -152,13 +204,73 @@ const TOUR_DATA = {
         "en": "Tour Guide / MOTO TOURS JAPAN Attendant Staff",
         "zh": "隨團領隊 / MOTO TOURS JAPAN 隨團人員"
       },
-      "phone": "050-1742-3855",
-      "email": "inquiry@mototoursjapan.com",
-      "lineId": "@638nrfza",
+      "phone": "090-9825-3632",
+      "email": "",
+      "lineId": "",
       "greeting": {
-        "ja": "お客様へ\n\nこのたびは「HondaGO TOUR in 伊豆箱根」にお申し込み誠にありがとうございます。\n\n今回の旅では、世界中のライダーに人気の日本のシンボル「富士山」を望む絶景ルートを走り、箱根・伊豆の山道を巡ります。\n\n五感を思い切り開放し旅の仲間たちと共に走る事の楽しさ、人の温かさ、自然の恵みを存分に味わっていただければ幸いです。\n安全第一にバイク旅をお楽しみください。\n　\nMOTO TOURS JAPAN\nスタッフ一同",
-        "en": "Dear Guest,\n\nThank you very much for booking the \"HondaGO TOUR in Izu & Hakone.\"\n\nOn this trip, you will ride scenic routes with views of Mt. Fuji, a symbol of Japan beloved by riders worldwide, through the mountain roads of Hakone and Izu.\n\nWe hope you will fully open your senses and savor the joy of riding with fellow travelers, the warmth of the people you meet, and the gifts of nature along the way.\nPlease enjoy your motorcycle journey with safety as the top priority.\n\nMOTO TOURS JAPAN\nThe Staff Team",
-        "zh": "親愛的貴賓：\n\n誠摯感謝您報名參加「HondaGO TOUR 伊豆箱根之旅」。\n\n本次旅程將沿著可遠眺世界各地騎士喜愛的日本象徵「富士山」的絕美路線，穿梭於箱根、伊豆的山道之間。\n\n衷心期盼您能敞開五感，盡情享受與旅伴同行的樂趣、人情的溫暖，以及大自然的恩賜。\n請以安全為第一優先，享受這趟摩托車之旅。\n\nMOTO TOURS JAPAN\n全體工作人員敬上"
+        "ja": "お客様へ\n\nこの度は、「HondaGO TOUR in 鹿児島」にご参加いただき誠にありがとうございます。\n\nHondaGOツアーは、女性の公道デビューを応援するコンセプトでスタートし、これまで大変ご好評を頂いてまいりました。\n\n\n九州最南端の「鹿児島県」にてHondaGO TOUR を開催いたします。\n\n桜島の力強い自然のエネルギーや薩摩半島独自の文化が根付く地を舞台に、五感を思い切り開放しこの地で出会う旅の仲間たちと共に、走る事の楽しさを存分に味わっていただければ幸いです。\n安全第一に、バイク旅をお楽しみください。\n　\nMOTO TOURS JAPAN　スタッフ一同",
+        "en": "Dear Customer,\n\nThank you for participating in the HondaGO tour in Kagoshima.\n\nThe HondaGO tour started with the concept of supporting women's public debut, and it has been very well received so far.We will hold a HondaGO tour in Kagoshima Prefecture, the southernmost part of Kyushu.\n\nIt would be great if you could experience the joy of running with the traveling companions you meet here, boldly opening up your five senses on the stage where the powerful natural energy of Sakurajima and the unique culture of the Satsuma Peninsula take root.Safety first, enjoy your motorcycle trip.\n　\nAll Moto tours Japan staff",
+        "zh": "尊敬的客戶：\n\n感謝您參加鹿兒島的HondaGO之旅。\n\nHondaGO巡迴賽始於支持女性公開亮相的概念，到目前為止一直非常受歡迎。我們將在九州最南端的鹿兒島縣舉辦HondaGO之旅。\n\n如果您能與在這裡遇到的旅伴一起體驗跑步的樂趣，在櫻島強大的自然能量和薩摩半島獨特的文化扎根的舞臺上大膽地打開您的五感，那將非常棒。安全第一，祝您機車之旅愉快。\n　\n所有Moto Tours日本員工",
+        "_auto": {
+          "en": "Dear Customer,\n\nThank you for participating in the HondaGO tour in Kagoshima.\n\nThe HondaGO tour started with the concept of supporting women's public debut, and it has been very well received so far.We will hold a HondaGO tour in Kagoshima Prefecture, the southernmost part of Kyushu.\n\nIt would be great if you could experience the joy of running with the traveling companions you meet here, boldly opening up your five senses on the stage where the powerful natural energy of Sakurajima and the unique culture of the Satsuma Peninsula take root.Safety first, enjoy your motorcycle trip.\n　\nAll Moto tours Japan staff",
+          "zh": "尊敬的客戶：\n\n感謝您參加鹿兒島的HondaGO之旅。\n\nHondaGO巡迴賽始於支持女性公開亮相的概念，到目前為止一直非常受歡迎。我們將在九州最南端的鹿兒島縣舉辦HondaGO之旅。\n\n如果您能與在這裡遇到的旅伴一起體驗跑步的樂趣，在櫻島強大的自然能量和薩摩半島獨特的文化扎根的舞臺上大膽地打開您的五感，那將非常棒。安全第一，祝您機車之旅愉快。\n　\n所有Moto Tours日本員工"
+        }
+      }
+    },
+    {
+      "name": {
+        "ja": "小山内 雅人",
+        "en": "Masato Koyamauchi",
+        "zh": "Masato Koyamauchi",
+        "_auto": {
+          "en": "Masato Koyamauchi",
+          "zh": "Masato Koyamauchi"
+        }
+      },
+      "title": {
+        "ja": "担当添乗員 / Moto Tours Japan アテンダントスタッフ",
+        "en": "Attendant Staff, Moto Tours Japan",
+        "zh": "Moto Tours日本服務員",
+        "_auto": {
+          "en": "Attendant Staff, Moto Tours Japan",
+          "zh": "Moto Tours日本服務員"
+        }
+      },
+      "phone": "050-1742-3855",
+      "email": "",
+      "lineId": "",
+      "greeting": {
+        "ja": "",
+        "en": "",
+        "zh": ""
+      }
+    },
+    {
+      "name": {
+        "ja": "原田 雄基",
+        "en": "Yuki Harada",
+        "zh": "Yuki Harada",
+        "_auto": {
+          "en": "Yuki Harada",
+          "zh": "Yuki Harada"
+        }
+      },
+      "title": {
+        "ja": "担当添乗員 / Moto Tours Japan アテンダントスタッフ",
+        "en": "Attendant Staff, Moto Tours Japan",
+        "zh": "Moto Tours日本服務員",
+        "_auto": {
+          "en": "Attendant Staff, Moto Tours Japan",
+          "zh": "Moto Tours日本服務員"
+        }
+      },
+      "phone": "080-3722-3884",
+      "email": "",
+      "lineId": "",
+      "greeting": {
+        "ja": "",
+        "en": "",
+        "zh": ""
       }
     }
   ],
@@ -174,19 +286,49 @@ const TOUR_DATA = {
       "zh": "餐食（早餐2次、午餐3次、晚餐2次）"
     },
     {
-      "ja": "添乗員同行（全行程）",
-      "en": "Tour guide accompaniment (entire itinerary)",
-      "zh": "全程隨團領隊陪同"
-    },
-    {
       "ja": "旅のしおり（本ページ）",
-      "en": "Travel itinerary booklet (this document)",
-      "zh": "旅遊手冊（本文件）"
+      "en": "Tour guide accompaniment (entire itinerary)",
+      "zh": "全程隨團領隊陪同",
+      "_auto": {
+        "en": "Tour guide accompaniment (entire itinerary)",
+        "zh": "全程隨團領隊陪同"
+      }
     },
     {
-      "ja": "車両保険を含むレンタルバイク代(3日間)",
+      "ja": "レンタルバイク代金",
+      "en": "Travel itinerary booklet (this document)",
+      "zh": "旅遊手冊（本文件）",
+      "_auto": {
+        "en": "Travel itinerary booklet (this document)",
+        "zh": "旅遊手冊（本文件）"
+      }
+    },
+    {
+      "ja": "規定のバイク保険・ガソリン代金",
       "en": "Rental motorcycle fee including vehicle insurance (3 days)",
-      "zh": "租賃機車費用（含車輛保險，3天）"
+      "zh": "租賃機車費用（含車輛保險，3天）",
+      "_auto": {
+        "en": "Rental motorcycle fee including vehicle insurance (3 days)",
+        "zh": "租賃機車費用（含車輛保險，3天）"
+      }
+    },
+    {
+      "ja": "バイクアテンダント・サポートカー費用",
+      "en": "Motorcycle attendant/support car costs",
+      "zh": "機車服務員/支援車輛費用",
+      "_auto": {
+        "en": "Motorcycle attendant/support car costs",
+        "zh": "機車服務員/支援車輛費用"
+      }
+    },
+    {
+      "ja": "ツアースケジュールに明記の観光施設入場料金",
+      "en": "Entrance fees for tourist facilities specified in the tour schedule",
+      "zh": "旅遊時間表中指定的旅遊設施的入場費",
+      "_auto": {
+        "en": "Entrance fees for tourist facilities specified in the tour schedule",
+        "zh": "旅遊時間表中指定的旅遊設施的入場費"
+      }
     }
   ],
   "excludes": [
@@ -206,9 +348,13 @@ const TOUR_DATA = {
       "zh": "往返出發地與抵達地的交通費"
     },
     {
-      "ja": "立ちごけ補償代(オプションでご加入可能)",
+      "ja": "ヘルメット・グローブ等オプション用品",
       "en": "Tip-over coverage fee (optional add-on available)",
-      "zh": "倒車摔倒保障費（可選擇加保）"
+      "zh": "倒車摔倒保障費（可選擇加保）",
+      "_auto": {
+        "en": "Tip-over coverage fee (optional add-on available)",
+        "zh": "倒車摔倒保障費（可選擇加保）"
+      }
     },
     {
       "ja": "その他含まれるものに記載がないもの",
@@ -218,28 +364,32 @@ const TOUR_DATA = {
   ],
   "day1": {
     "date": {
-      "ja": "2026年4月10日（金）",
-      "en": "Apr 10, 2026 (Fri)",
-      "zh": "2026年4月10日（五）"
+      "ja": "2026年10月12日（月）",
+      "en": "Oct 12, 2026 (Mon)",
+      "zh": "2026年10月12日（一）"
     },
     "theme": {
-      "ja": "箱根の峠を駆け抜ける",
+      "ja": "海沿いを駆け、黒酢の味わいと桜島の雄大さに出会う旅",
       "en": "Riding Through the Mountain Passes of Hakone",
-      "zh": "馳騁箱根群峰"
+      "zh": "馳騁箱根群峰",
+      "_auto": {
+        "en": "Riding Through the Mountain Passes of Hakone",
+        "zh": "馳騁箱根群峰"
+      }
     },
-    "mapEmbed": "https://www.google.com/maps/embed?pb=!1m52!1m12!1m3!1d104370.6503288722!2d139.02819780000002!3d35.16702359999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m37!3e0!4m5!1s0x60199793fb43016d%3A0x5b548f4253465f58!2z44OQ44Kk44Kr44O844K644OR44Op44OA44Kk44K55Y2X566x5qC544CB44CSNDE5LTAxMDEg6Z2Z5bKh55yM55Sw5pa56YOh5Ye95Y2X55S65qGR5Y6f77yR77yT77yU77yY4oiS77yS!3m2!1d35.166762299999995!2d139.0279531!4m5!1s0x6019a2f35ae637e7%3A0xfcbb25f508ffef70!2z5rWc5p2-5bGL44CB44CSMjUwLTAzMTQg56We5aWI5bed55yM6Laz5p-E5LiL6YOh566x5qC555S655WR5a6_77yS77yS77yX!3m2!1d35.2132036!2d139.06386849999998!4m3!3m2!1d35.2298875!2d139.10582259999998!4m5!1s0x6019a2072de8f88d%3A0xa15763c99a291a68!2z566x5qC55bCP5raM5ZyS44Om44ON44OD44K144Oz44CB44CSMjUwLTA0MDcg56We5aWI5bed55yM6Laz5p-E5LiL6YOh566x5qC555S65LqM44OO5bmz77yR77yS77yZ77yX!3m2!1d35.239422399999995!2d139.0453369!4m5!1s0x60199f00444ff05f%3A0xa39d90b14f1fa64c!2z44K_44Kk44Og44K6566x5qC544Ot44O844OX44Km44Kn44Kk5pep6Zuy5bGx6aeF56ys77yR44CB44CSMjUwLTA0MDgg56We5aWI5bed55yM6Laz5p-E5LiL6YOh566x5qC555S65by3576F!3m2!1d35.2461564!2d139.0357487!4m3!3m2!1d35.2310495!2d138.9790018!4m3!3m2!1d35.0865522!2d139.0814586!5e0!3m2!1sja!2sjp!4v1773828388115!5m2!1sja!2sjp width=600 height=450 style=border:0; allowfullscreen= loading=lazy referrerpolicy=no-referrer-when-downgrade></iframe>",
+    "icon": "fa-solid fa-motorcycle",
+    "mapEmbed": "https://www.google.com/maps/embed?pb=!1m52!1m12!1m3!1d108682.66598841295!2d130.6967377920576!3d31.652099562737114!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m37!3e0!4m5!1s0x353e60c806f31aa9%3A0xb55af4eb99df2e19!2z6bm_5YWQ5bO244K144Oz44Ot44Kk44Ok44Or44Ob44OG44Or44CB44CSODkwLTAwNjIg6bm_5YWQ5bO255yM6bm_5YWQ5bO25biC5LiO5qyh6YOO77yR5LiB55uu77yY4oiS77yR77yQ!3m2!1d31.568266599999998!2d130.5633296!4m5!1s0x353e590079bd7c7d%3A0x5e985479736522b5!2z44Gq44GO44GV5YWs5ZyS44GC44GE44KJ6aeQ6LuK5aC044CB44CSODk5LTU2NTEg6bm_5YWQ5bO255yM5ae26Imv5biC6ISH5YWD77yR77yU77yZ77yX4oiS77yS!3m2!1d31.7033703!2d130.6183423!4m5!1s0x353ee565d8f97dc3%3A0x619731b86cfa7eb5!2z44Kq44O844Ks44OL44OD44Kv44Os44K544OI44Op44OzSkFT6KqN6Ki85bqX772cIOm7kumFouOBrumDtyDmobflv5fnlLDjgIHjgJI4OTktNDUwMSDpub_lhZDls7bnnIzpnKfls7bluILnpo_lsbHnlLrnpo_lsbHvvJPvvJHvvJHiiJLvvJI!3m2!1d31.6485193!2d130.8224189!4m5!1s0x353e5f860593bd7b%3A0xbe26e8a396967d7b!2z5rmv5LmL5bmz5bGV5pyb5omA44CB44CSODkxLTE0MTgg6bm_5YWQ5bO255yM6bm_5YWQ5bO25biC5qGc5bO25bCP5rGg55S677yR77yQ77yS77yV!3m2!1d31.591480699999998!2d130.6299912!4m5!1s0x353e5fdee9f1980d%3A0xb7e0b302b59edc4f!2z44CM5Y-r44Gz44Gu6IKW5YOP44CN5aSn5oiQ5rWp44CB44CSODkxLTE0MjAg6bm_5YWQ5bO255yM6bm_5YWQ5bO25biC5qGc5bO26LWk5rC055S677yT77yW77yS77yZ4oiS77yT!3m2!1d31.5778057!2d130.60274099999998!4m5!1s0x353e60c806f31aa9%3A0xb55af4eb99df2e19!2z6bm_5YWQ5bO244K144Oz44Ot44Kk44Ok44Or44Ob44OG44Or44CB44CSODkwLTAwNjIg6bm_5YWQ5bO255yM6bm_5YWQ5bO25biC5LiO5qyh6YOO77yR5LiB55uu77yY4oiS77yR77yQ!3m2!1d31.568266599999998!2d130.5633296!5e0!3m2!1sja!2sjp!4v1788773409450!5m2!1sja!2sjp",
     "items": [
       {
-        "time": "10:00",
+        "time": "09:30",
         "title": {
-          "ja": "バイカーズパラダイス南箱根",
+          "ja": "鹿児島サンロイヤルホテル",
           "en": "Bikers Paradise Minami-Hakone",
-          "zh": "Bikers Paradise 南箱根"
-        },
-        "place": {
-          "ja": "集合",
-          "en": "Meeting",
-          "zh": "集合"
+          "zh": "Bikers Paradise 南箱根",
+          "_auto": {
+            "en": "Bikers Paradise Minami-Hakone",
+            "zh": "Bikers Paradise 南箱根"
+          }
         },
         "desc": {
           "ja": "ブリーフィング・レクチャー・着替え・準備運動・車両説明を行います。",
@@ -254,83 +404,100 @@ const TOUR_DATA = {
         },
         "badgeType": "red",
         "isHighlight": false,
-        "elevation": null,
-        "distanceFromPrev": null
+        "isRestStop": false,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d108780.58511066047!2d130.45960966176025!3d31.568261338413247!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353e60c806f31aa9%3A0xb55af4eb99df2e19!2z6bm_5YWQ5bO244K144Oz44Ot44Kk44Ok44Or44Ob44OG44Or!5e0!3m2!1sja!2sjp!4v1788773513171!5m2!1sja!2sjp"
       },
       {
-        "time": "11:30",
+        "time": "11:45",
         "title": {
-          "ja": "寄木細工 浜松屋",
+          "ja": "なぎさ公園あいら",
           "en": "Yosegi Marquetry Hamamatsuya",
-          "zh": "寄木細工 濱松屋"
-        },
-        "place": {
-          "ja": "見学・買い物",
-          "en": "Sightseeing / Shopping",
-          "zh": "參觀・購物"
+          "zh": "寄木細工 濱松屋",
+          "_auto": {
+            "en": "Yosegi Marquetry Hamamatsuya",
+            "zh": "寄木細工 濱松屋"
+          }
         },
         "desc": {
-          "ja": "箱根の伝統工芸である寄木細工の魅力を、職人の技とともに感じられるお店",
+          "ja": "雄大な桜島を望む、海辺の憩いの公園",
           "en": "A shop where you can feel the charm of Hakone's traditional Yosegi marquetry craftsmanship alongside the artisans' skill.",
-          "zh": "在這裡可以透過職人的精湛技藝，感受箱根傳統工藝「寄木細工」的魅力。"
+          "zh": "在這裡可以透過職人的精湛技藝，感受箱根傳統工藝「寄木細工」的魅力。",
+          "_auto": {
+            "en": "A shop where you can feel the charm of Hakone's traditional Yosegi marquetry craftsmanship alongside the artisans' skill.",
+            "zh": "在這裡可以透過職人的精湛技藝，感受箱根傳統工藝「寄木細工」的魅力。"
+          }
         },
-        "icon": "fa-solid fa-shop",
+        "icon": "fa-solid fa-mug-hot",
         "badge": {
-          "ja": "お店",
+          "ja": "休憩・散歩",
           "en": "Shop",
-          "zh": "商店"
+          "zh": "商店",
+          "_auto": {
+            "en": "Shop",
+            "zh": "商店"
+          }
         },
         "badgeType": "",
         "isHighlight": false,
-        "elevation": null,
-        "distanceFromPrev": null
+        "isRestStop": false,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1999.0830453698015!2d130.61597421818595!3d31.700440924510886!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353e5814693bfee9%3A0xc9fdcdb0507d768b!2z44Gq44GO44GV5YWs5ZyS44GC44GE44KJ!5e0!3m2!1sja!2sjp!4v1788773600461!5m2!1sja!2sjp"
       },
       {
         "time": "13:00",
         "title": {
-          "ja": "箱根小涌園 天悠",
+          "ja": "黒酢の郷　桷志田(かくいだ)",
           "en": "Hakone Kowakien Ten-Yu",
-          "zh": "箱根小涌園 天悠"
-        },
-        "place": {
-          "ja": "ランチ",
-          "en": "Lunch",
-          "zh": "午餐"
+          "zh": "箱根小涌園 天悠",
+          "_auto": {
+            "en": "Hakone Kowakien Ten-Yu",
+            "zh": "箱根小涌園 天悠"
+          }
         },
         "desc": {
-          "ja": "箱根の四季を感じる景観と心地よい癒やしの時間を味わえる、人気の温泉旅館",
+          "ja": "桜島と壺畑を望む、黒酢の味わいを楽しむ郷",
           "en": "A popular hot spring inn offering views that capture Hakone's four seasons and a soothing, relaxing atmosphere.",
-          "zh": "可感受箱根四季風情與療癒氛圍的人氣溫泉旅館。"
+          "zh": "可感受箱根四季風情與療癒氛圍的人氣溫泉旅館。",
+          "_auto": {
+            "en": "A popular hot spring inn offering views that capture Hakone's four seasons and a soothing, relaxing atmosphere.",
+            "zh": "可感受箱根四季風情與療癒氛圍的人氣溫泉旅館。"
+          }
         },
         "icon": "fa-solid fa-utensils",
         "badge": {
-          "ja": "お店",
+          "ja": "ランチ",
           "en": "Shop",
-          "zh": "商店"
+          "zh": "商店",
+          "_auto": {
+            "en": "Shop",
+            "zh": "商店"
+          }
         },
         "badgeType": "blue",
         "isHighlight": true,
-        "elevation": null,
-        "distanceFromPrev": null
+        "isRestStop": true,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d50301.48981399393!2d130.83039943329698!3d31.67385132471522!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353ee565d8f97dc3%3A0x619731b86cfa7eb5!2z44Kq44O844Ks44OL44OD44Kv44Os44K544OI44Op44OzSkFT6KqN6Ki85bqX772cIOm7kumFouOBrumDtyDmobflv5fnlLA!5e0!3m2!1sja!2sjp!4v1788773675759!5m2!1sja!2sjp"
       },
       {
-        "time": "14:00",
+        "time": "15:30",
         "title": {
-          "ja": "箱根ロープウェイ",
+          "ja": "湯之平展望所",
           "en": "Hakone Ropeway",
-          "zh": "箱根空中纜車"
-        },
-        "place": {
-          "ja": "早雲山駅",
-          "en": "Sounzan Station",
-          "zh": "早雲山站"
+          "zh": "箱根空中纜車",
+          "_auto": {
+            "en": "Hakone Ropeway",
+            "zh": "箱根空中纜車"
+          }
         },
         "desc": {
-          "ja": "雄大な自然を上空から楽しみながら、箱根ならではのダイナミックな景色を満喫",
+          "ja": "桜島の荒々しい山肌を間近に望む、迫力の展望所",
           "en": "Enjoy Hakone's dynamic scenery from the sky, taking in the grandeur of nature from above.",
-          "zh": "從空中欣賞箱根壯麗的自然景色，享受獨特而震撼的視野。"
+          "zh": "從空中欣賞箱根壯麗的自然景色，享受獨特而震撼的視野。",
+          "_auto": {
+            "en": "Enjoy Hakone's dynamic scenery from the sky, taking in the grandeur of nature from above.",
+            "zh": "從空中欣賞箱根壯麗的自然景色，享受獨特而震撼的視野。"
+          }
         },
-        "icon": "fa-solid fa-car",
+        "icon": "fa-solid fa-mountain",
         "badge": {
           "ja": "観光",
           "en": "Sightseeing",
@@ -338,53 +505,63 @@ const TOUR_DATA = {
         },
         "badgeType": "gold",
         "isHighlight": true,
-        "elevation": null,
-        "distanceFromPrev": null
+        "isRestStop": false,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d85441.37625239676!2d130.71164851943647!3d31.645198271524293!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353e5f860593bd7b%3A0xbe26e8a396967d7b!2z5rmv5LmL5bmz5bGV5pyb5omA!5e0!3m2!1sja!2sjp!4v1788773735050!5m2!1sja!2sjp"
       },
       {
-        "time": "15:40",
+        "time": "16:20",
         "title": {
-          "ja": "芦ノ湖スカイライン",
+          "ja": "桜島フェリー",
           "en": "Ashinoko Skyline",
-          "zh": "蘆之湖天空之路"
-        },
-        "place": {
-          "ja": "静岡県裾野市深良",
-          "en": "Fukara, Susono City, Shizuoka",
-          "zh": "靜岡縣裾野市深良"
+          "zh": "蘆之湖天空之路",
+          "_auto": {
+            "en": "Ashinoko Skyline",
+            "zh": "蘆之湖天空之路"
+          }
         },
         "desc": {
-          "ja": "雄大な自然を上空から楽しみながら、箱根ならではのダイナミックな景色を満喫",
+          "ja": "鹿児島と桜島を約15分で結ぶ、気軽な船旅",
           "en": "Enjoy Hakone's dynamic scenery from the sky, taking in the grandeur of nature from above.",
-          "zh": "從空中欣賞箱根壯麗的自然景色，享受獨特而震撼的視野。"
+          "zh": "從空中欣賞箱根壯麗的自然景色，享受獨特而震撼的視野。",
+          "_auto": {
+            "en": "Enjoy Hakone's dynamic scenery from the sky, taking in the grandeur of nature from above.",
+            "zh": "從空中欣賞箱根壯麗的自然景色，享受獨特而震撼的視野。"
+          }
         },
-        "icon": "fa-solid fa-motorcycle",
+        "icon": "fa-solid fa-ferry",
         "badge": {
-          "ja": "峠道",
+          "ja": "フェリー",
           "en": "Mountain Pass",
-          "zh": "山道"
+          "zh": "山道",
+          "_auto": {
+            "en": "Mountain Pass",
+            "zh": "山道"
+          }
         },
         "badgeType": "blue",
         "isHighlight": true,
-        "elevation": null,
-        "distanceFromPrev": null
+        "isRestStop": true,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d10382.037589845228!2d130.59537941845483!3d31.59221441780715!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353e5fc9e3e17799%3A0x193d963834f63299!2z5qGc5bO25riv!5e0!3m2!1sja!2sjp!4v1788859594397!5m2!1sja!2sjp"
       },
       {
-        "time": "17:00",
+        "time": "17:30",
         "title": {
-          "ja": "ホテルニューアカオ",
+          "ja": "鹿児島サンロイヤルホテル",
           "en": "Hotel New Akao",
-          "zh": "新熱海大飯店"
-        },
-        "place": {
-          "ja": "静岡県熱海市熱海1993-250",
-          "en": "1993-250 Atami, Atami City, Shizuoka",
-          "zh": "靜岡縣熱海市熱海1993-250"
+          "zh": "新熱海大飯店",
+          "_auto": {
+            "en": "Hotel New Akao",
+            "zh": "新熱海大飯店"
+          }
         },
         "desc": {
-          "ja": "熱海の美しい海景色と華やかなリゾート感を味わえる、魅力あふれるリゾートホテル",
+          "ja": "桜島と錦江湾を眺める展望温泉で、旅の疲れを癒す",
           "en": "A charming resort hotel where you can enjoy the beautiful seascape of Atami and a vibrant resort atmosphere.",
-          "zh": "魅力四溢的度假飯店，可享受熱海美麗海景與華麗的度假氣息。"
+          "zh": "魅力四溢的度假飯店，可享受熱海美麗海景與華麗的度假氣息。",
+          "_auto": {
+            "en": "A charming resort hotel where you can enjoy the beautiful seascape of Atami and a vibrant resort atmosphere.",
+            "zh": "魅力四溢的度假飯店，可享受熱海美麗海景與華麗的度假氣息。"
+          }
         },
         "icon": "fa-solid fa-hotel",
         "badge": {
@@ -393,41 +570,49 @@ const TOUR_DATA = {
           "zh": "住宿"
         },
         "badgeType": "green",
-        "isHighlight": true,
-        "elevation": null,
-        "distanceFromPrev": null
+        "isHighlight": false,
+        "isRestStop": false,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d85451.96502102325!2d130.62608493459842!3d31.633674778062694!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353e60c806f31aa9%3A0xb55af4eb99df2e19!2z6bm_5YWQ5bO244K144Oz44Ot44Kk44Ok44Or44Ob44OG44Or!5e0!3m2!1sja!2sjp!4v1788773956457!5m2!1sja!2sjp"
       }
     ]
   },
   "day2": {
     "date": {
-      "ja": "2026年4月11日（土）",
-      "en": "Apr 11, 2026 (Sat)",
-      "zh": "2026年4月11日（六）"
+      "ja": "2026年10月13日（火）",
+      "en": "Oct 13, 2026 (Tue)",
+      "zh": "2026年10月13日（二）"
     },
     "theme": {
-      "ja": "伊豆スカイライン・七滝ループ橋などライディングが盛り沢山",
+      "ja": "指宿スカイラインを駆け抜け、知覧の歴史と開聞岳の絶景を巡る旅",
       "en": "Izu Skyline, Nanadaru Loop Bridge, and Plenty of Riding",
-      "zh": "伊豆天空之路、七瀑迴環橋等豐富騎乘體驗"
+      "zh": "伊豆天空之路、七瀑迴環橋等豐富騎乘體驗",
+      "_auto": {
+        "en": "Izu Skyline, Nanadaru Loop Bridge, and Plenty of Riding",
+        "zh": "伊豆天空之路、七瀑迴環橋等豐富騎乘體驗"
+      }
     },
-    "mapEmbed": "https://www.google.com/maps/embed?pb=!1m54!1m12!1m3!1d209373.10773735182!2d138.75735001103624!3d34.920128925811696!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m39!3e0!4m5!1s0x6019be57c2afce07%3A0x359065200416e65f!2z44Ob44OG44Or44OL44Ol44O844Ki44Kr44Kq44CB44CSNDEzLTAwMzMg6Z2Z5bKh55yM54ax5rW35biC54ax5rW377yR77yZ77yZ77yT4oiS77yS77yV77yQ!3m2!1d35.086463699999996!2d139.08146639999998!4m5!1s0x60199714ec9eb88d%3A0x4ec9f67f17f7e1da!2z5LyK6LGG44K544Kr44Kk44Op44Kk44Oz54ax5rW35bOg5paZ6YeR5omA44CB44CSNDE5LTAxMDEg6Z2Z5bKh55yM55Sw5pa56YOh5Ye95Y2X55S65qGR5Y6f77yR77yU77yQ77yQ!3m2!1d35.120646799999996!2d139.040077!4m3!3m2!1d34.905425!2d139.0403081!4m3!3m2!1d34.9249059!2d139.04218699999998!4m5!1s0x6019eba5d5433e9b%3A0x9366a4d480d94da8!2z44GG44Gq44GO44O744Go44KN44KN44Gu5bed5ZaE44CB44CSNDEwLTI1MDQg6Z2Z5bKh55yM5LyK6LGG5biC6Zai6YeO77yT77yR77yX!3m2!1d34.9626014!2d138.9881038!4m5!1s0x6019ef085a687cbd%3A0x1adf8533b219cdf8!2z6YGT44Gu6aeFIOWkqeWfjui2iuOBiOOAgeOAkjQxMC0zMjA2IOmdmeWyoeecjOS8iuixhuW4gua5r-OCseWztu-8mO-8me-8kuKIku-8lg!3m2!1d34.855666899999996!2d138.9222771!4m5!1s0x6019f7070d32e5f3%3A0x58afa0c9084dc8cd!2z5aCC44O25bO244OL44Ol44O86YqA5rC044CB44CSNDEwLTM1MTQg6Z2Z5bKh55yM6LOA6IyC6YOh6KW_5LyK6LGG55S65LuB56eR77yS77yZ77yX77yX4oiS77yR!3m2!1d34.790136499999996!2d138.7628021!5e0!3m2!1sja!2sjp!4v1773896359126!5m2!1sja!2sjp width=600 height=450 style=border:0; allowfullscreen= loading=lazy referrerpolicy=no-referrer-when-downgrade></iframe>",
+    "icon": "fa-solid fa-motorcycle",
+    "mapEmbed": "https://www.google.com/maps/embed?pb=!1m74!1m12!1m3!1d5468.751442238279!2d130.63613483806566!3d31.21822603605749!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m59!3e0!4m5!1s0x353e60c806f31aa9%3A0xb55af4eb99df2e19!2z6bm_5YWQ5bO244K144Oz44Ot44Kk44Ok44Or44Ob44OG44Or44CB44CSODkwLTAwNjIg6bm_5YWQ5bO255yM6bm_5YWQ5bO25biC5LiO5qyh6YOO77yR5LiB55uu77yY4oiS77yR77yQ!3m2!1d31.568266599999998!2d130.5633296!4m5!1s0x353e7af332e79629%3A0xf25154dbbcafba14!2z5oyH5a6_44K544Kr44Kk44Op44Kk44Oz44CB6bm_5YWQ5bO255yM!3m2!1d31.4151253!2d130.4974131!4m5!1s0x353e77ac5b000497%3A0xae858072920b8b52!2z55-l6Kan54m55pS75bmz5ZKM5Lya6aSo44CB44CSODk3LTAzMDIg6bm_5YWQ5bO255yM5Y2X5Lmd5bee5biC55-l6Kan55S66YOh77yR77yX77yY77yY77yR!3m2!1d31.3636111!2d130.43430279999998!4m5!1s0x353e7fe5baaa080d%3A0xf2be52a54be564b9!2z44CSODkxLTAzMTEg6bm_5YWQ5bO255yM5oyH5a6_5biC6KW_5pa577yU77yT77yZ77yT4oiS77yR!3m2!1d31.2715529!2d130.6264345!4m5!1s0x353dd5638dd6f0b7%3A0xb75a69602d60676!2z6buE6YeR44Gu6bOl5bGF44CB44CSODkxLTAzMTIg6bm_5YWQ5bO255yM5oyH5a6_5biC5rGg55Sw77yT77yR77yU77yW4oiS77yY!3m2!1d31.2492193!2d130.5640828!4m5!1s0x353dd17ea6bc44db%3A0x61b0da171cb5350e!2z6ZaL6IGe5bGx6bqT6Ieq54S25YWs5ZyS77yI44OI44Kr44Op6aas54mn5aC077yJ44CB44CSODkxLTA2MDIg6bm_5YWQ5bO255yM5oyH5a6_5biC6ZaL6IGe5bed5bC777yW77yX77yU77yT!3m2!1d31.1782851!2d130.55227929999998!4m5!1s0x353dd1462caab6b5%3A0xc86e28c3d6ede2a9!2z5bmz44OQ44Ko44CB44CSODkxLTA2MDMg6bm_5YWQ5bO255yM5oyH5a6_5biC6ZaL6IGe5Y2B55S6!3m2!1d31.1655752!2d130.519393!4m3!3m2!1d31.201162099999998!2d130.5218495!4m5!1s0x353dd39257ed7979%3A0x85af626926de99f!2z6KW_5aSn5bGx6aeF44CB44CSODkxLTA1MTQg6bm_5YWQ5bO255yM5oyH5a6_5biC5bGx5bed5aSn5bGx!3m2!1d31.1903059!2d130.5765123!4m5!1s0x353c2adc75e9e2cb%3A0xd4897bbe6463bc26!2z5oyH5a6_44Ot44Kk44Ok44Or44Ob44OG44Or44CB44CSODkxLTA0MDMg6bm_5YWQ5bO255yM5oyH5a6_5biC5Y2B5LqM55S677yU77yS77yT77yS4oiS77yR!3m2!1d31.217971!2d130.6500134!5e0!3m2!1sja!2sjp!4v1788774023090!5m2!1sja!2sjp",
     "items": [
       {
-        "time": "9:00",
+        "time": "09:00",
         "title": {
-          "ja": "ホテルニューアカオ",
+          "ja": "鹿児島サンロイヤルホテル",
           "en": "Hotel New Akao",
-          "zh": "新熱海大飯店"
-        },
-        "place": {
-          "ja": "静岡県熱海市熱海1993-250",
-          "en": "1993-250 Atami, Atami City, Shizuoka",
-          "zh": "靜岡縣熱海市熱海1993-250"
+          "zh": "新熱海大飯店",
+          "_auto": {
+            "en": "Hotel New Akao",
+            "zh": "新熱海大飯店"
+          }
         },
         "desc": {
-          "ja": "熱海の美しい海景色と華やかなリゾート感を味わえる、魅力あふれるリゾートホテル。",
+          "ja": "エントランスに8:45集合、9:00に出発",
           "en": "A charming resort hotel where you can enjoy the beautiful seascape of Atami and a vibrant resort atmosphere.",
-          "zh": "魅力四溢的度假飯店，可享受熱海美麗海景與華麗的度假氣息。"
+          "zh": "魅力四溢的度假飯店，可享受熱海美麗海景與華麗的度假氣息。",
+          "_auto": {
+            "en": "A charming resort hotel where you can enjoy the beautiful seascape of Atami and a vibrant resort atmosphere.",
+            "zh": "魅力四溢的度假飯店，可享受熱海美麗海景與華麗的度假氣息。"
+          }
         },
         "icon": "fa-solid fa-hotel",
         "badge": {
@@ -437,25 +622,28 @@ const TOUR_DATA = {
         },
         "badgeType": "blue",
         "isHighlight": false,
-        "elevation": null,
-        "distanceFromPrev": null
+        "isRestStop": false,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d85451.96502102325!2d130.62608493459842!3d31.633674778062694!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353e60c806f31aa9%3A0xb55af4eb99df2e19!2z6bm_5YWQ5bO244K144Oz44Ot44Kk44Ok44Or44Ob44OG44Or!5e0!3m2!1sja!2sjp!4v1788773956457!5m2!1sja!2sjp"
       },
       {
-        "time": "10:00",
+        "time": "09:15",
         "title": {
-          "ja": "伊豆スカイライン",
+          "ja": "指宿スカイライン",
           "en": "Izu Skyline",
-          "zh": "伊豆天空之路"
-        },
-        "place": {
-          "ja": "熱海料金所",
-          "en": "Atami Tollgate",
-          "zh": "熱海收費站"
+          "zh": "伊豆天空之路",
+          "_auto": {
+            "en": "Izu Skyline",
+            "zh": "伊豆天空之路"
+          }
         },
         "desc": {
-          "ja": "富士山や相模湾を望みながら爽快な走りを楽しめる、伊豆を代表する絶景ルート",
+          "ja": "緑豊かな山あいを駆ける、南薩摩のツーリングロード",
           "en": "A signature scenic route of Izu, offering an exhilarating ride with views of Mt. Fuji and Sagami Bay.",
-          "zh": "伊豆代表性的絕景路線，可一邊眺望富士山與相模灣，一邊享受暢快騎乘。"
+          "zh": "伊豆代表性的絕景路線，可一邊眺望富士山與相模灣，一邊享受暢快騎乘。",
+          "_auto": {
+            "en": "A signature scenic route of Izu, offering an exhilarating ride with views of Mt. Fuji and Sagami Bay.",
+            "zh": "伊豆代表性的絕景路線，可一邊眺望富士山與相模灣，一邊享受暢快騎乘。"
+          }
         },
         "icon": "fa-solid fa-road",
         "badge": {
@@ -465,137 +653,168 @@ const TOUR_DATA = {
         },
         "badgeType": "",
         "isHighlight": true,
-        "elevation": null,
-        "distanceFromPrev": null
+        "isRestStop": false,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d52410.17606881633!2d130.5559589915496!3d31.435241293941125!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353e7af332e79629%3A0xf25154dbbcafba14!2z6bm_5YWQ5bO255yMIOaMh-Wuv-OCueOCq-OCpOODqeOCpOODsw!5e0!3m2!1sja!2sjp!4v1788774141588!5m2!1sja!2sjp"
       },
       {
-        "time": "10:35",
+        "time": "10:00",
         "title": {
-          "ja": "亀石駐車場",
+          "ja": "知覧特攻平和会館",
           "en": "Kameishi Parking Area",
-          "zh": "龜石停車場"
-        },
-        "place": {
-          "ja": "休憩",
-          "en": "Rest Stop",
-          "zh": "休息"
+          "zh": "龜石停車場",
+          "_auto": {
+            "en": "Kameishi Parking Area",
+            "zh": "龜石停車場"
+          }
         },
         "desc": {
-          "ja": "伊豆スカイラインの開放感ある景観の中で、景色を眺めながらゆったり休憩できるスポット",
+          "ja": "戦争の記憶をたどり、命と平和の大切さを考えるひととき",
           "en": "A spot along the open, scenic Izu Skyline where you can take a leisurely break while enjoying the view.",
-          "zh": "在伊豆天空之路開闊的景觀中，可悠閒欣賞風景並休息的景點。"
+          "zh": "在伊豆天空之路開闊的景觀中，可悠閒欣賞風景並休息的景點。",
+          "_auto": {
+            "en": "A spot along the open, scenic Izu Skyline where you can take a leisurely break while enjoying the view.",
+            "zh": "在伊豆天空之路開闊的景觀中，可悠閒欣賞風景並休息的景點。"
+          }
         },
-        "icon": "fa-solid fa-parking",
+        "icon": "fa-solid fa-torii-gate",
         "badge": {
-          "ja": "休憩",
+          "ja": "観光",
           "en": "Rest",
-          "zh": "休息"
+          "zh": "休息",
+          "_auto": {
+            "en": "Rest",
+            "zh": "休息"
+          }
         },
         "badgeType": "",
-        "isHighlight": false,
-        "elevation": null,
-        "distanceFromPrev": null
+        "isHighlight": true,
+        "isRestStop": true,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d54509.31254370088!2d130.3609624250701!3d31.363613968224932!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353e77ac5b000497%3A0xae858072920b8b52!2z55-l6Kan54m55pS75bmz5ZKM5Lya6aSo!5e0!3m2!1sja!2sjp!4v1788774211230!5m2!1sja!2sjp"
       },
       {
-        "time": "12:00",
+        "time": "12:15",
         "title": {
-          "ja": "うなぎ・とろろ川善",
+          "ja": "信州庵",
           "en": "Unagi & Tororo Kawazen",
-          "zh": "鰻魚・山藥泥 川善"
-        },
-        "place": {
-          "ja": "静岡県伊豆市関野317",
-          "en": "317 Sekino, Izu City, Shizuoka",
-          "zh": "靜岡縣伊豆市關野317"
+          "zh": "鰻魚・山藥泥 川善",
+          "_auto": {
+            "en": "Unagi & Tororo Kawazen",
+            "zh": "鰻魚・山藥泥 川善"
+          }
         },
         "desc": {
-          "ja": "丁寧に仕上げたうなぎととろろ料理を通して、和の味わいを堪能できる人気のお店",
+          "ja": "そばの香りと郷土の味で、旅のお昼を豊かに",
           "en": "A popular restaurant where you can savor authentic Japanese flavors through carefully prepared eel and grated yam dishes.",
-          "zh": "可透過精心調理的鰻魚與山藥泥料理，品嚐和風美味的人氣餐廳。"
+          "zh": "可透過精心調理的鰻魚與山藥泥料理，品嚐和風美味的人氣餐廳。",
+          "_auto": {
+            "en": "A popular restaurant where you can savor authentic Japanese flavors through carefully prepared eel and grated yam dishes.",
+            "zh": "可透過精心調理的鰻魚與山藥泥料理，品嚐和風美味的人氣餐廳。"
+          }
         },
         "icon": "fa-solid fa-utensils",
         "badge": {
           "ja": "ランチ",
-          "en": "Lunch",
-          "zh": "午餐"
-        },
-        "badgeType": "blue",
-        "isHighlight": true,
-        "elevation": null,
-        "distanceFromPrev": null
-      },
-      {
-        "time": "13:40",
-        "title": {
-          "ja": "わさび漬け体験",
-          "en": "Wasabi Pickling Experience",
-          "zh": "山葵漬體驗"
-        },
-        "place": {
-          "ja": "道の駅 天城越え",
-          "en": "Michi-no-Eki Amagi-goe",
-          "zh": "天城越休息站"
-        },
-        "desc": {
-          "ja": "伊豆の特産品であるわさびを使ったわさび漬け体験ができ、旅の思い出としても人気",
-          "en": "Try pickling wasabi, an Izu specialty, in an activity that makes for a popular travel memory.",
-          "zh": "體驗使用伊豆特產山葵製作山葵漬，是深受喜愛的旅行紀念活動。"
-        },
-        "icon": "fa-solid fa-shop",
-        "badge": {
-          "ja": "アクティビティ",
-          "en": "Activity",
-          "zh": "活動"
+          "en": "lunch",
+          "zh": "午餐",
+          "_auto": {
+            "en": "lunch",
+            "zh": "午餐"
+          }
         },
         "badgeType": "blue",
         "isHighlight": false,
-        "elevation": null,
-        "distanceFromPrev": null
+        "isRestStop": false,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4255.436690582661!2d130.62782824733654!3d31.27015849756702!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353e7fe5baa83bb5%3A0x88d3c9efd66cc7bb!2z5L-h5bee5bq1!5e0!3m2!1sja!2sjp!4v1788774292702!5m2!1sja!2sjp"
       },
       {
-        "time": "15:15",
+        "time": "13:30",
         "title": {
-          "ja": "河津七滝ループ橋",
-          "en": "Kawazu Nanadaru Loop Bridge",
-          "zh": "河津七瀑迴環橋"
-        },
-        "place": {
-          "ja": "静岡県賀茂郡河津町梨本",
-          "en": "Nashimoto, Kawazu, Kamo District, Shizuoka",
-          "zh": "靜岡縣賀茂郡河津町梨本"
+          "ja": "黄金の鳥居",
+          "en": "Wasabi Pickling Experience",
+          "zh": "山葵漬體驗",
+          "_auto": {
+            "en": "Wasabi Pickling Experience",
+            "zh": "山葵漬體驗"
+          }
         },
         "desc": {
-          "ja": "高低差を一気に下りながら独特の景観を楽しめる、伊豆ならではの印象的なループ橋",
-          "en": "A striking loop bridge unique to Izu, where you can enjoy the distinctive scenery while descending a steep change in elevation.",
-          "zh": "伊豆獨有的特色迴環橋，可在急降的高低差中享受獨特景觀。"
+          "ja": "池田湖と開聞岳を望む、湖畔に輝く黄金の鳥居",
+          "en": "Try pickling wasabi, an Izu specialty, in an activity that makes for a popular travel memory.",
+          "zh": "體驗使用伊豆特產山葵製作山葵漬，是深受喜愛的旅行紀念活動。",
+          "_auto": {
+            "en": "Try pickling wasabi, an Izu specialty, in an activity that makes for a popular travel memory.",
+            "zh": "體驗使用伊豆特產山葵製作山葵漬，是深受喜愛的旅行紀念活動。"
+          }
         },
-        "icon": "fa-solid fa-motorcycle",
+        "icon": "fa-solid fa-square-parking",
         "badge": {
-          "ja": "ライディング",
+          "ja": "休憩",
+          "en": "Activity",
+          "zh": "活動",
+          "_auto": {
+            "en": "Activity",
+            "zh": "活動"
+          }
+        },
+        "badgeType": "blue",
+        "isHighlight": false,
+        "isRestStop": false,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14179.861542450077!2d130.5695156163115!3d31.247041340284895!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353dd5638dd6f0b7%3A0xb75a69602d60676!2z6buE6YeR44Gu6bOl5bGF!5e0!3m2!1sja!2sjp!4v1788774424309!5m2!1sja!2sjp"
+      },
+      {
+        "time": "15:00",
+        "title": {
+          "ja": "西大山駅",
+          "en": "Kawazu Nanadaru Loop Bridge",
+          "zh": "河津七瀑迴環橋",
+          "_auto": {
+            "en": "Kawazu Nanadaru Loop Bridge",
+            "zh": "河津七瀑迴環橋"
+          }
+        },
+        "desc": {
+          "ja": "開聞岳を望む、JR日本最南端の小さな駅",
+          "en": "A striking loop bridge unique to Izu, where you can enjoy the distinctive scenery while descending a steep change in elevation.",
+          "zh": "伊豆獨有的特色迴環橋，可在急降的高低差中享受獨特景觀。",
+          "_auto": {
+            "en": "A striking loop bridge unique to Izu, where you can enjoy the distinctive scenery while descending a steep change in elevation.",
+            "zh": "伊豆獨有的特色迴環橋，可在急降的高低差中享受獨特景觀。"
+          }
+        },
+        "icon": "fa-solid fa-train",
+        "badge": {
+          "ja": "休憩",
           "en": "Riding",
-          "zh": "騎乘"
+          "zh": "騎乘",
+          "_auto": {
+            "en": "Riding",
+            "zh": "騎乘"
+          }
         },
         "badgeType": "gold",
         "isHighlight": true,
-        "elevation": null,
-        "distanceFromPrev": null
+        "isRestStop": true,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d32154.09993792561!2d130.56261637980396!3d31.20749099306397!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353dd39257ed7979%3A0x85af626926de99f!2z6KW_5aSn5bGx6aeF!5e0!3m2!1sja!2sjp!4v1788774553827!5m2!1sja!2sjp"
       },
       {
-        "time": "16:30",
+        "time": "15:30",
         "title": {
-          "ja": "ホテルニュー銀水",
+          "ja": "指宿ロイヤルホテル",
           "en": "Hotel New Ginsui",
-          "zh": "新銀水酒店"
-        },
-        "place": {
-          "ja": "静岡県賀茂郡西伊豆町仁科2977-1",
-          "en": "2977-1 Nishina, Nishi-Izu Town, Kamo District, Shizuoka",
-          "zh": "靜岡縣賀茂郡西伊豆町仁科2977-1"
+          "zh": "新銀水酒店",
+          "_auto": {
+            "en": "Hotel New Ginsui",
+            "zh": "新銀水酒店"
+          }
         },
         "desc": {
-          "ja": "伊豆の美しい海を望みながら、温泉と上質なおもてなしを楽しめる人気の宿",
+          "ja": "波音に耳を澄ませ、絶景露天風呂で旅の疲れを癒す",
           "en": "A popular inn offering hot springs and refined hospitality with views of Izu's beautiful sea.",
-          "zh": "可眺望伊豆美麗海景，享受溫泉與優質款待的人氣旅宿。"
+          "zh": "可眺望伊豆美麗海景，享受溫泉與優質款待的人氣旅宿。",
+          "_auto": {
+            "en": "A popular inn offering hot springs and refined hospitality with views of Izu's beautiful sea.",
+            "zh": "可眺望伊豆美麗海景，享受溫泉與優質款待的人氣旅宿。"
+          }
         },
         "icon": "fa-solid fa-hotel",
         "badge": {
@@ -604,41 +823,49 @@ const TOUR_DATA = {
           "zh": "住宿"
         },
         "badgeType": "green",
-        "isHighlight": true,
-        "elevation": null,
-        "distanceFromPrev": null
+        "isHighlight": false,
+        "isRestStop": false,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d32154.09993792561!2d130.56261637980396!3d31.20749099306397!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353c2adc75e9e2cb%3A0xd4897bbe6463bc26!2z5oyH5a6_44Ot44Kk44Ok44Or44Ob44OG44Or!5e0!3m2!1sja!2sjp!4v1788774599856!5m2!1sja!2sjp"
       }
     ]
   },
   "day3": {
     "date": {
-      "ja": "2026年4月12日（日）",
-      "en": "Apr 12, 2026 (Sun)",
-      "zh": "2026年4月12日（日）"
+      "ja": "2026年10月14日（水）",
+      "en": "Oct 14, 2026 (Wed)",
+      "zh": "2026年10月14日（三）"
     },
     "theme": {
-      "ja": "西伊豆スカイラインを駆け抜け、駿河湾の海の幸を堪能",
+      "ja": "潮風に誘われ枕崎へ、旅の締めくくりは仙巌園へ",
       "en": "Riding the Nishi-Izu Skyline and Savoring Suruga Bay's Seafood",
-      "zh": "馳騁西伊豆天空之路，品味駿河灣海鮮"
+      "zh": "馳騁西伊豆天空之路，品味駿河灣海鮮",
+      "_auto": {
+        "en": "Riding the Nishi-Izu Skyline and Savoring Suruga Bay's Seafood",
+        "zh": "馳騁西伊豆天空之路，品味駿河灣海鮮"
+      }
     },
-    "mapEmbed": "https://www.google.com/maps/embed?pb=!1m58!1m12!1m3!1d209205.05113020874!2d138.73092952295949!3d34.985949649629156!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m43!3e0!4m5!1s0x6019f7070d32e5f3%3A0x58afa0c9084dc8cd!2z5aCC44O25bO244OL44Ol44O86YqA5rC044CB44CSNDEwLTM1MTQg6Z2Z5bKh55yM6LOA6IyC6YOh6KW_5LyK6LGG55S65LuB56eR77yS77yZ77yX77yX4oiS77yR!3m2!1d34.790136499999996!2d138.7628021!4m5!1s0x6019f1764a4e998b%3A0xc2e9561a69999f6a!2z6KW_5aSp5Z-O6auY5Y6fIOeJp-WgtOOBruWutuOAgeOAkjQxMC0zNTAxIOmdmeWyoeecjOizgOiMgumDoeilv-S8iuixhueUuuWuh-S5hemgiO-8k--8lu-8kO-8meKIku-8kQ!3m2!1d34.8572811!2d138.8384587!4m5!1s0x60198d0fe9497eab%3A0x6885718d5283364d!2z44Gg44KL44G-5bGx6auY5Y6f5bGV5pyb5Y-w44CB44CSNDEwLTI0MTcg6Z2Z5bKh55yM5LyK6LGG5biC5aSn5rKi!3m2!1d34.9758249!2d138.850766!4m5!1s0x60198de7385789ed%3A0x17c7b0acd2802c27!2z44KJ44KJ44KJ44K144Oz44OT44O844OB44CB44CSNDEwLTAyMzQg6Z2Z5bKh55yM5rK85rSl5biC6KW_5rWm5bmz5rKi77yV77yR77yX4oiS77yU!3m2!1d35.020235299999996!2d138.861402!4m5!1s0x60198f94942fe071%3A0x9fa045efaac9560c!2z6a2a5rKz5bK4IOS4uOWkqSDjgb_jgarjgajlupfjgIHjgJI0MTAtMDg0NSDpnZnlsqHnnIzmsrzmtKXluILljYPmnKzmuK_nlLrvvJHvvJDvvJDiiJLvvJE!3m2!1d35.0834883!2d138.85819039999998!4m5!1s0x601757f2cc36d1ab%3A0x82282a0bb7a6a505!2z5LiJ5bO244K544Kr44Kk44Km44Kp44O844Kv44CB44CSNDExLTAwMTIg6Z2Z5bKh55yM5LiJ5bO25biC56y55Y6f5paw55Sw77yT77yR77yT!3m2!1d35.1503027!2d138.9808519!4m5!1s0x60199793fb43016d%3A0x5b548f4253465f58!2z44OQ44Kk44Kr44O844K644OR44Op44OA44Kk44K55Y2X566x5qC544CB44CSNDE5LTAxMDEg6Z2Z5bKh55yM55Sw5pa56YOh5Ye95Y2X55S65qGR5Y6f77yR77yT77yU77yY4oiS77yS!3m2!1d35.166762299999995!2d139.0279531!5e0!3m2!1sja!2sjp!4v1773901670494!5m2!1sja!2sjp width=600 height=450 style=border:0; allowfullscreen= loading=lazy referrerpolicy=no-referrer-when-downgrade></iframe>",
+    "icon": "fa-solid fa-motorcycle",
+    "mapEmbed": "https://www.google.com/maps/embed?pb=!1m58!1m12!1m3!1d8008.75029191679!2d130.55540033294756!3d31.554202424196607!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m43!3e0!4m5!1s0x353c2adc75e9e2cb%3A0xd4897bbe6463bc26!2z5oyH5a6_44Ot44Kk44Ok44Or44Ob44OG44Or44CB44CSODkxLTA0MDMg6bm_5YWQ5bO255yM5oyH5a6_5biC5Y2B5LqM55S677yU77yS77yT77yS4oiS77yR!3m2!1d31.217971!2d130.6500134!4m5!1s0x353de7a165a95087%3A0xd5dbb841d672fa4a!2z5p6V5bSO5biC44GL44Gk44GK5YWs56S-IE1ha3VyYXpha2ktc2hpIEthdHN1byBLb3NoYeOAgeOAkjg5OC0wMDI1IOm5v-WFkOWztuecjOaeleW0juW4gueri-elnuacrOeUuu-8k--8lO-8lw!3m2!1d31.269188999999997!2d130.285078!4m5!1s0x353de7a0e65d7f99%3A0x8c455d9bda021050!2z6Jap5pGp6YWS6YCgIOiKsea4oeW3neiSuOa6nOaJgCDmmI7msrvolLXjgIHjgJI4OTgtMDAyNSDpub_lhZDls7bnnIzmnpXltI7luILnq4vnpZ7mnKznlLrvvJLvvJY!3m2!1d31.271608299999997!2d130.28493749999998!4m5!1s0x353e74c3be68bddd%3A0x813e006a68c42052!2z44GG44Gq44GO5bCC6ZaA5bqXIOS4h-OBruOBm-OAgeOAkjg5Ny0wMDAxIOm5v-WFkOWztuecjOWNl-OBleOBpOOBvuW4guWKoOS4lueUsOadkeWOn--8lOS4geebru-8ke-8kOKIku-8mQ!3m2!1d31.4173473!2d130.3322495!4m5!1s0x353e5e5eeede7ee1%3A0x596ea6c552fa083f!2z5LuZ5beM5ZyS44CB44CSODkyLTA4NzEg6bm_5YWQ5bO255yM6bm_5YWQ5bO25biC5ZCJ6YeO55S677yZ77yX77yQ77yQ4oiS77yR!3m2!1d31.6174149!2d130.5771969!4m5!1s0x353e60c854ba5487%3A0xd6d4b35668fe339b!2z44CSODkwLTAwNjIg6bm_5YWQ5bO255yM6bm_5YWQ5bO25biC5LiO5qyh6YOO77yR5LiB55uu77yV4oiS77yS77yZIO-8pe-8ru-8pe-8r--8s-OCu-ODq-ODleS4juasoemDju-8s--8sw!3m2!1d31.567544299999998!2d130.5610814!4m5!1s0x353e60cf82fbab21%3A0x2b16f58a98a9b179!2z44Ob44OG44Or44Km44Kn44Or44OT44Ol44O844GL44GU44GX44G-44CB44CSODkwLTAwNjIg6bm_5YWQ5bO255yM6bm_5YWQ5bO25biC5LiO5qyh6YOO77yS5LiB55uu77yU4oiS77yS77yV!3m2!1d31.561762899999998!2d130.5630913!5e0!3m2!1sja!2sjp!4v1788774653882!5m2!1sja!2sjp",
     "items": [
       {
-        "time": "8:30",
+        "time": "09:00",
         "title": {
-          "ja": "ホテルニュー銀水",
+          "ja": "指宿ロイヤルホテル",
           "en": "Hotel New Ginsui",
-          "zh": "新銀水酒店"
-        },
-        "place": {
-          "ja": "静岡県賀茂郡西伊豆町仁科2977-1",
-          "en": "2977-1 Nishina, Nishi-Izu Town, Kamo District, Shizuoka",
-          "zh": "靜岡縣賀茂郡西伊豆町仁科2977-1"
+          "zh": "新銀水酒店",
+          "_auto": {
+            "en": "Hotel New Ginsui",
+            "zh": "新銀水酒店"
+          }
         },
         "desc": {
-          "ja": "フロント7Fに集合",
+          "ja": "エントランスに8:45集合、9:00に出発",
           "en": "Gather on the 7th floor at the front desk.",
-          "zh": "於7樓櫃台集合。"
+          "zh": "於7樓櫃台集合。",
+          "_auto": {
+            "en": "Gather on the 7th floor at the front desk.",
+            "zh": "於7樓櫃台集合。"
+          }
         },
         "icon": "fa-solid fa-hotel",
         "badge": {
@@ -648,230 +875,218 @@ const TOUR_DATA = {
         },
         "badgeType": "blue",
         "isHighlight": false,
-        "elevation": null,
-        "distanceFromPrev": null
+        "isRestStop": false,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d118924.9267371123!2d130.67686554664292!3d31.32907934998575!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353c2adc75e9e2cb%3A0xd4897bbe6463bc26!2z5oyH5a6_44Ot44Kk44Ok44Or44Ob44OG44Or!5e0!3m2!1sja!2sjp!4v1788774694340!5m2!1sja!2sjp"
       },
       {
-        "time": "9:35",
+        "time": "10:15",
         "title": {
-          "ja": "西天城高原牧場の家",
+          "ja": "薩摩酒造 花渡川蒸溜所 明治蔵",
           "en": "Nishi-Amagi Highland Pasture House",
-          "zh": "西天城高原牧場之家"
-        },
-        "place": {
-          "ja": "静岡県賀茂郡西伊豆町宇久須3609-1",
-          "en": "3609-1 Ukusu, Nishi-Izu Town, Kamo District, Shizuoka",
-          "zh": "靜岡縣賀茂郡西伊豆町宇久須3609-1"
+          "zh": "西天城高原牧場之家",
+          "_auto": {
+            "en": "Nishi-Amagi Highland Pasture House",
+            "zh": "西天城高原牧場之家"
+          }
         },
         "desc": {
-          "ja": "高原ならではの爽やかな空気と美しい眺望を楽しめる、伊豆らしい自然豊かなスポット",
+          "ja": "受け継がれる焼酎造りの技を知る、枕崎の蔵見学",
           "en": "A spot rich in Izu's nature, offering refreshing highland air and beautiful views.",
-          "zh": "充滿伊豆自然風情的景點，可享受高原清新空氣與優美景緻。"
+          "zh": "充滿伊豆自然風情的景點，可享受高原清新空氣與優美景緻。",
+          "_auto": {
+            "en": "A spot rich in Izu's nature, offering refreshing highland air and beautiful views.",
+            "zh": "充滿伊豆自然風情的景點，可享受高原清新空氣與優美景緻。"
+          }
         },
-        "icon": "fa-solid fa-mug-hot",
+        "icon": "fa-solid fa-torii-gate",
         "badge": {
-          "ja": "休憩",
+          "ja": "見学・休憩",
           "en": "Rest",
-          "zh": "休息"
-        },
-        "badgeType": "",
-        "isHighlight": false,
-        "elevation": null,
-        "distanceFromPrev": null
-      },
-      {
-        "time": "10:10",
-        "title": {
-          "ja": "西伊豆スカイライン",
-          "en": "Nishi-Izu Skyline",
-          "zh": "西伊豆天空之路"
-        },
-        "place": {
-          "ja": "",
-          "en": "",
-          "zh": ""
-        },
-        "desc": {
-          "ja": "伊豆の山々と駿河湾の景色を望みながら、爽快な走りを楽しめる絶景ルート",
-          "en": "A scenic route offering an exhilarating ride with views of the Izu mountains and Suruga Bay.",
-          "zh": "可眺望伊豆群山與駿河灣景色的絕景路線，享受暢快騎乘。"
-        },
-        "icon": "fa-solid fa-road",
-        "badge": {
-          "ja": "峠道",
-          "en": "Mountain Pass",
-          "zh": "山道"
-        },
-        "badgeType": "",
-        "isHighlight": true,
-        "elevation": null,
-        "distanceFromPrev": null
-      },
-      {
-        "time": "10:40",
-        "title": {
-          "ja": "だるま山高原展望台",
-          "en": "Daruma-yama Highland Observatory",
-          "zh": "達摩山高原展望台"
-        },
-        "place": {
-          "ja": "静岡県伊豆市大沢",
-          "en": "Osawa, Izu City, Shizuoka",
-          "zh": "靜岡縣伊豆市大澤"
-        },
-        "desc": {
-          "ja": "伊豆の自然美を感じながら、息をのむようなパノラマ景観を楽しめる人気の立ち寄りスポット",
-          "en": "A popular stopover spot offering breathtaking panoramic views amid Izu's natural beauty.",
-          "zh": "在伊豆自然美景中，可欣賞令人屏息的全景風光，是深受喜愛的中途景點。"
-        },
-        "icon": "fa-solid fa-mug-hot",
-        "badge": {
-          "ja": "休憩",
-          "en": "Rest",
-          "zh": "休息"
-        },
-        "badgeType": "blue",
-        "isHighlight": true,
-        "elevation": null,
-        "distanceFromPrev": null
-      },
-      {
-        "time": "12:10",
-        "title": {
-          "ja": "魚河岸 丸天 みなと店",
-          "en": "Uogashi Maruten Minato-ten",
-          "zh": "魚河岸丸天 港店"
-        },
-        "place": {
-          "ja": "静岡県沼津市千本港町100-1",
-          "en": "100-1 Sembonkocho, Numazu City, Shizuoka",
-          "zh": "靜岡縣沼津市千本港町100-1"
-        },
-        "desc": {
-          "ja": "新鮮な海の幸を豪快に味わえる、港町ならではの活気あふれるお食事処",
-          "en": "A lively port-town restaurant where you can heartily enjoy fresh seafood.",
-          "zh": "可豪邁享用新鮮海味的港町風情餐廳。"
-        },
-        "icon": "fa-solid fa-utensils",
-        "badge": {
-          "ja": "昼食",
-          "en": "Lunch",
-          "zh": "午餐"
-        },
-        "badgeType": "",
-        "isHighlight": true,
-        "elevation": null,
-        "distanceFromPrev": null
-      },
-      {
-        "time": "14:40",
-        "title": {
-          "ja": "三島スカイウォーク",
-          "en": "Mishima Skywalk",
-          "zh": "三島Skywalk天空步道"
-        },
-        "place": {
-          "ja": "静岡県三島市笹原新田313",
-          "en": "313 Sasaharashinden, Mishima City, Shizuoka",
-          "zh": "靜岡縣三島市笹原新田313"
-        },
-        "desc": {
-          "ja": "開放感あふれる吊橋の上から、箱根・伊豆エリアの美しい自然を一望できる魅力的な場所",
-          "en": "An appealing spot offering panoramic views of Hakone and Izu's beautiful nature from atop an open suspension bridge.",
-          "zh": "從開闊的吊橋上，可一望箱根、伊豆地區美麗自然景緻的魅力景點。"
-        },
-        "icon": "fa-solid fa-bridge",
-        "badge": {
-          "ja": "観光",
-          "en": "Sightseeing",
-          "zh": "觀光"
-        },
-        "badgeType": "blue",
-        "isHighlight": false,
-        "elevation": null,
-        "distanceFromPrev": null
-      },
-      {
-        "time": "17:00",
-        "title": {
-          "ja": "ツアー終了・解散",
-          "en": "Tour End / Dismissal",
-          "zh": "行程結束・解散"
-        },
-        "place": {
-          "ja": "バイカーズパラダイス南箱根",
-          "en": "Bikers Paradise Minami-Hakone",
-          "zh": "Bikers Paradise 南箱根"
-        },
-        "desc": {
-          "ja": "添乗員によるご挨拶の後、解散となります。お気をつけてお帰りください。またのご利用を心よりお待ちしております。",
-          "en": "After closing remarks from the tour guide, the tour will be dismissed. Please travel home safely. We hope to see you again on a future tour.",
-          "zh": "隨團領隊致閉幕詞後即解散。請小心返家，我們由衷期盼再次與您相會。"
-        },
-        "icon": "fa-solid fa-flag-checkered",
-        "badge": {
-          "ja": "解散",
-          "en": "Dismissal",
-          "zh": "解散"
+          "zh": "休息",
+          "_auto": {
+            "en": "Rest",
+            "zh": "休息"
+          }
         },
         "badgeType": "red",
         "isHighlight": true,
-        "elevation": null,
-        "distanceFromPrev": null
+        "isRestStop": true,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d21033.95040170941!2d130.30248879307334!3d31.280723507399152!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353de7a0e65d7f99%3A0x8c455d9bda021050!2z6Jap5pGp6YWS6YCgIOiKsea4oeW3neiSuOa6nOaJgCDmmI7msrvolLU!5e0!3m2!1sja!2sjp!4v1788774796987!5m2!1sja!2sjp"
+      },
+      {
+        "time": "11:30",
+        "title": {
+          "ja": "うなぎ専門店 万のせ",
+          "en": "Nishi-Izu Skyline",
+          "zh": "西伊豆天空之路",
+          "_auto": {
+            "en": "Nishi-Izu Skyline",
+            "zh": "西伊豆天空之路"
+          }
+        },
+        "desc": {
+          "ja": "南さつまで味わう、うなぎ専門店の贅沢な昼ごはん",
+          "en": "A scenic route offering an exhilarating ride with views of the Izu mountains and Suruga Bay.",
+          "zh": "可眺望伊豆群山與駿河灣景色的絕景路線，享受暢快騎乘。",
+          "_auto": {
+            "en": "A scenic route offering an exhilarating ride with views of the Izu mountains and Suruga Bay.",
+            "zh": "可眺望伊豆群山與駿河灣景色的絕景路線，享受暢快騎乘。"
+          }
+        },
+        "icon": "fa-solid fa-utensils",
+        "badge": {
+          "ja": "ランチ",
+          "en": "lunch",
+          "zh": "午餐",
+          "_auto": {
+            "en": "lunch",
+            "zh": "午餐"
+          }
+        },
+        "badgeType": "",
+        "isHighlight": true,
+        "isRestStop": false,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d57762.49725355855!2d130.34249295229245!3d31.340789180100384!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353e74c3be68bddd%3A0x813e006a68c42052!2z44GG44Gq44GO5bCC6ZaA5bqXIOS4h-OBruOBmw!5e0!3m2!1sja!2sjp!4v1788774920139!5m2!1sja!2sjp"
+      },
+      {
+        "time": "14:00",
+        "title": {
+          "ja": "仙厳園",
+          "en": "Daruma-yama Highland Observatory",
+          "zh": "達摩山高原展望台",
+          "_auto": {
+            "en": "Daruma-yama Highland Observatory",
+            "zh": "達摩山高原展望台"
+          }
+        },
+        "desc": {
+          "ja": "桜島と錦江湾を庭の景色に取り込んだ、壮大な大名庭園",
+          "en": "A popular stopover spot offering breathtaking panoramic views amid Izu's natural beauty.",
+          "zh": "在伊豆自然美景中，可欣賞令人屏息的全景風光，是深受喜愛的中途景點。",
+          "_auto": {
+            "en": "A popular stopover spot offering breathtaking panoramic views amid Izu's natural beauty.",
+            "zh": "在伊豆自然美景中，可欣賞令人屏息的全景風光，是深受喜愛的中途景點。"
+          }
+        },
+        "icon": "fa-solid fa-torii-gate",
+        "badge": {
+          "ja": "観光",
+          "en": "Rest",
+          "zh": "休息",
+          "_auto": {
+            "en": "Rest",
+            "zh": "休息"
+          }
+        },
+        "badgeType": "blue",
+        "isHighlight": true,
+        "isRestStop": true,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d32332.91911280419!2d130.5313615219885!3d31.58715193115059!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353e5e5eeede7ee1%3A0x596ea6c552fa083f!2z5LuZ5beM5ZyS!5e0!3m2!1sja!2sjp!4v1788774992537!5m2!1sja!2sjp"
+      },
+      {
+        "time": "16:00",
+        "title": {
+          "ja": "ホテルウェルビューかごしま",
+          "en": "Uogashi Maruten Minato-ten",
+          "zh": "魚河岸丸天 港店",
+          "_auto": {
+            "en": "Uogashi Maruten Minato-ten",
+            "zh": "魚河岸丸天 港店"
+          }
+        },
+        "desc": {
+          "ja": "雄大な桜島を眺める天然温泉で、旅の疲れを癒す、ツアーのゴール地点",
+          "en": "A lively port-town restaurant where you can heartily enjoy fresh seafood.",
+          "zh": "可豪邁享用新鮮海味的港町風情餐廳。",
+          "_auto": {
+            "en": "A lively port-town restaurant where you can heartily enjoy fresh seafood.",
+            "zh": "可豪邁享用新鮮海味的港町風情餐廳。"
+          }
+        },
+        "icon": "fa-solid fa-flag-checkered",
+        "badge": {
+          "ja": "ゴール",
+          "en": "Lunch",
+          "zh": "午餐",
+          "_auto": {
+            "en": "Lunch",
+            "zh": "午餐"
+          }
+        },
+        "badgeType": "",
+        "isHighlight": true,
+        "isRestStop": false,
+        "streetViewUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6605.373260574025!2d130.5569442379516!3d31.56293527907609!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353e60cf82fbab21%3A0x2b16f58a98a9b179!2z44Ob44OG44Or44Km44Kn44Or44OT44Ol44O844GL44GU44GX44G-!5e0!3m2!1sja!2sjp!4v1788775052005!5m2!1sja!2sjp"
       }
     ]
   },
   "highlights": [
     {
       "title": {
-        "ja": "伊豆スカイライン",
+        "ja": "桜島",
         "en": "Izu Skyline",
-        "zh": "伊豆天空之路"
+        "zh": "伊豆天空之路",
+        "_auto": {
+          "en": "Izu Skyline",
+          "zh": "伊豆天空之路"
+        }
       },
       "desc": {
-        "ja": "富士山や相模湾を望みながら爽快な走りを楽しめる、伊豆を代表する絶景ルート",
+        "ja": "見る角度で表情を変える、旅の景色を彩る桜島",
         "en": "A signature scenic route of Izu, offering an exhilarating ride with views of Mt. Fuji and Sagami Bay.",
-        "zh": "伊豆代表性的絕景路線，可一邊眺望富士山與相模灣，一邊享受暢快騎乘。"
+        "zh": "伊豆代表性的絕景路線，可一邊眺望富士山與相模灣，一邊享受暢快騎乘。",
+        "_auto": {
+          "en": "A signature scenic route of Izu, offering an exhilarating ride with views of Mt. Fuji and Sagami Bay.",
+          "zh": "伊豆代表性的絕景路線，可一邊眺望富士山與相模灣，一邊享受暢快騎乘。"
+        }
       },
-      "icon": "fa-solid fa-motorcycle",
+      "icon": "fa-solid fa-mountain",
       "color": "#ed1b23",
       "image": "images/highlight_1.webp"
     },
     {
       "title": {
-        "ja": "浜松屋 (箱根寄木細工)",
+        "ja": "指宿スカイライン",
         "en": "Hamamatsuya (Hakone Yosegi Marquetry)",
-        "zh": "濱松屋（箱根寄木細工）"
+        "zh": "濱松屋（箱根寄木細工）",
+        "_auto": {
+          "en": "Hamamatsuya (Hakone Yosegi Marquetry)",
+          "zh": "濱松屋（箱根寄木細工）"
+        }
       },
       "desc": {
-        "ja": "箱根の伝統工芸である寄木細工の魅力を、職人の技とともに感じられるお店",
+        "ja": "緑豊かな山あいを駆ける、南薩摩のツーリングロード",
         "en": "A shop where you can feel the charm of Hakone's traditional Yosegi marquetry craftsmanship alongside the artisans' skill.",
-        "zh": "在這裡可以透過職人的精湛技藝，感受箱根傳統工藝「寄木細工」的魅力。"
+        "zh": "在這裡可以透過職人的精湛技藝，感受箱根傳統工藝「寄木細工」的魅力。",
+        "_auto": {
+          "en": "A shop where you can feel the charm of Hakone's traditional Yosegi marquetry craftsmanship alongside the artisans' skill.",
+          "zh": "在這裡可以透過職人的精湛技藝，感受箱根傳統工藝「寄木細工」的魅力。"
+        }
       },
-      "icon": "fa-solid fa-house",
+      "icon": "fa-solid fa-motorcycle",
       "color": "#ed1b23",
       "image": "images/highlight_2.webp"
     },
     {
       "title": {
-        "ja": "三島スカイウォーク",
-        "en": "Michi-no-Eki Amagi-goe",
-        "zh": "天城越休息站",
+        "ja": "仙厳園",
+        "en": "Sengen Garden",
+        "zh": "Sengen Garden",
         "_auto": {
-          "en": "Michi-no-Eki Amagi-goe",
-          "zh": "天城越休息站"
+          "en": "Sengen Garden",
+          "zh": "Sengen Garden"
         }
       },
       "desc": {
-        "ja": "開放感あふれる吊橋の上から、箱根・伊豆エリアの美しい自然を一望できる魅力的な場所",
-        "en": "Try pickling wasabi, an Izu specialty, in an activity that makes for a popular travel memory.",
-        "zh": "體驗使用伊豆特產山葵製作山葵漬，是深受喜愛的旅行紀念活動。",
+        "ja": "桜島と錦江湾を庭の景色に取り込んだ、壮大な大名庭園",
+        "en": "Spectacular daimyo garden with views of Sakurajima and Kinko Bay",
+        "zh": "壯觀的大名花園，可欣賞櫻島和近江灣的美景",
         "_auto": {
-          "en": "Try pickling wasabi, an Izu specialty, in an activity that makes for a popular travel memory.",
-          "zh": "體驗使用伊豆特產山葵製作山葵漬，是深受喜愛的旅行紀念活動。"
+          "en": "Spectacular daimyo garden with views of Sakurajima and Kinko Bay",
+          "zh": "壯觀的大名花園，可欣賞櫻島和近江灣的美景"
         }
       },
-      "icon": "fa-solid fa-bridge",
+      "icon": "fa-solid fa-torii-gate",
       "color": "#ed1b23",
       "image": "images/highlight_3.webp"
     }
@@ -884,30 +1099,46 @@ const TOUR_DATA = {
         "zh": "第1晚（Day1→Day2）"
       },
       "name": {
-        "ja": "ホテルニューアカオ",
+        "ja": "鹿児島サンロイヤルホテル",
         "en": "Hotel New Akao",
-        "zh": "新熱海大飯店"
+        "zh": "新熱海大飯店",
+        "_auto": {
+          "en": "Hotel New Akao",
+          "zh": "新熱海大飯店"
+        }
       },
       "address": {
-        "ja": "〒413-0033 静岡県熱海市熱海1993-250",
+        "ja": "〒890-0062 鹿児島県鹿児島市与次郎１丁目８−１０",
         "en": "413-0033 1993-250 Atami, Atami City, Shizuoka",
-        "zh": "〒413-0033 靜岡縣熱海市熱海1993-250"
+        "zh": "〒413-0033 靜岡縣熱海市熱海1993-250",
+        "_auto": {
+          "en": "413-0033 1993-250 Atami, Atami City, Shizuoka",
+          "zh": "〒413-0033 靜岡縣熱海市熱海1993-250"
+        }
       },
-      "phone": "0557-83-6161",
+      "phone": "099-253-2020",
       "checkin": "15:00〜",
       "checkout": "〜10:00",
       "desc": {
-        "ja": "海に包まれるような景観と温泉、ゆったりとした時間を満喫できる人気の宿泊施設",
+        "ja": "雄大な桜島を望む、くつろぎのホテル",
         "en": "A popular accommodation offering an ocean-enveloped view, hot springs, and a relaxed atmosphere.",
-        "zh": "可享受被海景環繞般的景緻與溫泉，度過悠閒時光的人氣住宿設施。"
+        "zh": "可享受被海景環繞般的景緻與溫泉，度過悠閒時光的人氣住宿設施。",
+        "_auto": {
+          "en": "A popular accommodation offering an ocean-enveloped view, hot springs, and a relaxed atmosphere.",
+          "zh": "可享受被海景環繞般的景緻與溫泉，度過悠閒時光的人氣住宿設施。"
+        }
       },
-      "url": "https://hotel-new-akao.com/",
+      "url": "https://www.sunroyal.co.jp/",
       "image": "images/hotel-1.jpg",
       "amenities": [
         {
-          "ja": "無料Wi-Fi / バスタオル / シャンプー / ヘアドライヤー / 例として記入※増減可",
+          "ja": "インターネット/ハンドソープ/ボディーソープ/シャンプー/リンス/ハミガキセット/カミソリ/ブラシ/ ボディスポンジ/タオル/バスタオル/部屋着/スリッパ/スリッパ用中敷",
           "en": "Free Wi-Fi / Bath towel / Shampoo / Hair dryer / Example entry, may vary",
-          "zh": "免費Wi-Fi／浴巾／洗髮精／吹風機／範例內容，可能有所變動"
+          "zh": "免費Wi-Fi／浴巾／洗髮精／吹風機／範例內容，可能有所變動",
+          "_auto": {
+            "en": "Free Wi-Fi / Bath towel / Shampoo / Hair dryer / Example entry, may vary",
+            "zh": "免費Wi-Fi／浴巾／洗髮精／吹風機／範例內容，可能有所變動"
+          }
         }
       ]
     },
@@ -918,30 +1149,46 @@ const TOUR_DATA = {
         "zh": "第2晚（Day2→Day3）"
       },
       "name": {
-        "ja": "ホテルニュー銀水",
+        "ja": "指宿ロイヤルホテル",
         "en": "Hotel New Ginsui",
-        "zh": "新銀水酒店"
+        "zh": "新銀水酒店",
+        "_auto": {
+          "en": "Hotel New Ginsui",
+          "zh": "新銀水酒店"
+        }
       },
       "address": {
-        "ja": "〒410-3514 静岡県賀茂郡西伊豆町仁科2977-1",
+        "ja": "〒891-0403 鹿児島県指宿市十二町４２３２−１",
         "en": "410-3514 2977-1 Nishina, Nishi-Izu Town, Kamo District, Shizuoka",
-        "zh": "〒410-3514 靜岡縣賀茂郡西伊豆町仁科2977-1"
+        "zh": "〒410-3514 靜岡縣賀茂郡西伊豆町仁科2977-1",
+        "_auto": {
+          "en": "410-3514 2977-1 Nishina, Nishi-Izu Town, Kamo District, Shizuoka",
+          "zh": "〒410-3514 靜岡縣賀茂郡西伊豆町仁科2977-1"
+        }
       },
-      "phone": "0558-52-2211",
-      "checkin": "14:00〜",
+      "phone": "0993-23-2211",
+      "checkin": "15:00〜",
       "checkout": "〜10:00",
       "desc": {
-        "ja": "伊豆の美しい海を望みながら、温泉と上質なおもてなしを楽しめる人気の宿",
+        "ja": "錦江湾を一望する、南国のくつろぎホテル",
         "en": "A popular inn offering hot springs and refined hospitality with views of Izu's beautiful sea.",
-        "zh": "可眺望伊豆美麗海景，享受溫泉與優質款待的人氣旅宿。"
+        "zh": "可眺望伊豆美麗海景，享受溫泉與優質款待的人氣旅宿。",
+        "_auto": {
+          "en": "A popular inn offering hot springs and refined hospitality with views of Izu's beautiful sea.",
+          "zh": "可眺望伊豆美麗海景，享受溫泉與優質款待的人氣旅宿。"
+        }
       },
-      "url": "https://www.dougashima-newginsui.jp/",
+      "url": "https://ibusukiroyalhotel.co.jp/",
       "image": "images/hotel-2.jpg",
       "amenities": [
         {
-          "ja": "無料Wi-Fi / バスタオル / シャンプー / ヘアドライヤー / 例として記入※増減可",
+          "ja": "インターネット/シャンプー/リンス/ボディソープ/歯ブラシ/ 髭剃り/タオル/綿棒コットン/加湿機能付き空気清浄機/テレビ地上・BS/ 冷蔵庫/電気ポット/ドライヤー/浴衣/ バス/トイレ",
           "en": "Free Wi-Fi / Bath towel / Shampoo / Hair dryer / Example entry, may vary",
-          "zh": "免費Wi-Fi／浴巾／洗髮精／吹風機／範例內容，可能有所變動"
+          "zh": "免費Wi-Fi／浴巾／洗髮精／吹風機／範例內容，可能有所變動",
+          "_auto": {
+            "en": "Free Wi-Fi / Bath towel / Shampoo / Hair dryer / Example entry, may vary",
+            "zh": "免費Wi-Fi／浴巾／洗髮精／吹風機／範例內容，可能有所變動"
+          }
         }
       ]
     }
@@ -953,30 +1200,46 @@ const TOUR_DATA = {
       "zh": "第1晚（Day1→Day2）"
     },
     "name": {
-      "ja": "ホテルニューアカオ",
+      "ja": "鹿児島サンロイヤルホテル",
       "en": "Hotel New Akao",
-      "zh": "新熱海大飯店"
+      "zh": "新熱海大飯店",
+      "_auto": {
+        "en": "Hotel New Akao",
+        "zh": "新熱海大飯店"
+      }
     },
     "address": {
-      "ja": "〒413-0033 静岡県熱海市熱海1993-250",
+      "ja": "〒890-0062 鹿児島県鹿児島市与次郎１丁目８−１０",
       "en": "413-0033 1993-250 Atami, Atami City, Shizuoka",
-      "zh": "〒413-0033 靜岡縣熱海市熱海1993-250"
+      "zh": "〒413-0033 靜岡縣熱海市熱海1993-250",
+      "_auto": {
+        "en": "413-0033 1993-250 Atami, Atami City, Shizuoka",
+        "zh": "〒413-0033 靜岡縣熱海市熱海1993-250"
+      }
     },
-    "phone": "0557-83-6161",
+    "phone": "099-253-2020",
     "checkin": "15:00〜",
     "checkout": "〜10:00",
     "desc": {
-      "ja": "海に包まれるような景観と温泉、ゆったりとした時間を満喫できる人気の宿泊施設",
+      "ja": "雄大な桜島を望む、くつろぎのホテル",
       "en": "A popular accommodation offering an ocean-enveloped view, hot springs, and a relaxed atmosphere.",
-      "zh": "可享受被海景環繞般的景緻與溫泉，度過悠閒時光的人氣住宿設施。"
+      "zh": "可享受被海景環繞般的景緻與溫泉，度過悠閒時光的人氣住宿設施。",
+      "_auto": {
+        "en": "A popular accommodation offering an ocean-enveloped view, hot springs, and a relaxed atmosphere.",
+        "zh": "可享受被海景環繞般的景緻與溫泉，度過悠閒時光的人氣住宿設施。"
+      }
     },
-    "url": "https://hotel-new-akao.com/",
+    "url": "https://www.sunroyal.co.jp/",
     "image": "images/hotel-1.jpg",
     "amenities": [
       {
-        "ja": "無料Wi-Fi / バスタオル / シャンプー / ヘアドライヤー / 例として記入※増減可",
+        "ja": "インターネット/ハンドソープ/ボディーソープ/シャンプー/リンス/ハミガキセット/カミソリ/ブラシ/ ボディスポンジ/タオル/バスタオル/部屋着/スリッパ/スリッパ用中敷",
         "en": "Free Wi-Fi / Bath towel / Shampoo / Hair dryer / Example entry, may vary",
-        "zh": "免費Wi-Fi／浴巾／洗髮精／吹風機／範例內容，可能有所變動"
+        "zh": "免費Wi-Fi／浴巾／洗髮精／吹風機／範例內容，可能有所變動",
+        "_auto": {
+          "en": "Free Wi-Fi / Bath towel / Shampoo / Hair dryer / Example entry, may vary",
+          "zh": "免費Wi-Fi／浴巾／洗髮精／吹風機／範例內容，可能有所變動"
+        }
       }
     ]
   },
@@ -1016,29 +1279,49 @@ const TOUR_DATA = {
           "zh": "智慧型手機與充電器"
         },
         {
-          "ja": "モバイルバッテリー",
-          "en": "Mobile battery",
-          "zh": "行動電源"
-        },
-        {
           "ja": "常備薬",
-          "en": "Regular medication",
-          "zh": "常備藥品"
-        },
-        {
-          "ja": "歩きやすいシューズ",
-          "en": "Comfortable walking shoes",
-          "zh": "便於行走的鞋子"
+          "en": "Mobile battery",
+          "zh": "行動電源",
+          "_auto": {
+            "en": "Mobile battery",
+            "zh": "行動電源"
+          }
         },
         {
           "ja": "宿泊用着替え（2日分）",
-          "en": "Change of clothes for the stay (2 days)",
-          "zh": "住宿期間換洗衣物（2天）"
+          "en": "Regular medication",
+          "zh": "常備藥品",
+          "_auto": {
+            "en": "Regular medication",
+            "zh": "常備藥品"
+          }
         },
         {
-          "ja": "健康保険証",
+          "ja": "マイナ保険証または資格確認書",
+          "en": "Minor insurance card or certificate of eligibility",
+          "zh": "未成年人保險卡或資格證明",
+          "_auto": {
+            "en": "Minor insurance card or certificate of eligibility",
+            "zh": "未成年人保險卡或資格證明"
+          }
+        },
+        {
+          "ja": "ヘルメット・グローブ・ライディングウェア",
+          "en": "Change of clothes for the stay (2 days)",
+          "zh": "住宿期間換洗衣物（2天）",
+          "_auto": {
+            "en": "Change of clothes for the stay (2 days)",
+            "zh": "住宿期間換洗衣物（2天）"
+          }
+        },
+        {
+          "ja": "雨具　※雨天時レンタル雨具もございます",
           "en": "Health insurance card",
-          "zh": "健康保險證"
+          "zh": "健康保險證",
+          "_auto": {
+            "en": "Health insurance card",
+            "zh": "健康保險證"
+          }
         }
       ]
     },
@@ -1052,9 +1335,13 @@ const TOUR_DATA = {
       "color": "#1A1A1A",
       "items": [
         {
-          "ja": "折りたたみ傘・レインコート",
+          "ja": "折りたたみ傘",
           "en": "Folding umbrella / raincoat",
-          "zh": "折疊雨傘・雨衣"
+          "zh": "折疊雨傘・雨衣",
+          "_auto": {
+            "en": "Folding umbrella / raincoat",
+            "zh": "折疊雨傘・雨衣"
+          }
         },
         {
           "ja": "日焼け止め",
@@ -1072,34 +1359,58 @@ const TOUR_DATA = {
           "zh": "相機與備用電池"
         },
         {
-          "ja": "エコバッグ",
-          "en": "Reusable eco bag",
-          "zh": "環保購物袋"
-        },
-        {
           "ja": "ウェットティッシュ・ハンカチ",
-          "en": "Wet wipes / handkerchief",
-          "zh": "濕紙巾・手帕"
+          "en": "Reusable eco bag",
+          "zh": "環保購物袋",
+          "_auto": {
+            "en": "Reusable eco bag",
+            "zh": "環保購物袋"
+          }
         },
         {
           "ja": "マスク（予備含む）",
-          "en": "Mask (spare included)",
-          "zh": "口罩（含備用）"
+          "en": "Wet wipes / handkerchief",
+          "zh": "濕紙巾・手帕",
+          "_auto": {
+            "en": "Wet wipes / handkerchief",
+            "zh": "濕紙巾・手帕"
+          }
         },
         {
           "ja": "軽量アウター",
+          "en": "Mask (spare included)",
+          "zh": "口罩（含備用）",
+          "_auto": {
+            "en": "Mask (spare included)",
+            "zh": "口罩（含備用）"
+          }
+        },
+        {
+          "ja": "モバイルバッテリー",
           "en": "Lightweight outerwear",
-          "zh": "輕便外套"
+          "zh": "輕便外套",
+          "_auto": {
+            "en": "Lightweight outerwear",
+            "zh": "輕便外套"
+          }
         },
         {
-          "ja": "ネックポーチ",
+          "ja": "歩きやすい靴",
           "en": "Neck pouch",
-          "zh": "頸掛包"
+          "zh": "頸掛包",
+          "_auto": {
+            "en": "Neck pouch",
+            "zh": "頸掛包"
+          }
         },
         {
-          "ja": "絆創膏・靴ずれ防止パッド",
+          "ja": "電源タップ",
           "en": "Adhesive bandages / blister pads",
-          "zh": "OK繃・防磨貼"
+          "zh": "OK繃・防磨貼",
+          "_auto": {
+            "en": "Adhesive bandages / blister pads",
+            "zh": "OK繃・防磨貼"
+          }
         }
       ]
     }
@@ -1107,16 +1418,24 @@ const TOUR_DATA = {
   "tips": [
     {
       "title": {
-        "ja": "4月の気候と服装",
+        "ja": "10月の気候と服装",
         "en": "Climate & Clothing in April",
-        "zh": "4月的氣候與服裝"
+        "zh": "4月的氣候與服裝",
+        "_auto": {
+          "en": "Climate & Clothing in April",
+          "zh": "4月的氣候與服裝"
+        }
       },
       "icon": "fa-solid fa-cloud-sun",
       "iconColor": "#ed1b23",
       "content": {
-        "ja": "朝晩と日中の寒暖差が大きい可能性がございます。特に伊豆箱根では、標高が高い場所は冷え込みますので調整しやすい服装でお越しください。\n4月10日～12日 伊豆エリアの最高気温：16℃ /最低気温：7℃ ※予報3/25現在\nライディング中は天候にもよりますが、走行中実際の気温より体感温度が低くなります。重ね着で温度調整できる服装をお勧めいたします。",
-        "en": "There can be a significant temperature difference between morning/evening and daytime. In particular, higher-elevation areas of Izu and Hakone can be quite cold, so please dress in layers you can adjust.\nApr 10-12 forecast for the Izu area: High 16°C / Low 7°C (as of forecast on 3/25)\nDepending on the weather, the perceived temperature while riding can feel colder than the actual temperature. We recommend wearing layered clothing that you can adjust as needed.",
-        "zh": "早晚與日間溫差可能較大。尤其是箱根、伊豆地區海拔較高處氣溫偏低，建議穿著可隨時調整的服裝。\n4月10日至12日伊豆地區預測：最高氣溫16℃／最低氣溫7℃（3/25預測時點）\n騎乘時依天氣狀況，實際體感溫度可能比氣溫更低，建議以洋蔥式穿搭調節體溫。"
+        "ja": "朝晩と日中の寒暖差が大きい可能性がございます。調整しやすい服装でお越しください。\n10月12日～14日 鹿児島エリアの最高気温：28℃ /最低気温：20℃ ※予報9/26現在\nライディング中は天候にもよりますが、走行中実際の気温より体感温度が低くなります。重ね着で温度調整できる服装をお勧めいたします。",
+        "en": "There is a possibility that the temperature difference between morning and evening and during the day is large.Please wear clothes that are easy to adjust.\nOctober 12-14 Highest temperature in the Kagoshima area: 28°C/Lowest temperature: 20°C * Forecast as of September 26\nIt depends on the weather while riding, but it will feel cooler than the actual temperature while driving.It is recommended to wear clothes that can be adjusted by layering.",
+        "zh": "早上和晚上以及白天之間的溫度差異可能很大。請穿著易於調整的衣服。\n10月12日至14日鹿兒島地區最高溫度： 28°C/最低溫度： 20°C *截至9月26日的預測\n這取決於騎車時的天氣，但駕駛時會感覺比實際溫度更涼爽。建議穿著可分層調整的衣服。",
+        "_auto": {
+          "en": "There is a possibility that the temperature difference between morning and evening and during the day is large.Please wear clothes that are easy to adjust.\nOctober 12-14 Highest temperature in the Kagoshima area: 28°C/Lowest temperature: 20°C * Forecast as of September 26\nIt depends on the weather while riding, but it will feel cooler than the actual temperature while driving.It is recommended to wear clothes that can be adjusted by layering.",
+          "zh": "早上和晚上以及白天之間的溫度差異可能很大。請穿著易於調整的衣服。\n10月12日至14日鹿兒島地區最高溫度： 28°C/最低溫度： 20°C *截至9月26日的預測\n這取決於騎車時的天氣，但駕駛時會感覺比實際溫度更涼爽。建議穿著可分層調整的衣服。"
+        }
       }
     },
     {
@@ -1135,30 +1454,24 @@ const TOUR_DATA = {
     },
     {
       "title": {
-        "ja": "立ちごけ補償",
-        "en": "Tip-Over Coverage",
-        "zh": "倒車摔倒保障"
-      },
-      "icon": "fa-solid fa-person-biking",
-      "iconColor": "#ed1b23",
-      "content": {
-        "ja": "発進時や停止時の転倒(時速8km以内)を、「立ちごけ」として補償します。走行中の滑走転倒や相手のある事故は該当いたしませんので予めご注意ください。",
-        "en": "Falls while starting or stopping (under 8 km/h) are covered as a \"tip-over.\" Please note that skidding falls while riding or accidents involving another party are not covered.",
-        "zh": "起步或停車時的倒車（時速8公里以內）可依「倒車摔倒」獲得保障。請注意，騎乘中滑倒或涉及對方的事故不適用此保障。"
-      }
-    },
-    {
-      "title": {
         "ja": "サポートバン",
-        "en": "Support Van",
-        "zh": "支援車"
+        "en": "Tip-Over Coverage",
+        "zh": "倒車摔倒保障",
+        "_auto": {
+          "en": "Tip-Over Coverage",
+          "zh": "倒車摔倒保障"
+        }
       },
       "icon": "fa-solid fa-truck",
       "iconColor": "#ed1b23",
       "content": {
-        "ja": "サポートバンは荷物や車両を運ぶ役割をいたします。基本的にバイクの後ろを走行いたします。",
-        "en": "The support van carries luggage and assists with vehicles. It generally drives behind the motorcycles.",
-        "zh": "支援車負責運送行李與協助車輛。基本上會行駛於機車隊伍之後。"
+        "ja": "サポートバンは荷物や車両を運ぶ役割をいたします。基本的にバイクの後ろを走行いたします。\n立ち寄り先で必要になる荷物は、サポートバン後方に設置している個人ボックスをご利用ください。",
+        "en": "Falls while starting or stopping (under 8 km/h) are covered as a \"tip-over.\" Please note that skidding falls while riding or accidents involving another party are not covered.",
+        "zh": "起步或停車時的倒車（時速8公里以內）可依「倒車摔倒」獲得保障。請注意，騎乘中滑倒或涉及對方的事故不適用此保障。",
+        "_auto": {
+          "en": "Falls while starting or stopping (under 8 km/h) are covered as a \"tip-over.\" Please note that skidding falls while riding or accidents involving another party are not covered.",
+          "zh": "起步或停車時的倒車（時速8公里以內）可依「倒車摔倒」獲得保障。請注意，騎乘中滑倒或涉及對方的事故不適用此保障。"
+        }
       }
     }
   ],
@@ -1187,7 +1500,7 @@ const TOUR_DATA = {
           "en": "Ensure Your Safety",
           "zh": "確保自身安全"
         },
-        "icon": "fa-solid fa-circle-check",
+        "icon": "fa-solid fa-shield-halved",
         "tag": {
           "ja": "最優先",
           "en": "Top Priority",
@@ -1206,7 +1519,7 @@ const TOUR_DATA = {
           "en": "Contacting Emergency Services",
           "zh": "聯絡緊急機關"
         },
-        "icon": "fa-solid fa-circle-check",
+        "icon": "fa-solid fa-phone",
         "tag": {
           "ja": "必要な場合",
           "en": "If Necessary",
@@ -1225,7 +1538,7 @@ const TOUR_DATA = {
           "en": "Contacting Your Tour Guide",
           "zh": "聯絡隨團領隊"
         },
-        "icon": "fa-solid fa-circle-check",
+        "icon": "fa-solid fa-phone-volume",
         "tag": {
           "ja": "必須",
           "en": "Required",
@@ -1244,7 +1557,7 @@ const TOUR_DATA = {
           "en": "Contacting Our Emergency Line",
           "zh": "聯絡本公司緊急聯絡電話"
         },
-        "icon": "fa-solid fa-circle-check",
+        "icon": "fa-solid fa-phone-volume",
         "tag": {
           "ja": "",
           "en": "",
@@ -1263,7 +1576,7 @@ const TOUR_DATA = {
           "en": "Documenting the Situation / Evidence",
           "zh": "記錄狀況・證據"
         },
-        "icon": "fa-solid fa-circle-check",
+        "icon": "fa-solid fa-camera-retro",
         "tag": {
           "ja": "",
           "en": "",
@@ -1282,7 +1595,7 @@ const TOUR_DATA = {
           "en": "Insurance Procedures After Returning Home",
           "zh": "回國後的保險手續"
         },
-        "icon": "fa-solid fa-circle-check",
+        "icon": "fa-solid fa-list-check",
         "tag": {
           "ja": "旅行後",
           "en": "After the Trip",
@@ -1615,7 +1928,14 @@ const TOUR_DATA = {
     }
   ],
   "postTour": {
-    "albumUrl": "https://drive.google.com/drive/folders/1UdxV6UGen0kgAGa5Qc1iFQW4y6pbBASe?usp=sharing",
+    "enabled": true,
+    "albumUrl": "https://photos.app.goo.gl/fjoAZxx9bBhiDeju7",
+    "albumExpiry": "2026-12-28",
+    "albumExpiryLabel": {
+      "ja": "",
+      "en": "",
+      "zh": ""
+    },
     "photos": [],
     "videos": [
       {
@@ -1629,53 +1949,10 @@ const TOUR_DATA = {
           }
         },
         "url": "https://youtu.be/4XJDbIKD7Rc?si=pulwUicIuZfSByrt",
-        "embedCode": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/4XJDbIKD7Rc?si=q-xIfQKcQV0RjrTQ\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
+        "embedCode": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/lYykEcV32Q4?si=LOEcz4ogtfExGQTP\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>"
       }
     ],
-    "nextTours": [
-      {
-        "title": {
-          "ja": "HondaGO TOUR 公道デビュー応援プリンセスツアー in 北軽井沢レベル1",
-          "en": "HondaGO TOUR Princess Tour for Public Road Debut in Kita-Karuizawa Level 1",
-          "zh": "HondaGO TOUR 公路出道應援公主之旅 北輕井澤 Level 1"
-        },
-        "desc": {
-          "ja": "本ツアーは自然豊かな軽井沢エリアを1泊2日でツーリング。比較的に交通量の少ない道で安心してバイクと仲間との時間をお楽しみください。公道走行が不慣れな方、久しぶりの方でも大丈夫。安心安全にツーリングをお楽しみいただけるようスタッフが全力でサポートいたします。",
-          "en": "This 2-day, 1-night tour rides through the nature-rich Karuizawa area. Enjoy time with your motorcycle and fellow travelers on relatively low-traffic roads. Perfect even if you're new to public roads or haven't ridden in a while — our staff will fully support a safe and secure touring experience.",
-          "zh": "本旅程於自然豐饒的輕井澤地區進行1夜2日的騎乘之旅。在車流量相對較少的道路上，安心享受與機車及旅伴共度的時光。即使是初次上路或久未騎乘也無須擔心，工作人員將全力支援，確保您安心安全地享受騎乘樂趣。"
-        },
-        "url": "https://hondago-tour.jp/open/1561/",
-        "image": "images/next_tour_1.webp"
-      },
-      {
-        "title": {
-          "ja": "HondaGO TOUR 公道デビュー応援プリンセスツアー in 北軽井沢レベル2",
-          "en": "HondaGO TOUR Princess Tour for Public Road Debut in Kita-Karuizawa Level 2",
-          "zh": "HondaGO TOUR 公路出道應援公主之旅 北輕井澤 Level 2"
-        },
-        "desc": {
-          "ja": "本ツアーは自然豊かな軽井沢エリアを1泊2日でツーリング。比較的に交通量の少ない道で安心してバイクと仲間との時間をお楽しみください。公道走行が不慣れな方、久しぶりの方でも大丈夫。安心安全にツーリングをお楽しみいただけるようスタッフが全力でサポートいたします。",
-          "en": "This 2-day, 1-night tour rides through the nature-rich Karuizawa area. Enjoy time with your motorcycle and fellow travelers on relatively low-traffic roads. Perfect even if you're new to public roads or haven't ridden in a while — our staff will fully support a safe and secure touring experience.",
-          "zh": "本旅程於自然豐饒的輕井澤地區進行1夜2日的騎乘之旅。在車流量相對較少的道路上，安心享受與機車及旅伴共度的時光。即使是初次上路或久未騎乘也無須擔心，工作人員將全力支援，確保您安心安全地享受騎乘樂趣。"
-        },
-        "url": "https://hondago-tour.jp/open/1571/",
-        "image": "images/next_tour_2.webp"
-      },
-      {
-        "title": {
-          "ja": "HondaGO TOUR in EUROPE",
-          "en": "HondaGO TOUR in EUROPE",
-          "zh": "HondaGO TOUR 歐洲之旅"
-        },
-        "desc": {
-          "ja": "HondaGO TOURならではのサポート体制で出発前の準備から現地での滞在まで安心してライディングをお楽しみいただけます",
-          "en": "With HondaGO TOUR's signature support system, you can enjoy riding with peace of mind from pre-departure preparation through your stay abroad.",
-          "zh": "憑藉HondaGO TOUR獨有的支援體系，從出發前的準備到當地停留期間，皆能安心享受騎乘樂趣。"
-        },
-        "url": "https://hondago-tour.jp/open/1405/",
-        "image": "images/next_tour_3.webp"
-      }
-    ]
+    "nextTours": []
   },
   "hotelNote": {
     "ja": "※夕食時のドリンク代・ルームサービス料は自己負担になります。予めご了承ください。",
@@ -1812,10 +2089,6 @@ const TOUR_DATA = {
     {
       "icon": "fa-solid fa-star",
       "label": "星"
-    },
-    {
-      "icon": "fa-solid fa-sparkles",
-      "label": "キラキラ"
     },
     {
       "icon": "fa-solid fa-camera-retro",
@@ -1960,6 +2233,26 @@ const TOUR_DATA = {
     {
       "icon": "fa-brands fa-redhat",
       "label": "キャップ"
+    },
+    {
+      "icon": "fa-solid fa-mountain",
+      "label": "山"
+    },
+    {
+      "icon": "fa-solid fa-ferry",
+      "label": "フェリー"
+    },
+    {
+      "icon": "fa-solid fa-square-parking",
+      "label": "駐車場"
+    },
+    {
+      "icon": "fa-solid fa-shop",
+      "label": "ショップ"
+    },
+    {
+      "icon": "fa-solid fa-train",
+      "label": "電車"
     }
   ],
   "vehicles": [
@@ -1993,7 +2286,16 @@ const TOUR_DATA = {
       },
       "image": "https://cdn.rental819.com/static/public/master_bike_color/old/1094-2025-13.jpg?updated_on=20250314181248"
     }
-  ]
+  ],
+  "goodsNote": {
+    "ja": "購入ご希望の方は事前にメールにてお申し出ください。\n",
+    "en": "If you wish to purchase, please let us know by email in advance.",
+    "zh": "如果您想購買，請提前透過電子郵件通知我們。",
+    "_auto": {
+      "en": "If you wish to purchase, please let us know by email in advance.",
+      "zh": "如果您想購買，請提前透過電子郵件通知我們。"
+    }
+  }
 };
 
 // ── i18n resolver ──────────────────────────────────────────────
@@ -2031,9 +2333,44 @@ function resolveLang(node, lang) {
   return node;
 }
 
+// ── ブラウザ保存データの名前空間分離 ──────────────────────────────
+// このしおりを複製して複数ツアー分を同じドメイン配下（例：username.github.io/ツアーA/、
+// username.github.io/ツアーB/）で公開した場合、localStorageはドメイン単位でしか区別されず
+// URLのパスでは区別されないため、何も対策しないと別ツアーの一時保存データと混ざってしまう。
+// そのため、保存キーの先頭に「そのページが置かれているフォルダのパス」を付与して区別する。
+function tourStorageNS() {
+  try { return location.pathname.replace(/\/[^\/]*$/, ''); } catch (e) { return ''; }
+}
+function tourStorageGet(baseKey) {
+  try {
+    var nsKey = tourStorageNS() + '::' + baseKey;
+    var v = localStorage.getItem(nsKey);
+    if (v !== null) return v;
+    // 名前空間分離前の旧データが残っていれば、このツアー用として一度だけ引き継いでから旧キーを削除する。
+    // 旧キーは全ツアーで共有されてしまうため、読み取るだけで残したままにすると
+    // 別のツアーがあとから同じ旧データを引き継いでしまい、結局ツアー間で混ざる原因になる。
+    var legacy = localStorage.getItem(baseKey);
+    if (legacy !== null) {
+      localStorage.setItem(nsKey, legacy);
+      localStorage.removeItem(baseKey);
+      return legacy;
+    }
+    return null;
+  } catch (e) { return null; }
+}
+function tourStorageSet(baseKey, value) {
+  try { localStorage.setItem(tourStorageNS() + '::' + baseKey, value); } catch (e) {}
+}
+function tourStorageRemove(baseKey) {
+  try {
+    localStorage.removeItem(tourStorageNS() + '::' + baseKey);
+    localStorage.removeItem(baseKey); // 旧キーが残っていれば併せて削除
+  } catch (e) {}
+}
+
 function getCurrentLang() {
   try {
-    var l = localStorage.getItem('TOUR_LANG');
+    var l = tourStorageGet('TOUR_LANG');
     if (l === 'en' || l === 'zh') return l;
   } catch (e) {}
   return 'ja';
@@ -2041,7 +2378,7 @@ function getCurrentLang() {
 
 function getRawData() {
   try {
-    var override = localStorage.getItem('TOUR_DATA_RAW_OVERRIDE');
+    var override = tourStorageGet('TOUR_DATA_RAW_OVERRIDE');
     if (override) return JSON.parse(override);
   } catch (e) {}
   return TOUR_DATA;

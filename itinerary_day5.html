@@ -36,7 +36,7 @@
 </header>
 
 <div class="page-banner" style="background:linear-gradient(135deg,#c5151b,#9e1016)">
-  <h1><i class="fa-solid fa-mountain-sun"></i> Day 5 <span data-i18n="route.detailTitle">詳細行程</span></h1>
+  <h1><i id="dayHeadIcon" class="fa-solid fa-mountain-sun"></i> Day 5 <span data-i18n="route.detailTitle">詳細行程</span></h1>
   <p id="bannerSub">—</p>
 </div>
 
@@ -65,6 +65,7 @@
 
 <script src="pwa.js"></script>
 <script src="i18n.js"></script>
+<script src="anim.js" defer></script>
 <script src="tour-data.js"></script>
 <script>
 applyI18nStaticText();
@@ -72,10 +73,17 @@ mountLangSwitcher('langSwitcherDesktop');
 mountLangSwitcher('langSwitcherMobile');
 document.title = 'Day 5 ' + t('route.detailTitle') + ' | ' + t('title.index');
 const d = getData();
+// 「ツアー後」ページ：admin.htmlで公開がオンになるまでヘッダーメニューから隠す
+if (!d.postTour || !d.postTour.enabled) {
+  document.querySelectorAll('a[href="post_tour.html"]').forEach(function(a){
+    if (a.closest('.nav-menu') || a.closest('.mobile-nav')) a.style.display = 'none';
+  });
+}
 const DAY_NUM = 5;
 // このツアーがDay5を使わない場合は全体行程ページへ戻す
 if (!d.day5) { location.replace('route.html'); }
 const day = d.day5 || {theme:'', date:'', items:[]};
+if (day.icon) document.getElementById('dayHeadIcon').className = day.icon;
 const BADGE = {red:'badge-red',blue:'badge-blue',green:'badge-green',gold:'badge-gold'};
 // ツアーによって日数が異なるため、実際に存在する day1, day2... の数を数える
 const TOTAL_DAYS = Object.keys(d).filter(k => /^day\d+$/.test(k) && d[k] && (d[k].date || d[k].theme || (d[k].items && d[k].items.length))).length;
@@ -120,7 +128,7 @@ document.getElementById('timeline').innerHTML = (day.items||[]).map(item=>{
       <div class="tl-card-header">
         <div class="tl-card-title"><i class="${item.icon||'fa-solid fa-circle'}"></i>${item.title}${bdg}</div>
       </div>
-      <div class="tl-card-place"><i class="fa-solid fa-location-dot"></i>${item.place||''}</div>
+      ${item.place ? `<div class="tl-card-place"><i class="fa-solid fa-location-dot"></i>${item.place}</div>` : ''}
       <p>${item.desc||''}</p>
     </div>
   </div>`;
